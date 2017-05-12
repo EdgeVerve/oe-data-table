@@ -1,0 +1,38 @@
+{
+  "name": "oe-data-table",
+  "version": "0.8.0",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "lint:polymer": "polylint",
+    "lint:js": "eslint . --fix --ext js,html --ignore-path .gitignore",
+    "lint:css": "stylelint **/*.html",
+    "lint": "npm-run-all -c -n -s --silent lint:*",
+    "test": "wct",
+    "postinstall": "bower install"
+  },
+  "pre-commit": [
+    "lint",
+    "test"
+  ],
+  "keywords": [
+    "bower",
+    "git",
+    "polymer",
+    "oe-ui"
+  ],
+  "author": "Sasivarnan R <sasivarnan36@gmail.com> (https://cybeadon.com)",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-plugin-html": "^2.0.1",
+    "npm-run-all": "^4.0.2",
+    "polylint": "^2.10.4",
+    "pre-commit": "^1.2.2",
+    "stylelint": "^7.10.1",
+    "stylelint-config-standard": "^16.0.0",
+    "stylelint-processor-html": "^1.0.0",
+    "web-component-tester": "^5.0.1"
+  }
+}
