@@ -1,4 +1,4 @@
-<!-- 
+<!--
   ©2016-2017 EdgeVerve Systems Limited (a fully owned Infosys subsidiary),
   Bangalore, India. All Rights Reserved.
 -->
@@ -26,7 +26,9 @@
        */
       columns: {
         type: Array,
-        value: [],
+        value: function () {
+          return [];
+        },
         notify: true,
         observer: '_organizeData'
       },

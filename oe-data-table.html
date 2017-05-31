@@ -1,4 +1,4 @@
-<!-- 
+<!--
   ©2016-2017 EdgeVerve Systems Limited (a fully owned Infosys subsidiary),
   Bangalore, India. All Rights Reserved.
 -->
@@ -90,7 +90,7 @@ Custom property | Description | Default
 
   <template>
     <style>
-      :host {
+       :host {
         width: 100%;
         display: block;
         font-family: Roboto;
@@ -268,7 +268,7 @@ Custom property | Description | Default
         padding-right: 24px;
       }
 
-      :host[disable-selection] .table-data:first-of-type {
+       :host[disable-selection] .table-data:first-of-type {
         padding-left: 24px;
       }
 
@@ -687,15 +687,17 @@ Custom property | Description | Default
         var columns = [],
           attributesToSkip = ['class', 'id'];
         for (var i = 1, l = children.length; i < l; i++) {
-          var attributes = children[i].attributes,
-            column = {};
-          for (var j = 0, al = attributes.length; j < al; j++) {
-            var attribute = attributes[j];
-            if (attributesToSkip.indexOf(attribute.name) == -1) {
-              column[kebabCaseToCamelCase(attribute.name)] = attribute.value
+          if (children[i].tagName === 'OE-DATA-TABLE-COLUMN') {
+            var attributes = children[i].attributes;
+            var column = {};
+            for (var j = 0, al = attributes.length; j < al; j++) {
+              var attribute = attributes[j];
+              if (attributesToSkip.indexOf(attribute.name) == -1) {
+                column[kebabCaseToCamelCase(attribute.name)] = attribute.value
+              }
             }
+            columns.push(column);
           }
-          columns.push(column);
         }
         this.set('columns', columns);
       }
