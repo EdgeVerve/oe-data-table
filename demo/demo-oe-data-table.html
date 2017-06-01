@@ -48,7 +48,6 @@
     oe-data-table {
       margin: 0 10px;
     }
-
   </style>
 </head>
 
@@ -858,14 +857,14 @@
               <template>
                 <template is="dom-bind" id="pagination-table">
                   <h3> Default Pagination </h3>
-                  <oe-data-table id="table" label="Phone" columns=[[columns]] items=[[items]]></oe-data-table>
+                  <oe-data-table id="table" label="Phone" columns=[[columns]] items=[[defaultItems]]></oe-data-table>
                   <h3> Server side pagination </h3>
                   <oe-data-table label="Literal" columns=[[literalColumns]] data-controller=[[dataController]]></oe-data-table>
                 </template>
                 <script>
                   var paginationTable = document.getElementById('pagination-table');
 
-                  var items = [{
+                  var defaultItems = [{
                     user: 'Mike',
                     phone: 1242109098
                   }, {
@@ -921,19 +920,12 @@
                   }]);
 
                   paginationTable.set('dataController', {
-                    restUrl: 'http://localhost:3000/api/Literals',
-                    filter: {
-                      where: {
-                        key: {
-                          gt: 'c'
-                        }
-                      }
-                    }
+                    restUrl: '/api/Literals'
                   });
 
                   //setting after a small delay for letting browser to finish rendering the other demos
                   paginationTable.async(function () {
-                    paginationTable.set('items', items);
+                    paginationTable.set('defaultItems', defaultItems);
                   }, 2000);
 
                 </script>
@@ -1619,6 +1611,35 @@
       value: 'The Walk',
       id: 7
     }]
+    var literalData = [{
+      'key': 'Line1',
+      'value': 'Line1',
+      'placeholder': []
+    }, {
+      'key': 'Line2',
+      'value': 'Line2',
+      'placeholder': []
+    }, {
+      'key': 'City',
+      'value': 'City',
+      'placeholder': []
+    }, {
+      'key': 'Province',
+      'value': 'Province',
+      'placeholder': []
+    }, {
+      'key': 'Country',
+      'value': 'Country',
+      'placeholder': []
+    }, {
+      'key': 'Zip Code',
+      'value': 'Zip Code',
+      'placeholder': []
+    }, {
+      'key': 'Profile',
+      'value': 'Profile',
+      'placeholder': []
+    }]
 
     server.respondWith('get', /api\/Movies/, function (req) {
       var queryString = req.url.split('/^')[1].split('/')[0];
@@ -1628,6 +1649,33 @@
       });
       if (req.url.toLowerCase().indexOf('findone') !== -1 && data.length > 0) {
         data = data[0];
+      }
+      req.respond(200, {
+        'Content-Type': 'application/json'
+      }, JSON.stringify(data));
+
+    });
+
+    server.respondWith('get', /api\/Literals/, function (req) {
+      //var queryString = req.url.split('/^')[1].split('/')[0];
+      var url = decodeURIComponent(req.url);
+      var data = literalData
+      var filter;
+      if (url.indexOf('?') !== -1) {
+        filter = url.split('?')[1].split('=')[1].split('}')[0] + '}';
+        filter = JSON.parse(filter);
+        data = literalData.slice(filter.skip);
+      }
+      // console.log(filter.skip)
+
+
+      if (req.url.toLowerCase().indexOf('findone') !== -1 && data.length > 0) {
+        data = data[0];
+      }
+      if (req.url.toLowerCase().indexOf('count') !== -1 && data.length > 0) {
+        data = {
+          count: data.length
+        }
       }
       req.respond(200, {
         'Content-Type': 'application/json'
