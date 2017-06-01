@@ -94,6 +94,7 @@
   },
   "globals": {
     "Polymer": true,
+    "MetaPolymer": true,
     "expect": true,
     "fixture": true,
     "sinon": true,
