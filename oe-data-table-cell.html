@@ -186,8 +186,8 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
         var formatterFn;
         if (column.formatter) {
           formatterFn = column.formatter;
-        } else if (column.type && baseUtils.TypeMappings[column.type] && baseUtils.TypeMappings[column.type].formatter) {
-          formatterFn = baseUtils.TypeMappings[column.type].formatter;
+        } else if (column.type && OEUtils.TypeMappings[column.type] && OEUtils.TypeMappings[column.type].formatter) {
+          formatterFn = OEUtils.TypeMappings[column.type].formatter;
         }
         if (formatterFn) {
           if (typeof formatterFn === 'string') {
@@ -252,7 +252,7 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
 
       _createElement: function () {
         var column = this.column;
-        var typeMapping = baseUtils.TypeMappings[column.type || column.uitype];
+        var typeMapping = OEUtils.TypeMappings[column.type || column.uitype];
         var uitype = column.uiType || (typeMapping && typeMapping.uiType);
         var editorAttributes = column.editorAttributes;
         var elem = document.createElement(uitype);

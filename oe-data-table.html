@@ -411,7 +411,7 @@ Custom property | Description | Default
                   <div class="header-icon">
                     <paper-icon-button icon="[[action.icon]]" on-tap="_tableActionTapped"></paper-icon-button>
                     <paper-tooltip>
-                      <i18n-msg msgid=[[action.title]]>[[action.title]]</i18n-msg>
+                      <oe-i18n-msg msgid=[[action.title]]>[[action.title]]</oe-i18n-msg>
                     </paper-tooltip>
                   </div>
                 </template>
@@ -423,13 +423,13 @@ Custom property | Description | Default
                       <template is="dom-repeat" items=[[menuActions]] as="action">
                         <paper-icon-item on-tap="_tableActionTapped">
                           <iron-icon icon="[[action.icon]]" item-icon></iron-icon>
-                          <i18n-msg msgid=[[action.title]]>[[action.title]]</i18n-msg>
+                          <oe-i18n-msg msgid=[[action.title]]>[[action.title]]</oe-i18n-msg>
                         </paper-icon-item>
                       </template>
                       <template is="dom-if" if=[[configCode]]>
                         <paper-icon-item on-tap="_saveGridConfig">
                           <iron-icon icon="save" item-icon></iron-icon>
-                          <i18n-msg msgid="Save Grid Config">Save Grid Config</i18n-msg>
+                          <oe-i18n-msg msgid="Save Grid Config">Save Grid Config</oe-i18n-msg>
                         </paper-icon-item>
                       </template>
                     </paper-menu>
@@ -668,7 +668,7 @@ Custom property | Description | Default
     },
 
     behaviors: [
-      baseUtils.DataTableBehaviour
+      OEUtils.DataTableBehaviour
     ],
 
     listeners: {
@@ -767,7 +767,7 @@ Custom property | Description | Default
               this.set('config', gridConfig);
               return;
             }
-            this.fire('oe-show-error', baseUtils.extractErrorMessage(err));
+            this.fire('oe-show-error', OEUtils.extractErrorMessage(err));
           }.bind(this));
 
           ajaxRequest.generateRequest();
@@ -1179,7 +1179,7 @@ Custom property | Description | Default
         }.bind(this));
 
         ajaxRequest.addEventListener('error', function (err) {
-          this.fire('oe-show-error', baseUtils.extractErrorMessage(err));
+          this.fire('oe-show-error', OEUtils.extractErrorMessage(err));
         }.bind(this));
 
         ajaxRequest.generateRequest();
@@ -1228,8 +1228,8 @@ Custom property | Description | Default
           var options = column.editorAttributes;
           if (column.formatter) {
             return column.formatter.call(this, result, options);
-          } else if (column.type && baseUtils.TypeMappings[column.type] && baseUtils.TypeMappings[column.type].formatter) {
-            var formatterFn = baseUtils.TypeMappings[column.type].formatter;
+          } else if (column.type && OEUtils.TypeMappings[column.type] && OEUtils.TypeMappings[column.type].formatter) {
+            var formatterFn = OEUtils.TypeMappings[column.type].formatter;
             return formatterFn(result, options);
           } else {
             return result;

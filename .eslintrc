@@ -99,7 +99,7 @@
     "fixture": true,
     "sinon": true,
     "page": true,
-    "baseUtils": true,
+    "OEUtils": true,
     "HTMLImports": true,
     "ev_navigate_to": true,
     "I18nMsg": true,

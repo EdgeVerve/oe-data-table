@@ -7,7 +7,7 @@
 <link rel="import" href="../meta-polymer/meta-polymer.html">
 
 <script>
-  var baseUtils = baseUtils || {};
+  var OEUtils = OEUtils || {};
 
   /**
    * Behavior used for `oe-data-table`. Contains data manipulation logic.
@@ -15,7 +15,7 @@
    *
    * @polymerBehavior
    */
-  baseUtils.DataTableBehaviour = {
+  OEUtils.DataTableBehaviour = {
 
     properties: {
 
@@ -155,10 +155,10 @@
       this._setSelectedItems([]);
       this.set('_selectionState', new WeakMap()); // eslint-disable-line no-undef
 
-      // fetch model from baseUtils.modelDefCache
+      // fetch model from OEUtils.modelDefCache
       this.async(function () {
         if (this.model && this.columns.length === 0) {
-          baseUtils.getModelDefinition(this.model, function (err, modelDefinition) {
+          OEUtils.getModelDefinition(this.model, function (err, modelDefinition) {
             if (err) {
               return;
             }
@@ -175,10 +175,10 @@
         // ignore fields starting with underscore.
         if (prop.charAt(0) !== '_' && prop.toLowerCase().indexOf('scope') === -1) {
           var property = modelDef.properties[prop];
-          var type = baseUtils.TypeMappings[property.type] || 'string';
+          var type = OEUtils.TypeMappings[property.type] || 'string';
           var col = {
             key: prop,
-            label: baseUtils.camelCaseToLabel(prop),
+            label: OEUtils.camelCaseToLabel(prop),
             type: property.type,
             uiType: type.uiType
           };
@@ -438,7 +438,7 @@
 
       ajaxRequest.addEventListener('error', function (err) {
         this.set('_loadingData', false);
-        done(baseUtils.extractErrorMessage(err));
+        done(OEUtils.extractErrorMessage(err));
       }.bind(this));
 
       ajaxRequest.generateRequest();
@@ -471,7 +471,7 @@
 
       ajaxRequest.addEventListener('error', function (err) {
         this.set('_loadingData', false);
-        this.fire('oe-show-error', baseUtils.extractErrorMessage(err));
+        this.fire('oe-show-error', OEUtils.extractErrorMessage(err));
       }.bind(this));
 
       ajaxRequest.generateRequest();

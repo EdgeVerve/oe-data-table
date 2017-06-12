@@ -85,7 +85,7 @@
     <div id="cell" style$="[[_computeCellAlignment(column)]]" on-tap="_changeSortOrder">
       <iron-icon class="sort-icon" icon="icons:[[_getSortIcon(column.sort)]]" hidden$=[[!column.sort]]></iron-icon>
       <span class$="header-title [[_getSortedClass(column.sort)]]">
-      <i18n-msg msgid=[[_computeColumnLabel(column)]]>[[_computeColumnLabel(column)]]</i18n-msg> </span>
+      <oe-i18n-msg msgid=[[_computeColumnLabel(column)]]>[[_computeColumnLabel(column)]]</oe-i18n-msg> </span>
     </div>
     <iron-icon hidden$=[[_disableFilter(hasPagination,column)]] class="filter-icon" icon="icons:filter-list" on-tap="openFilter"></iron-icon>
     <paper-dialog id="dialog" on-iron-overlay-opened="_positionFilterDialog">
