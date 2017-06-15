@@ -90,7 +90,7 @@ Custom property | Description | Default
 
   <template>
     <style>
-      :host {
+       :host {
         width: 100%;
         display: block;
         font-family: Roboto;
@@ -268,7 +268,7 @@ Custom property | Description | Default
         padding-right: 24px;
       }
 
-      :host[disable-selection] .table-data:first-of-type {
+       :host[disable-selection] .table-data:first-of-type {
         padding-left: 24px;
       }
 
@@ -735,12 +735,15 @@ Custom property | Description | Default
     // observer called when config object is changed
     _configChanged: function () {
       if (this.config) {
-        var propertiesToSet = ['columns', 'editorFormUrl', 'label'];
-        propertiesToSet.forEach(function (prop) {
-          if (!this[prop] && this.config[prop]) {
-            this.set(prop, this.config[prop]);
-          }
-        }.bind(this));
+        if (!this.editorFormUrl || (oldCfg && this.editorFormUrl === oldCfg.editorFormUrl)) {
+          this.set('editorFormUrl', this.config.editorFormUrl);
+        }
+        if (!this.label || (oldCfg && this.label === oldCfg.label)) {
+          this.set('label', this.config.label);
+        }
+        if (!this.columns || this.columns.length === 0 || (oldCfg && this.columns === oldCfg.columns)) {
+          this.set('columns', this.config.columns);
+        }
       }
     },
 
