@@ -26,7 +26,7 @@
   <link rel="import" href="../../oe-typeahead/oe-typeahead.html">
   <link rel="import" href="../../oe-input/oe-decimal.html">
   <link rel="import" href="../oe-data-table.html">
-  <link rel="import" href="../../meta-polymer/meta-polymer.html">
+  <link rel="import" href="../../oe-ui-forms/meta-polymer.html">
 
   <style is="custom-style" include="demo-pages-shared-styles">
     body {
@@ -48,6 +48,13 @@
     oe-data-table {
       margin: 0 10px;
     }
+
+    oe-data-table oe-info.amount-info {
+      --oe-info-label: {
+        display: none;
+      }
+    }
+    
   </style>
 </head>
 
@@ -100,20 +107,44 @@
                     key: 'name',
                     label: 'Name',
                     type: 'string'
+                  }, {
+                    key: 'details',
+                    label: 'Details',
+                    type: 'object'
                   }]);
 
                   dataTable.set('items', [{
                     id: 1,
-                    name: 'Admin'
+                    name: 'Admin',
+                    details: {
+                      gender: 'male',
+                      location: 'Bangalore',
+                      country: 'India'
+                    }
                   }, {
                     id: 2,
-                    name: 'Developer'
+                    name: 'Developer',
+                    details: {
+                      gender: 'female',
+                      location: 'Bangalore',
+                      country: 'India'
+                    }
                   }, {
                     id: 3,
-                    name: 'Designer'
+                    name: 'Designer',
+                    details: {
+                      gender: 'male',
+                      location: 'Chennai',
+                      country: 'India'
+                    }
                   }, {
                     id: 4,
-                    name: 'Tester'
+                    name: 'Tester',
+                    details: {
+                      gender: 'male',
+                      location: 'Chennai',
+                      country: 'India'
+                    }
                   }]);
 
                 </script>
@@ -468,7 +499,7 @@
 
                   var flagRenderer = function (column, row) { // eslint-disable-line no-unused-vars
                     var elementToReturn =
-                      '<div class="flex layout horizontal center">  <img style="height:30px;width:40px;" src="https://rawgit.com/hjnilsson/country-flags/master/svg/[[countryCodeToLowerCase(row.code)]].svg" /> &nbsp; &nbsp; &nbsp; <span> [[row.name]] </span> </div>';
+                      '<div class="flex layout horizontal center">  <img style="height:30px;width:40px;" src="https://cdn.rawgit.com/hjnilsson/country-flags/5f6e1339/svg/[[countryCodeToLowerCase(row.code)]].svg" /> &nbsp; &nbsp; &nbsp; <span> [[row.name]] </span> </div>';
 
                     this._customElement.countryCodeToLowerCase = function (code) {
                       return code ? code.toLowerCase() : null;
@@ -480,7 +511,7 @@
 
                   var amountRenderer = function (column, row) { // eslint-disable-line no-unused-vars
                     var elementToReturn =
-                      '<div class="flex layout horizontal center"> <img height="16" width="16" src="https://rawgit.com/changecoin/currency-font/master/svg/200/[[currencyCodeToLowerCase(row.currency)]].svg" /> &nbsp; <oe-info precision=[[row.precision]] type="decimal" value=[[row.amount]]></oe-info> </span> </div>';
+                      '<div class="flex layout horizontal center"> <img height="16" width="16" src="https://rawgit.com/changecoin/currency-font/master/svg/200/[[currencyCodeToLowerCase(row.currency)]].svg" /> &nbsp; <oe-info class="amount-info" precision=[[row.precision]] type="decimal" value=[[row.amount]]></oe-info> </span> </div>';
 
                     this._customElement.currencyCodeToLowerCase = function (code) {
                       return code ? code.toLowerCase() : null;
@@ -513,7 +544,7 @@
                     amount: 1960,
                     precision: 2,
                     capital: 'New Delhi',
-                    flag: 'https://rawgit.com/hjnilsson/country-flags/master/svg/in.svg'
+                    flag: 'https://cdn.rawgit.com/hjnilsson/country-flags/5f6e1339/svg/in.svg'
                   }, {
                     code: 'US',
                     name: 'United States Of America',
@@ -969,6 +1000,7 @@
                   }
 
                 </style>
+
                 <oe-data-table id="styling-table" label="Scores" min-col-width=50></oe-data-table>
                 <script>
                   var stylingTable = document.getElementById('styling-table');

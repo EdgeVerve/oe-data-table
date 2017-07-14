@@ -217,14 +217,11 @@
 
       suite('column width', function () {
 
-        var server = sinon.fakeServer.create();
-        server.autoRespond = true;
-        server.respondImmediately = true;
-
+        var server;
         var serverData = {
           'code': 'TestTable',
           'label': 'Users',
-          'editorFormUrl': '/components/person-form.html',
+          // 'editorFormUrl': '/components/person-form.html',
           'columns': [{
             key: 'key',
             label: 'Key',
@@ -238,36 +235,43 @@
           }]
         }
 
-        server.respondWith('get', /api\/GridConfigs\/config/, function (req) {
-          var configName = req.url.split('GridConfigs/config/')[1];
-          if (serverData.code === configName) {
-            req.respond(200, {
-              'Content-Type': 'application/json'
-            }, JSON.stringify(serverData));
-          } else {
-            req.respond(500, {
-              'Content-Type': 'application/json'
-            }, JSON.stringify({
-              error: 'config not found'
-            }));
-          }
+        setup(function () {
 
-        });
+          server = sinon.fakeServer.create();
+          server.autoRespond = true;
 
-        server.respondWith('POST', /api\/GridConfigs/, function (req) {
-          var data = req.requestBody;
-          if (data.code) {
-            serverData = data;
-            req.respond(200, {
-              'Content-Type': 'application/json'
-            }, JSON.stringify(serverData));
-          } else {
-            req.respond(500, {
-              'Content-Type': 'application/json'
-            }, JSON.stringify({
-              error: 'config not valid'
-            }));
-          }
+          server.respondWith('GET', /api\/GridConfigs\/config/, function (req) {
+            var configName = req.url.split('GridConfigs/config/')[1];
+            if (serverData.code === configName) {
+              req.respond(200, {
+                'Content-Type': 'application/json'
+              }, JSON.stringify(serverData));
+            } else {
+              req.respond(500, {
+                'Content-Type': 'application/json'
+              }, JSON.stringify({
+                error: 'config not found'
+              }));
+            }
+
+          });
+
+          server.respondWith('POST', /api\/GridConfigs/, function (req) {
+            var data = req.requestBody;
+            if (data.code) {
+              serverData = data;
+              req.respond(200, {
+                'Content-Type': 'application/json'
+              }, JSON.stringify(serverData));
+            } else {
+              req.respond(500, {
+                'Content-Type': 'application/json'
+              }, JSON.stringify({
+                error: 'config not valid'
+              }));
+            }
+          });
+
         });
 
         teardown(function () {
@@ -856,13 +860,17 @@
               var summaryRow = dataTable.querySelectorAll('.summary-row')[0];
               expect(summaryRow.getBoundingClientRect().bottom).to.be.equal(tableBody.getBoundingClientRect()
                 .bottom)
-              expect(eval(summaryRow.querySelectorAll('oe-data-table-summary-cell')[1].innerText)).to
+              expect(Number(summaryRow.querySelectorAll('oe-data-table-summary-cell')[1].innerText))
+                .to
                 .be.equal(4);
-              expect(eval(summaryRow.querySelectorAll('oe-data-table-summary-cell')[2].innerText)).to
+              expect(Number(summaryRow.querySelectorAll('oe-data-table-summary-cell')[2].innerText))
+                .to
                 .be.equal(15200);
-              expect(eval(summaryRow.querySelectorAll('oe-data-table-summary-cell')[3].innerText)).to
+              expect(Number(summaryRow.querySelectorAll('oe-data-table-summary-cell')[3].innerText))
+                .to
                 .be.equal(12.5);
-              expect(eval(summaryRow.querySelectorAll('oe-data-table-summary-cell')[4].innerText)).to
+              expect(Number(summaryRow.querySelectorAll('oe-data-table-summary-cell')[4].innerText))
+                .to
                 .be.equal(161999.5);
               done();
             });
@@ -879,13 +887,17 @@
               var summaryRow = dataTable.querySelectorAll('.summary-row')[0];
               expect(summaryRow.getBoundingClientRect().top).to.be.equal(tableBody.getBoundingClientRect()
                 .top)
-              expect(eval(summaryRow.querySelectorAll('oe-data-table-summary-cell')[1].innerText)).to
+              expect(Number(summaryRow.querySelectorAll('oe-data-table-summary-cell')[1].innerText))
+                .to
                 .be.equal(4);
-              expect(eval(summaryRow.querySelectorAll('oe-data-table-summary-cell')[2].innerText)).to
+              expect(Number(summaryRow.querySelectorAll('oe-data-table-summary-cell')[2].innerText))
+                .to
                 .be.equal(15200);
-              expect(eval(summaryRow.querySelectorAll('oe-data-table-summary-cell')[3].innerText)).to
+              expect(Number(summaryRow.querySelectorAll('oe-data-table-summary-cell')[3].innerText))
+                .to
                 .be.equal(12.5);
-              expect(eval(summaryRow.querySelectorAll('oe-data-table-summary-cell')[4].innerText)).to
+              expect(Number(summaryRow.querySelectorAll('oe-data-table-summary-cell')[4].innerText))
+                .to
                 .be.equal(161999.5);
               done();
             });
