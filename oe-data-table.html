@@ -29,7 +29,7 @@
 <link rel="import" href="oe-data-table-column-chooser.html">
 <link rel="import" href="oe-data-table-column-customizer.html">
 
-<link rel="import" href="../meta-polymer/lazy-component.html">
+<link rel="import" href="../oe-ui-forms/lazy-component.html">
 <!--
 ### oe-data-table
 
@@ -1127,7 +1127,7 @@ Custom property | Description | Default
     },
 
     _getVisibleColumns: function (column) {
-      return !column.hidden;
+      return !(column.hidden === true || column.hidden === 'true');
     },
 
     _tableActionTapped: function (event) {
