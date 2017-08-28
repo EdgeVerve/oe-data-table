@@ -227,11 +227,13 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
         if (!this._element) {
           this._createElement();
         }
-        this.set('_inEdit', true);
-        var key = this.column.key || this.column.field;
-        var cellValue = this.row[key];
-        this._element.set('value', cellValue);
-        this._element.focus();
+        if(this._element && this._element.set){
+          this.set('_inEdit', true);
+          var key = this.column.key || this.column.field;
+          var cellValue = this.row[key];
+          this._element.set('value', cellValue);
+          this._element.focus();
+        }
       },
 
       _disableEditMode: function () {
