@@ -370,6 +370,9 @@ Custom property | Description | Default
         width: 100%;
       }
 
+      .empty-state{
+        height: 100%;
+      }
     </style>
 
     <paper-material class="data-table">
@@ -491,6 +494,11 @@ Custom property | Description | Default
                 </template>
               </iron-list>
             </template>
+            <template is="dom-if" if=[[!_items.length]] restamp=true>
+              <div class="empty-state layout horizontal center-center">
+                <label>[[emptyStateMessage]]</label>
+              </div>
+            </template>
           </div>
           <template is="dom-if" if="[[_hasAggregator(columns.*)]]">
             <div class="summary-row">
@@ -589,7 +597,11 @@ Custom property | Description | Default
       emitOnSave: {
         type: String
       },
-
+      
+      emptyStateMessage:{
+        type: String,
+        value:"No records found"
+      },
       _modelBeingUpdated: {
         type: Object
       },
