@@ -215,7 +215,7 @@
 
       });
 
-      suite('column width', function () {
+      suite('Column width', function () {
 
         var server;
         var serverData = {
@@ -618,7 +618,7 @@
 
       });
 
-      suite('inline edit', function () {
+      suite('Inline edit', function () {
         var dataTable, columns, items;
 
         setup(function (done) {
@@ -787,7 +787,7 @@
 
       });
 
-      suite('column aggregator', function () {
+      suite('Column aggregator', function () {
         var columns, items;
         setup(function (done) {
           columns = [{
@@ -877,7 +877,7 @@
           });
         });
 
-        test('should create a row to the bottom of the table', function (done) {
+        test('should create a row to the top of the table', function (done) {
           var dataTable = fixture('column-aggregator-top');
           dataTable.set('columns', columns);
           flush(function () {
