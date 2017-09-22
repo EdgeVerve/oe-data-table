@@ -175,13 +175,19 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
         }
 
       },
-
+      _deepValue: function (obj, path) {
+        for (var i = 0, path = path.split('.'), len = path.length; obj && i < len; i++) { // eslint-disable-line no-redeclare
+          obj = obj[path[i]];
+        }
+        return obj;
+      },
       _computeCellData: function (rowPath, column) {
         var key = column.key || column.field;
         if (!key) {
           return null;
         }
-        var cellValue = this.row[key];
+        //var cellValue = this.row[key];
+        var cellValue = this._deepValue(this.row, key);
         var options = column.editorAttributes;
         var formatterFn;
         if (column.formatter) {
