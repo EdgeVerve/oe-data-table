@@ -1,6 +1,6 @@
 {
   "name": "oe-data-table",
-  "version": "0.8.0",
+  "version": "1.0.0",
   "directories": {
     "test": "test"
   },
