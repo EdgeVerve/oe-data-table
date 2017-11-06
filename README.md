@@ -17,7 +17,8 @@ Column property | Description
 `label` | The string to be shown in column header.
 `type` | The type of the content that is shown in the column. For example date, timestamp, number, string.
 `uitype` | (Deprecated. use type) The type of the content that is shown in the column. For example date, timestamp.
-`uiType` | The input control that has to be used for inline editing
+`uiType` | The input control that has to be used for inline editing.
+`readOnly` | Boolean flag denoting whether the column is non editable in inline mode , by default it is false.
 `width` | Width of the column in `px`.
 `minWidth` | Min Width of the column in `px`, by default grid level min width will be taken
 `sort` |  Sort order of the current column. Takes either `asc` or `desc`.
