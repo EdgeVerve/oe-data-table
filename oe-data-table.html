@@ -50,16 +50,17 @@ Column property | Description
 `label` | The string to be shown in column header.
 `type` | The type of the content that is shown in the column. For example date, timestamp, number, string.
 `uitype` | (Deprecated. use type) The type of the content that is shown in the column. For example date, timestamp.
-`uiType` | The input control that has to be used for inline editing
+`uiType` | The input control that has to be used for inline editing.
+`readOnly` | Boolean flag denoting whether the column is non editable in inline mode , by default it is false.
 `width` | Width of the column in `px`.
-`minWidth` | Min Width of the column in `px`, by default grid level min width will be taken
+`minWidth` | Min Width of the column in `px`, by default grid level min width will be taken.
 `sort` |  Sort order of the current column. Takes either `asc` or `desc`.
 `firstToSort` | Whether to sort first by desc or asc, by default it is asc.
 `formatter` | A custom formatting function which returns the value to show in the cell.
 `renderer` | A custom rendering function which returns the element to show in the cell.
 `href` | Takes an express styled path and shows the cell content as a `hyperlink` with the provided path. For example, href="/models/customer/:id".
-`cellClass` | Class to apply on data table cell
-`cellClassRules` | Object having class name to be applied as key and an expression to evaluate as value
+`cellClass` | Class to apply on data table cell.
+`cellClassRules` | Object having class name to be applied as key and an expression to evaluate as value.
 `valueGetter` | A custom getter function which returns a value for the property specified in the `key`.
 `hidden` | Column will be hidden if it is set to true.
 
