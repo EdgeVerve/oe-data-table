@@ -271,6 +271,10 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
             });
           }
           elem.set('noLabelFloat', true);
+          // Prevent the opening of dialog or dropdown for oe-date/oe-datetime component as focus change resets the cell back to read state.
+          if(uitype === 'oe-date' || uitype === 'oe-datetime'){
+            elem.set('hideIcon',true);
+          }
         }
         this.set('_element', elem);
         this.$.injectionPoint.appendChild(this._element);

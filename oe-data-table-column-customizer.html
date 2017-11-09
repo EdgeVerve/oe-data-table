@@ -86,6 +86,11 @@
         @apply(--layout-center);
       }
 
+      .column-item > oe-input,
+      .column-item > oe-decimal{
+        width:100%;
+      }
+
       .column-item + .column-item {
         margin-left: 1px;
       }
@@ -93,6 +98,11 @@
       .column-label {
         font-size: 14px;
         padding: 12px 0;
+        box-sizing: border-box;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        max-width: 200px;
       }
 
       .column-item.hide-column-item {
@@ -122,7 +132,7 @@
         <template is="dom-repeat" items={{customColumns}}>
           <div class$="column-item {{computeClass(item.hidden)}}">
             <paper-checkbox checked="{{!item.hidden}}">Show</paper-checkbox>
-            <div class="column-label">{{item.label}}</div>
+            <div class="column-label">{{item.label}}<paper-tooltip>[[item.label]]</paper-tooltip> </div>
             <oe-combo label="Type" value={{item.type}} listdata={{dataTypes}}></oe-combo>
             <oe-combo label="Aggregator" value={{item.aggregator}} displayproperty="key" valueproperty="value" listdata={{aggregators}}></oe-combo>
             <oe-input label="Label" value={{item.label}}></oe-input>
