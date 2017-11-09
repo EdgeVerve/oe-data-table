@@ -463,7 +463,7 @@ Custom property | Description | Default
           </template>
           <div style$="height: [[_computeGridHeight(pageSize,_items.length)]]px">
             <template is="dom-if" if=[[_items.length]] restamp=true>
-              <iron-list id="row-list" items="{{_items}}" as="row" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key">
+              <iron-list id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key">
                 <template>
                   <div class$="table-row [[_computeClassforRow(row,_computeSelection)]]" tabindex$="[[tabIndex]]" on-tap="_rowClicked">
                     <template is="dom-if" if="[[!disableSelection]]">
@@ -867,7 +867,9 @@ Custom property | Description | Default
         }
 
       }, 100);
-      return ((itemsToShow > 5 && itemsToShow < pageSize) ? itemsToShow : pageSize) * 48;
+      var size = ((itemsToShow > 5 && itemsToShow < pageSize) ? itemsToShow : pageSize)
+      this.set('_maxDomElement',size*2);
+      return size * 48;
     },
 
     _rowActionClicked: function (event) {
