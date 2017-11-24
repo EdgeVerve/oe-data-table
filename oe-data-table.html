@@ -769,7 +769,7 @@ Custom property | Description | Default
           var ajaxRequest = document.createElement('oe-ajax');
           ajaxRequest.contentType = 'application/json';
           ajaxRequest.handleAs = 'json';
-          ajaxRequest.url = '/api/GridConfigs/config/' + this.configCode;
+          ajaxRequest.url = this._getRestApiRoot() + '/GridConfigs/config/' + this.configCode;
 
           ajaxRequest.addEventListener('response', function (event) {
             var config = event.detail.response
@@ -1186,7 +1186,7 @@ Custom property | Description | Default
         var ajaxRequest = document.createElement('oe-ajax');
         ajaxRequest.contentType = 'application/json';
         ajaxRequest.handleAs = 'json';
-        ajaxRequest.url = '/api/GridConfigs';
+        ajaxRequest.url = this._getRestApiRoot() + '/GridConfigs';
         ajaxRequest.method = config.id ? 'PUT' : 'POST';
         ajaxRequest.body = JSON.stringify(config);
 
@@ -1279,7 +1279,12 @@ Custom property | Description | Default
 
     _hideEditIcon: function (selectedItemsLength) {
       return selectedItemsLength !== 1;
-    }
+    },
+
+	_getRestApiRoot: function(){
+	  var restApiRoot = (window.OEUtils && window.OEUtils.restApiRoot) ? window.OEUtils.restApiRoot : '/api';
+	  return restApiRoot;
+	}
   });
 
 </script>
