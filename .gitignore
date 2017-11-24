@@ -10,3 +10,6 @@ bower_components
 
 # IDE
 .vscode
+
+# Coverage
+coverage
