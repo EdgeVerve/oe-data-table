@@ -296,10 +296,10 @@
                 var headerCells = dataTable.$$('#table-header').querySelectorAll('.table-data');
                 var firstCell = headerCells[0];
                 var secondCell = headerCells[1];
-                var firstCellWidth = firstCell.offsetWidth;
-                var secondCellWidth = secondCell.offsetWidth;
-                expect(firstCellWidth).to.be.equal(200);
-                expect(secondCellWidth).to.be.equal(300);
+                var firstCellWidth = firstCell.getComputedStyleValue("width");
+                var secondCellWidth = secondCell.getComputedStyleValue("width");
+                expect(firstCellWidth).to.be.equal("200px");
+                expect(secondCellWidth).to.be.equal("300px");
                 done();
               });
             });
@@ -360,7 +360,9 @@
           dataTable = fixture('customize-view');
           dataTable.set('columns', columns);
           dataTable.set('items', items);
-          setTimeout(done, 1);
+          setTimeout(function() {
+            done();
+          }, 100);
         });
 
         test('test to show customize-view options and hide the datatable on tap of customizeView button',
@@ -609,7 +611,7 @@
                   dataTable.async(function () {
                     expect(dataTable.items.length).to.be.equal(4);
                     done();
-                  }, 500)
+                  }, 1000)
                 });
               })
             })
