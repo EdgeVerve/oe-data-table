@@ -154,6 +154,7 @@
     attached: function () {
       this._setSelectedItems([]);
       this.set('_selectionState', new WeakMap()); // eslint-disable-line no-undef
+      this.refCodeMap = {};
 
       // fetch model from OEUtils.modelDefCache
       this.async(function () {
@@ -162,7 +163,38 @@
             if (err) {
               return;
             }
-            this.set('columns', this._getColumnsFromModelDef(modelDefinition));
+            var properties = modelDefinition.properties;
+            var refCodeModelPromisesMap = new Map();
+            var refCodeModelDataMap = new Map();
+
+            Object.keys(properties).forEach(prop => {
+              var refCodeType = properties[prop].refcodetype;
+              if (refCodeType) {
+                refCodeModelPromisesMap.set(prop, this._getRefCodeModel(refCodeType));
+              }
+            });
+
+            Promise.all(refCodeModelPromisesMap.values()).then(modelMap => {
+              var entries = refCodeModelPromisesMap.entries();
+              modelMap.forEach(model => {
+                var prop = entries.next().value[0];
+                refCodeModelDataMap.set(prop, this._getRefCodes(model.resturl));
+              });
+              return Promise.all(refCodeModelDataMap.values());
+            }).then(resultMap => {
+              var entries = refCodeModelDataMap.entries();
+              resultMap.forEach(result => {
+                var propertyName = entries.next().value[0];
+                this.refCodeMap[propertyName] = {};
+                Object.keys(result).forEach(res => {
+                  var code = result[res].code;
+                  var desc = result[res].description;
+                  this.refCodeMap[propertyName][code] = desc;
+                });
+              });
+              this.set('columns', this._getColumnsFromModelDef(modelDefinition));
+            }).catch(error => { });
+
           }.bind(this));
         }
       });
@@ -182,9 +214,19 @@
             type: property.type,
             uiType: type.uiType
           };
+          if (property.refcodetype) {
+            var codeMap = this.refCodeMap[prop];
+            if (codeMap) {
+              col.formatter = (function (codeMap) {
+                return function (value, options) {
+                  return codeMap[value];
+                }
+              })(codeMap);
+            }
+          }
           columns.push(col);
         }
-      })
+      }.bind(this));
       return columns;
     },
 
@@ -523,9 +565,28 @@
           });
         }
       }
+    },
+
+    _getRefCodes: function (url) {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        xhr.onload = () => resolve(JSON.parse(xhr.responseText));
+        xhr.onerror = () => reject(xhr.statusText);
+        xhr.send();
+      });
+    },
+
+    _getRefCodeModel: function (modelName) {
+      return new Promise((resolve, reject) => {
+        OEUtils.getModelDefinition(modelName, function (err, model) {
+          if (err) {
+            return reject(err);
+          }
+          resolve(model);
+        })
+      });
     }
-
-
   }
 
 </script>
