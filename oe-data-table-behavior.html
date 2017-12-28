@@ -155,6 +155,7 @@
       this._setSelectedItems([]);
       this.set('_selectionState', new WeakMap()); // eslint-disable-line no-undef
       this.refCodeMap = {};
+      this.listDataMap = {};
 
       // fetch model from OEUtils.modelDefCache
       this.async(function () {
@@ -186,10 +187,12 @@
               resultMap.forEach(result => {
                 var propertyName = entries.next().value[0];
                 this.refCodeMap[propertyName] = {};
+                this.listDataMap[propertyName] = [];
                 Object.keys(result).forEach(res => {
                   var code = result[res].code;
                   var desc = result[res].description;
                   this.refCodeMap[propertyName][code] = desc;
+                  this.listDataMap[propertyName].push({ code: code, description: desc });
                 });
               });
               this.set('columns', this._getColumnsFromModelDef(modelDefinition));
@@ -217,6 +220,12 @@
           if (property.refcodetype) {
             var codeMap = this.refCodeMap[prop];
             if (codeMap) {
+              col.uiType = 'oe-combo';
+              col.editorAttributes = {
+                valueproperty: 'code',
+                displayproperty: 'description',
+                listdata: this.listDataMap[prop]
+              };
               col.formatter = (function (codeMap) {
                 return function (value, options) {
                   return codeMap[value];
