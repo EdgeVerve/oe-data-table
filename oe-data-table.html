@@ -55,6 +55,7 @@ Column property | Description
 `width` | Width of the column in `px`.
 `minWidth` | Min Width of the column in `px`, by default grid level min width will be taken.
 `sort` |  Sort order of the current column. Takes either `asc` or `desc`.
+`alignment` | Alignment of the cell content , can have `left`,`right` or `center` .
 `firstToSort` | Whether to sort first by desc or asc, by default it is asc.
 `formatter` | A custom formatting function which returns the value to show in the cell.
 `renderer` | A custom rendering function which returns the element to show in the cell.
@@ -113,7 +114,10 @@ Custom property | Description | Default
         height: 64px;
         padding: 0 14px 0 24px;
         box-sizing: border-box;
-
+        background: #FFFFFF;
+        box-shadow: 1px 1px 2px 0 rgba(0,0,0,0.16);
+        border-radius: 4px 4px 0 0;
+        margin-bottom: 4px;
         @apply(--layout-horizontal);
         @apply(--layout-center);
         @apply(--layout-justified);
@@ -135,14 +139,37 @@ Custom property | Description | Default
 
       #table-header {
         font-size: 12px;
-        height: 56px;
+        height: 55px;
         color: rgba(0, 0, 0, 0.54);
         font-weight: 700;
         font-style: normal;
         overflow-x: hidden;
         border-bottom: 1px solid #ededed;
-
+        background: #FFF;
+        @apply(--oe-data-table-column-header);
         @apply(--layout);
+      }
+
+      .multi-select-true{
+        background:var(--primary-light-color,#d1e9fd);
+        border: 1px solid #b9cfe2;
+      }
+      .multi-select-true .header-title{
+        margin:0px 16px;
+      }
+
+      .selected-items-count{
+        font-size: 14px;
+        color: rgba(0,0,0,0.87)
+      }
+      .grid-info > iron-icon{
+        cursor: pointer;
+        --iron-icon-width:16px;
+        --iron-icon-height:16px;
+      }
+      .grid-info{
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
       }
 
       .header-icon {
@@ -220,7 +247,7 @@ Custom property | Description | Default
       .table-row {
         min-height: 48px;
         border-bottom: 1px solid #ededed;
-
+        background: #FFF;
         @apply(--layout);
         @apply(--oe-data-table-row);
       }
@@ -379,11 +406,16 @@ Custom property | Description | Default
     <paper-material class="data-table">
       <iron-collapse opened="{{showGrid(_hideGrid,_customizeView)}}">
         <template is="dom-if" if="[[!hideHeader]]">
-          <div id="grid-header" class="grid-header">
-
-            <div class="header-title">
-              [[label]]
-              <content select="[header-title]"></content>
+          <div id="grid-header" class$="multi-select-[[_isMultiSelected(selectedItems.length)]] grid-header">
+            <div class="grid-info">
+              <iron-icon icon="arrow-back" on-tap="_toggleSelectAll" hidden=[[!_isMultiSelected(selectedItems.length)]]></iron-icon>
+              <div class="header-title">
+                [[label]]
+                <content select="[header-title]"></content>
+              </div>
+              <div class="selected-items-count" hidden=[[!_isMultiSelected(selectedItems.length)]]>
+                [[selectedItems.length]] items selected
+              </div>
             </div>
             <div class="icon-group">
               <template is="dom-if" if="[[!disabled]]">
@@ -1281,10 +1313,14 @@ Custom property | Description | Default
       return selectedItemsLength !== 1;
     },
 
-	_getRestApiRoot: function(){
-	  var restApiRoot = (window.OEUtils && window.OEUtils.restApiRoot) ? window.OEUtils.restApiRoot : '/api';
-	  return restApiRoot;
-	}
+    _getRestApiRoot: function(){
+      var restApiRoot = (window.OEUtils && window.OEUtils.restApiRoot) ? window.OEUtils.restApiRoot : '/api';
+      return restApiRoot;
+    },
+
+    _isMultiSelected:function(selectedItemsLength){
+      return selectedItemsLength > 1;
+    }
   });
 
 </script>
