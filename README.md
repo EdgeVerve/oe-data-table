@@ -20,7 +20,8 @@ Column property | Description
 `uiType` | The input control that has to be used for inline editing.
 `readOnly` | Boolean flag denoting whether the column is non editable in inline mode , by default it is false.
 `width` | Width of the column in `px`.
-`minWidth` | Min Width of the column in `px`, by default grid level min width will be taken
+`minWidth` | Min Width of the column in `px`, by default grid level min width will be taken.
+`alignment` | Alignment of the cell content , can have `left`,`right` or `center` .
 `sort` |  Sort order of the current column. Takes either `asc` or `desc`.
 `firstToSort` | Whether to sort first by desc or asc, by default it is asc.
 `formatter` | A custom formatting function which returns the value to show in the cell.

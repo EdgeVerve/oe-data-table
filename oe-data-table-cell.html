@@ -329,7 +329,13 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
       },
 
       _computeCellAlignment: function (column) {
-        return ['number', 'decimal'].indexOf(column.type || column.uitype) > -1 ? 'text-align: right' : null;
+        var style = null;
+        if(column.alignment){
+          style = 'text-align:'+ column.alignment;
+        }else{
+          style = ['number', 'decimal'].indexOf(column.type || column.uitype) > -1 ? 'text-align: right' : null;
+        }
+        return style; 
       }
 
     });

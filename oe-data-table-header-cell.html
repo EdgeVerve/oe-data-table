@@ -52,7 +52,7 @@
       }
 
       .sort-icon {
-        margin-left: -3px;
+        margin: 0px 4px;
       }
 
       .filter-icon {
@@ -80,12 +80,28 @@
         cursor: col-resize;
       }
 
+      .cell-align-center{
+        @apply(--layout-center-center);
+      }
+      .cell-align-left .header-content{
+        @apply(--layout-horizontal-reverse);
+      }
+      .cell-align-right{
+        @apply(--layout-end-justified);
+      }
+
+      
+
+
     </style>
 
-    <div id="cell" style$="[[_computeCellAlignment(column)]]" on-tap="_changeSortOrder">
-      <iron-icon class="sort-icon" icon="icons:[[_getSortIcon(column.sort)]]" hidden$=[[!column.sort]]></iron-icon>
-      <span class$="header-title [[_getSortedClass(column.sort)]]">
-      <oe-i18n-msg msgid=[[_computeColumnLabel(column)]]>[[_computeColumnLabel(column)]]</oe-i18n-msg> </span>
+    <div id="cell" class$="[[_computeCellAlignment(column)]] layout horizontal center" on-tap="_changeSortOrder">
+      <div class="header-content layout horizontal center">
+        <iron-icon class="sort-icon" icon="icons:[[_getSortIcon(column.sort)]]" hidden$=[[!column.sort]]></iron-icon>
+        <span class$="header-title [[_getSortedClass(column.sort)]]">
+          <oe-i18n-msg msgid=[[_computeColumnLabel(column)]]></oe-i18n-msg> 
+        </span>
+      </div>
     </div>
     <iron-icon hidden$=[[_disableFilter(hasPagination,column)]] class="filter-icon" icon="icons:filter-list" on-tap="openFilter"></iron-icon>
     <paper-dialog id="dialog" on-iron-overlay-opened="_positionFilterDialog">
@@ -210,7 +226,13 @@
     },
 
     _computeCellAlignment: function (column) {
-      return ['number', 'decimal'].indexOf(column.type || column.uitype) > -1 ? 'text-align: right' : null;
+      var cssClass = 'cell-align-left';
+      if(column.alignment){
+        cssClass = 'cell-align-'+ column.alignment;
+      }else{
+        cssClass = ['number', 'decimal'].indexOf(column.type || column.uitype) > -1 ? 'cell-align-right' : 'cell-align-left';
+      }
+      return cssClass;
     }
 
   });
