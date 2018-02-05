@@ -572,7 +572,7 @@ Custom property | Description | Default
       <iron-collapse opened="{{_hideGrid}}">
         <div class="form-content">
           <paper-icon-button icon="icons:arrow-back" on-tap="_goBack"></paper-icon-button>
-          <lazy-component id="form-component" url={{editorFormUrl}} model={{modelToEdit}} emit-on-save={{emitOnSave}}></lazy-component>
+          <lazy-component id="form-component" url={{dataTableFormUrl}} model={{modelToEdit}} emit-on-save={{emitOnSave}}></lazy-component>
         </div>
       </iron-collapse>
     </paper-material>
@@ -927,18 +927,30 @@ Custom property | Description | Default
 
     _showAddForm: function (event) { // eslint-disable-line no-unused-vars
       var form = this.$['form-component'];
-      form.newRecord(this.defaultRecord);
-      if (this.recordHandling !== 'remote') {
-        form.set('emitOnSave', 'oe-action-add');
-      } else {
-        form.set('emitOnSave', '');
+      
+      function addNewRecord(){
+        form.newRecord(this.defaultRecord);
+        if (this.recordHandling !== 'remote') {
+          form.set('emitOnSave', 'oe-action-add');
+        } else {
+          form.set('emitOnSave', '');
+        }
+        this.set('_hideGrid', true);
+        form.removeEventListener('lazy-component-loaded',addNewRecord);
       }
-      this.set('_hideGrid', true);
+
+      if(this.dataTableFormUrl !== this.editorFormUrl){
+        form.addEventListener('lazy-component-loaded',addNewRecord.bind(this));
+        this.set('dataTableFormUrl',this.editorFormUrl);
+      }else{
+        addNewRecord.call(this);
+      }
     },
 
     _showEditForm: function (event) { // eslint-disable-line no-unused-vars
       var form = this.$['form-component'];
-      if (this.selectedItems.length) {
+
+      function editRecord(){
         form.set('model', JSON.parse(JSON.stringify(this.selectedItems[0])));
         if (this.recordHandling !== 'remote') {
           form.set('emitOnSave', 'oe-action-update');
@@ -947,8 +959,17 @@ Custom property | Description | Default
         }
         this.set('_hideGrid', true);
         this.set('_modelBeingUpdated', this.selectedItems[0]);
+        form.removeEventListener('lazy-component-loaded',editRecord);
       }
 
+      if (this.selectedItems.length) {
+        if(this.dataTableFormUrl !== this.editorFormUrl){
+          form.addEventListener('lazy-component-loaded',editRecord.bind(this));
+          this.set('dataTableFormUrl',this.editorFormUrl);
+        }else{
+          editRecord.call(this);
+        }
+      }
     },
 
     _goBack: function (event) { // eslint-disable-line no-unused-vars
