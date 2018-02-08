@@ -168,7 +168,7 @@
             var refCodeModelPromisesMap = new Map();
             var refCodeModelDataMap = new Map();
 
-            Object.keys(properties).forEach(prop => {
+            properties && Object.keys(properties).forEach(prop => {
               var refCodeType = properties[prop].refcodetype;
               if (refCodeType) {
                 refCodeModelPromisesMap.set(prop, this._getRefCodeModel(refCodeType));
@@ -188,7 +188,7 @@
                 var propertyName = entries.next().value[0];
                 this.refCodeMap[propertyName] = {};
                 this.listDataMap[propertyName] = [];
-                Object.keys(result).forEach(res => {
+                result && Object.keys(result).forEach(res => {
                   var code = result[res].code;
                   var desc = result[res].description;
                   this.refCodeMap[propertyName][code] = desc;
@@ -206,7 +206,7 @@
 
     _getColumnsFromModelDef: function (modelDef) {
       var columns = [];
-      Object.keys(modelDef.properties).forEach(function (prop) {
+      modelDef.properties && Object.keys(modelDef.properties).forEach(function (prop) {
         // ignore fields starting with underscore.
         if (prop.charAt(0) !== '_' && prop.toLowerCase().indexOf('scope') === -1) {
           var property = modelDef.properties[prop];
@@ -339,7 +339,7 @@
 
       filteredData = filterExists ? items.filter(function (d) {
         var isValid = true;
-        Object.keys(filters).forEach(function (key) {
+        filters && Object.keys(filters).forEach(function (key) {
           var filter = filters[key];
           if (filter.selectedItems && filter.selectedItems.length) {
             isValid = isValid && filter.selectedItems.indexOf(d[key]) != -1;
