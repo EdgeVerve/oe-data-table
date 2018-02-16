@@ -81,6 +81,7 @@
           <paper-item> Customize View</paper-item>
           <paper-item> Menu Actions</paper-item>
           <paper-item> Column Aggregation</paper-item>
+          <paper-item> Other Options </paper-item>
         </paper-menu>
       </div>
     </paper-header-panel>
@@ -102,7 +103,8 @@
                   dataTable.set('columns', [{
                     key: 'id',
                     label: 'Id',
-                    type: 'number'
+                    type: 'number',
+                    readOnly: true
                   }, {
                     key: 'name',
                     label: 'Name',
@@ -164,7 +166,7 @@
             <demo-snippet>
               <template>
                 <oe-data-table id="columns-table" label="Columns Table">
-                  <oe-data-table-column key='id' label='Id' type='number'></oe-data-table-column>
+                  <oe-data-table-column key='id' read-only label='Id' type='number'></oe-data-table-column>
                   <oe-data-table-column key='name' label='Name' type='string'></oe-data-table-column>
                 </oe-data-table>
                 <script>
@@ -1588,7 +1590,75 @@
               </template>
             </demo-snippet>
           </div>
-        </iron-pages>
+            <div>
+            <h1> Other Options </h1>
+            <p> 
+            </p>
+            <p> </p>
+            <demo-snippet>
+              <template>
+                <oe-data-table disable-config-editor disable-edit disable-delete disable-add id="options-table" label="Simple Table"></oe-data-table>
+                <script>
+                  var dataTable = document.getElementById('options-table');
+
+                  dataTable.set('columns', [{
+                    key: 'id',
+                    label: 'Id',
+                    type: 'number'
+                  }, {
+                    key: 'name',
+                    label: 'Name',
+                    type: 'string',
+                    alignment:'center'
+                  }, {
+                    key: 'details.location',
+                    label: 'Location',
+                    type: 'string'
+                  }, {
+                    key: 'details',
+                    label: 'Details',
+                    type: 'object'
+                  }]);
+
+                  dataTable.set('items', [{
+                    id: 1,
+                    name: 'Admin',
+                    details: {
+                      gender: 'male',
+                      location: 'Bangalore',
+                      country: 'India'
+                    }
+                  }, {
+                    id: 2,
+                    name: 'Developer',
+                    details: {
+                      gender: 'female',
+                      location: 'Bangalore',
+                      country: 'India'
+                    }
+                  }, {
+                    id: 3,
+                    name: 'Designer',
+                    details: {
+                      gender: 'male',
+                      location: 'Chennai',
+                      country: 'India'
+                    }
+                  }, {
+                    id: 4,
+                    name: 'Tester',
+                    details: {
+                      gender: 'male',
+                      location: 'Chennai',
+                      country: 'India'
+                    }
+                  }]);
+
+                </script>
+              </template>
+            </demo-snippet>
+          </div>
+      </iron-pages>
       </div>
     </paper-header-panel>
   </paper-drawer-panel>

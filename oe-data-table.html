@@ -424,24 +424,32 @@ Custom property | Description | Default
                   <paper-tooltip for="refresh-icon"> Refresh </paper-tooltip>
                 </template>
                 <template is="dom-if" if="[[!selectedItems.length]]">
-                  <div class="header-icon">
-                    <paper-icon-button icon="icons:add-circle-outline" on-tap="_showAddForm"></paper-icon-button>
-                    <paper-tooltip> New </paper-tooltip>
-                  </div>
-                  <div class="header-icon">
-                    <paper-icon-button icon="image:tune" on-tap="_openColumnCustomizer"></paper-icon-button>
-                    <paper-tooltip> Customize View </paper-tooltip>
-                  </div>
+                  <template is="dom-if" if="[[!disableAdd]]">
+                    <div class="header-icon">
+                      <paper-icon-button icon="icons:add-circle-outline" on-tap="_showAddForm"></paper-icon-button>
+                      <paper-tooltip> New </paper-tooltip>
+                    </div>
+                  </template>
+                  <template is="dom-if" if="[[!disableConfigEditor]]">
+                    <div class="header-icon">
+                      <paper-icon-button icon="image:tune" on-tap="_openColumnCustomizer"></paper-icon-button>
+                      <paper-tooltip> Customize View </paper-tooltip>
+                    </div>
+                  </template>
                 </template>
                 <template is="dom-if" if="[[selectedItems.length]]">
+                  <template is="dom-if" if="[[!disableEdit]]">
                   <div class="header-icon" hidden$=[[_hideEditIcon(selectedItems.length)]]>
                     <paper-icon-button icon="editor:mode-edit" on-tap="_showEditForm"></paper-icon-button>
                     <paper-tooltip> Edit </paper-tooltip>
                   </div>
+                  </template>
+                  <template is="dom-if" if="[[!disableDelete]]">
                   <div class="header-icon">
                     <paper-icon-button id="delete-icon" icon="delete" on-tap="_deleteSelectedRows"></paper-icon-button>
                     <paper-tooltip> Delete </paper-tooltip>
                   </div>
+                  </template>
                 </template>
                 <template is="dom-repeat" items=[[toolbarActions]] as="action">
                   <div class="header-icon">
@@ -511,7 +519,7 @@ Custom property | Description | Default
                       </div>
                     </template>
                     <template is="dom-repeat" items="[[columns]]" as="column" filter="_getVisibleColumns" observe="hidden">
-                      <oe-data-table-cell class$="table-data [[_computeCellClass(row.*,column)]]" key=[[key]] row={{row}} column=[[column]] style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-cell>
+                      <oe-data-table-cell read-only=[[disableEdit]] key=[[key]] row={{row}} column=[[column]] class$="table-data [[_computeCellClass(row.*,column)]]" style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-cell>
                     </template>
                     <template is="dom-if" if=[[rowActions.length]]>
                       <div class="row-actions" style$="flex: [[_computeRowActionWidth(rowActions.length)]]">
@@ -599,11 +607,50 @@ Custom property | Description | Default
         value: false
       },
 
+      /**
+      * Disable Add, Edit, Delete and Column-Config options
+      */
       disabled: {
         type: Boolean,
         value: false
       },
 
+      /**
+      * Disable adding new records
+      */
+      disableAdd: {
+        type: Boolean,
+        value: false
+      },
+      /**
+      * Disable editing records
+      */
+      disableEdit: {
+        type: Boolean,
+        value: false
+      },
+      /**
+      * Disable deleting records
+      */
+      disableDelete: {
+        type: Boolean,
+        value: false
+      },
+      /**
+      * Disable editing column  configuration.
+      */
+      disableConfigEditor: {
+        type: Boolean,
+        value: false
+      },
+      /**
+      * Disable row selection
+      */
+      disableSelection: {
+        type: Boolean,
+        value: false
+      },
+      
       /**
        * Array of page numbers that has to be shown in Rows per page dropdown
        */
@@ -741,6 +788,7 @@ Custom property | Description | Default
                 column[kebabCaseToCamelCase(attribute.name)] = attribute.value
               }
             }
+            column.disabled = children[i].hasAttribute('disabled');
             columns.push(column);
           }
         }
@@ -1102,8 +1150,8 @@ Custom property | Description | Default
 
       this._resetActiveCell();
       var elementToSet = event.detail.element;
-      if (elementToSet) {
-        elementToSet._enableEditMode();
+      if (elementToSet && !this.disableEdit) {
+        elementToSet.enterEditMode();
       }
       this.set('_activeCell', elementToSet);
     },
@@ -1112,7 +1160,7 @@ Custom property | Description | Default
     _resetActiveCell: function (event) { // eslint-disable-line no-unused-vars
       var activeCell = this._activeCell;
       if (activeCell) {
-        activeCell._disableEditMode();
+        activeCell.exitEditMode();
         this.set('_activeCell', null);
       }
     },

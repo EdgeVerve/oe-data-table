@@ -48,12 +48,18 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
         /**
          * The definition of the column of the current cell.
          *
-         * @type {{key: string, label: string, type : string, uiType: string, sort: string}}
+         * @type {{key: string, label: string, type : string, uiType: string, sort: string, readOnly: boolean}}
          */
         column: {
           type: Object
         },
-
+        /**
+        * Disable editing field (equivalent to column.readOnly)
+        */
+        readOnly: {
+          type: Boolean,
+          value: false
+        },
         /**
          * row object.
          */
@@ -222,11 +228,14 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
           });
         }
       },
+      enterEditMode: function () {
 
-      _enableEditMode: function () {
-
-        if (this._inEdit || this._hasCustomRenderer || this.column.href || this.column.readOnly || this.column
-          .valueGetter) {
+        if (this._inEdit || 
+            this._hasCustomRenderer || 
+            this.column.readOnly || 
+            this.readOnly || 
+            this.column.href || 
+            this.column.readOnly || this.column.valueGetter) {
           return;
         }
 
@@ -242,7 +251,7 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
         }
       },
 
-      _disableEditMode: function () {
+      exitEditMode: function () {
         this.set('_inEdit', false);
       },
 
@@ -312,9 +321,9 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
 
       _handleActionKeyPress: function (event) {
         if (event.which == 13) {
-          this._disableEditMode();
+          this.exitEditMode();
         } else if (event.which == 9) {
-          this._disableEditMode();
+          this.exitEditMode();
           // if tab is pressed move to the next element
           this.async(function () {
             var elementToNavigate = event.shiftKey ? this.previousElementSibling : this.nextElementSibling;
