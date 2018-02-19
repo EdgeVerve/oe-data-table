@@ -100,6 +100,7 @@
         <iron-icon class="sort-icon" icon="icons:[[_getSortIcon(column.sort)]]" hidden$=[[!column.sort]]></iron-icon>
         <span class$="header-title [[_getSortedClass(column.sort)]]">
           <oe-i18n-msg msgid=[[_computeColumnLabel(column)]]></oe-i18n-msg> 
+		   <paper-tooltip id="header-tooltip-[[_computeColumnLabel(column)]]"  offset="0" position="bottom">  <oe-i18n-msg msgid=[[column.tooltip]]>[[column.tooltip]]</oe-i18n-msg> </paper-tooltip>
         </span>
       </div>
     </div>
