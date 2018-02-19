@@ -37,6 +37,9 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
       <span class="cell-content" id="custom-container">  </span>
     </template>
     <div hidden$="{{!_inEdit}}" id="injectionPoint"></div>
+   <template is="dom-if" if="[[column.valueAsTooltip]]" restamp="true">
+        <paper-tooltip  offset="0" position="bottom" id="[[column.label]]">  [[_displayValue]]  </paper-tooltip>  
+      </template>
   </template>
 </dom-module>
 <script>
