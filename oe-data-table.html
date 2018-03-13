@@ -492,7 +492,7 @@ Custom property | Description | Default
             </div>
           </template>
           <template is="dom-repeat" items="{{columns}}" as="column" filter="_getVisibleColumns" observe="hidden">
-            <oe-data-table-header-cell col-index=[[index]] class="table-data" items=[[items]] column={{column}} has-pagination=[[_hasPagination]]
+            <oe-data-table-header-cell col-index=[[index]] class="table-data" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]]
               style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-header-cell>
           </template>
           <template is="dom-if" if=[[rowActions.length]]>
