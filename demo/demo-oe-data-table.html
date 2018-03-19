@@ -1593,11 +1593,17 @@
             <div>
             <h1> Other Options </h1>
             <p> 
+              When disabled attribute is set the editing/adding a record is prevented but selection is allowed.</p>
+              <p>
+                In addition the row can be selected by clicking anywhere on the row and the selected row can be changed via UP/DOWN arrow keys.
+              </p>
+            <p>
+              The arrow key navigation only works when a single row is selected.
             </p>
             <p> </p>
             <demo-snippet>
               <template>
-                <oe-data-table disable-config-editor disable-edit disable-delete disable-add id="options-table" label="Simple Table"></oe-data-table>
+                <oe-data-table disabled disable-config-editor disable-edit disable-delete disable-add id="options-table" label="Simple Table"></oe-data-table>
                 <script>
                   var dataTable = document.getElementById('options-table');
 

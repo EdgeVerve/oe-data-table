@@ -521,7 +521,7 @@ Custom property | Description | Default
                       </div>
                     </template>
                     <template is="dom-repeat" items="[[columns]]" as="column" filter="_getVisibleColumns" observe="hidden">
-                      <oe-data-table-cell read-only=[[disableEdit]] key=[[key]] row={{row}} column=[[column]] class$="table-data [[_computeCellClass(row.*,column)]]" style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-cell>
+                      <oe-data-table-cell read-only=[[_computeReadOnly(disableEdit,disabled)]] key=[[key]] row={{row}} column=[[column]] class$="table-data [[_computeCellClass(row.*,column)]]" style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-cell>
                     </template>
                     <template is="dom-if" if=[[rowActions.length]]>
                       <div class="row-actions" style$="flex: [[_computeRowActionWidth(rowActions.length)]]">
@@ -772,8 +772,46 @@ Custom property | Description | Default
     },
 
     observers: [
-      '_updateRowWidth(_items.*)'
+      '_updateRowWidth(_items.*)',
+      '_keyHandlers(disabled,_items.length)'
     ],
+    _keyHandlers:function(){
+      if(this._items.length == 0){
+        return;
+      }
+      this.async(function(){
+        var ironList = this.querySelector('#row-list');
+        if(this.disabled){
+          this.listen(ironList, 'keydown', '_keyDownListener');
+        }else{
+          this.unlisten(ironList, 'keydown', '_keyDownListener');
+        }
+      })  
+    },
+    _keyDownListener:function(e){
+      if(this.selectedItems.length !== 1){
+        return;
+      }
+      if(e.keyCode === 40 || e.keyCode === 38){
+        var selectedIndex = this._items.indexOf(this.selectedItems[0]);
+        if(e.keyCode === 40){
+          //down arrow
+          if(selectedIndex+1 === this._items.length){
+            return;
+          }
+          selectedIndex++;
+        }else if(e.keyCode === 38){
+          //up arrow
+          if(selectedIndex === 0){
+            return;
+          }
+          selectedIndex--;
+        }
+        this.toggleSelection(this._items[selectedIndex]);
+      }
+     
+    },
+
 
     ready: function () {
       var children = this.children;
@@ -940,7 +978,9 @@ Custom property | Description | Default
     _disableNext: function (isLastPage) {
       return isLastPage;
     },
-
+    _computeReadOnly: function(disableEdit,disabled){
+      return (disableEdit||disabled) ;
+    },
     _computeGridHeight: function (pageSize, itemsToShow) {
       this.async(function () {
         var rowList = this.$$('#row-list');
@@ -1145,6 +1185,7 @@ Custom property | Description | Default
     _rowClicked: function (event) {
       // event.model.row will contain the object
       this.fire('oe-data-table-row-clicked', event);
+      this.toggleSelection(event.model.row);
     },
 
     //sets the active cell that is being edited
