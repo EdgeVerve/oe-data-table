@@ -142,7 +142,7 @@
     },
 
     listeners: {
-      'apply-criteria': '_organizeData',
+      'apply-criteria': 'render',
       'oe-data-table-cell-value-changed': '_organizeData'
     },
 
@@ -577,10 +577,10 @@
       ajaxRequest.generateRequest();
     },
 
-    render: function () {
+    render: function (event) {
       this.set('_items', []);
       this.async(function () {
-        this._organizeData();
+        this._organizeData(event);
       });
     },
 
