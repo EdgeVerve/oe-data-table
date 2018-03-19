@@ -1018,7 +1018,8 @@ Custom property | Description | Default
     _showAddForm: function (event) { // eslint-disable-line no-unused-vars
       var form = this.$['form-component'];
       
-      function addNewRecord(){
+      function addNewRecord(ev){
+        ev && ev.stopPropagation();
         form.newRecord(this.defaultRecord);
         if (this.recordHandling !== 'remote') {
           form.set('emitOnSave', 'oe-action-add');
@@ -1040,7 +1041,8 @@ Custom property | Description | Default
     _showEditForm: function (event) { // eslint-disable-line no-unused-vars
       var form = this.$['form-component'];
 
-      function editRecord(){
+      function editRecord(ev){
+        ev && ev.stopPropagation();
         form.set('model', JSON.parse(JSON.stringify(this.selectedItems[0])));
         if (this.recordHandling !== 'remote') {
           form.set('emitOnSave', 'oe-action-update');
