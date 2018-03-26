@@ -27,8 +27,8 @@
   <link rel="import" href="../../oe-input/oe-decimal.html">
   <link rel="import" href="../oe-data-table.html">
   <link rel="import" href="../../oe-ui-forms/meta-polymer.html">
-
-  <style is="custom-style" include="demo-pages-shared-styles">
+  <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
+  <style is="custom-style" include="demo-pages-shared-styles iron-flex iron-flex-alignment">
     body {
       padding: 0;
     }
@@ -65,7 +65,7 @@
         <paper-menu id="links-menu">
           <paper-item> Overview </paper-item>
           <paper-item> Declaring columns </paper-item>
-          <paper-item> Column sizing & resizing</paper-item>
+          <paper-item> Column sizing &amp; resizing</paper-item>
           <paper-item> Sorting and filtering </paper-item>
           <paper-item> Row selection </paper-item>
           <paper-item> Value Formatting </paper-item>
@@ -518,7 +518,7 @@
 
                   var amountRenderer = function (column, row) { // eslint-disable-line no-unused-vars
                     var elementToReturn =
-                      '<div class="flex layout horizontal center"> <img height="16" width="16" src="https://rawgit.com/changecoin/currency-font/master/svg/200/[[currencyCodeToLowerCase(row.currency)]].svg" /> &nbsp; <oe-info class="amount-info" precision=[[row.precision]] type="decimal" value=[[row.amount]]></oe-info> </span> </div>';
+                      '<div class="flex layout horizontal center"> <img height="16" width="16" src="https://rawgit.com/changecoin/currency-font/master/svg/200/[[currencyCodeToLowerCase(row.currency)]].svg" /> &nbsp; <oe-info class="amount-info" precision=[[row.precision]] type="decimal" value=[[row.amount]]></oe-info></div>';
 
                     this._customElement.currencyCodeToLowerCase = function (code) {
                       return code ? code.toLowerCase() : null;
@@ -590,6 +590,88 @@
                     image: 'flag'
                   });
 
+                </script>
+              </template>
+            </demo-snippet>
+            <p>
+              In addition to providing the cell rendering as a function or a string , the cell template for a particular column can be provided in 
+              the light dom of the oe-data-table.
+              The template should contain a <strong>column-key</strong> attribute to specify the column for which the template should be used.
+              The following properties will be avialable inside the template.
+              <ul>
+                <li>`row` - The current row data in the list</li>
+                <li>`column` - The column value provided for this column key</li>
+              </ul>
+            </p>
+            <p>
+              The above example with render function can also be achieved via the light dom as shown below.
+            </p>
+            <demo-snippet>
+              <template>
+                <template is="dom-bind" id="flags-table2">
+                  <h3> Table with light DOM column templates</h3>
+                  <oe-data-table columns=[[currencyColumns]] items=[[items]] label="Country">
+                    <template column-key="amount">
+                      <div class="flex layout horizontal center">
+                        <img height="16" width="16" src="https://rawgit.com/changecoin/currency-font/master/svg/200/[[row.currency]].svg" />&nbsp;
+                        <oe-info class="amount-info" precision=[[row.precision]] type="decimal" value=[[row.amount]]></oe-info>
+                      </div>
+                    </template>
+                    <template column-key="code">
+                        <div class="flex layout horizontal center">  
+                          <img style="height:30px;width:40px;" src="https://cdn.rawgit.com/hjnilsson/country-flags/5f6e1339/svg/[[row.code]].svg" /> &nbsp; &nbsp; &nbsp;
+                          <span> [[row.name]] </span> 
+                        </div>
+                    </template>
+                  </oe-data-table>
+                </template>
+                <script>
+                  var flagsTable2 = document.getElementById('flags-table2');
+                  flagsTable2.set('currencyColumns', [{
+                    key: 'code',
+                    label: 'Country',
+                    type: 'string'
+                  }, {
+                    key: 'amount',
+                    label: 'Amount',
+                    type: 'decimal',
+                    width: 150
+                  }, {
+                    key: 'capital',
+                    label: 'Capital',
+                    type: 'string'
+                  }]);
+
+                  flagsTable2.set('items', [{
+                    code: 'in',
+                    name: 'India',
+                    currency: 'inr',
+                    amount: 1960,
+                    precision: 2,
+                    capital: 'New Delhi',
+                    flag: 'https://cdn.rawgit.com/hjnilsson/country-flags/5f6e1339/svg/in.svg'
+                  }, {
+                    code: 'us',
+                    name: 'United States Of America',
+                    currency: 'usd',
+                    amount: 1555.34,
+                    precision: 2,
+                    capital: 'Washington DC'
+                  }, {
+                    code: 'gb',
+                    name: 'United Kingdom',
+                    currency: 'gbp',
+                    amount: 1360,
+                    precision: 2,
+                    capital: 'London'
+                  }, {
+                    code: 'jp',
+                    name: 'Japan',
+                    currency: 'jpy',
+                    amount: 2360.23,
+                    precision: 0,
+                    capital: 'Tokyo'
+                  }]);
                 </script>
               </template>
             </demo-snippet>
