@@ -521,7 +521,7 @@ Custom property | Description | Default
                       </div>
                     </template>
                     <template is="dom-repeat" items="[[columns]]" as="column" filter="_getVisibleColumns" observe="hidden">
-                      <oe-data-table-cell read-only=[[_computeReadOnly(disableEdit,disabled)]] key=[[key]] row={{row}} column=[[column]] class$="table-data [[_computeCellClass(row.*,column)]]" column-template=[[_getValidTemplate(row.*,column)]] style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-cell>
+                      <oe-data-table-cell read-only=[[_computeReadOnly(disableEdit,disabled)]] key=[[key]] row={{row}} column=[[column]] class$="table-data [[_computeCellClass(row.*,column)]]" column-template=[[_getValidTemplate(row.*,row,column)]] style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-cell>
                     </template>
                     <template is="dom-if" if=[[rowActions.length]]>
                       <div class="row-actions" style$="flex: [[_computeRowActionWidth(rowActions.length)]]">
@@ -762,7 +762,8 @@ Custom property | Description | Default
     },
 
     behaviors: [
-      OEUtils.DataTableBehaviour
+      OEUtils.DataTableBehaviour,
+      Polymer.Templatizer
     ],
 
     listeners: {
@@ -843,10 +844,18 @@ Custom property | Description | Default
 
       this.fire('oe-data-table-ready');
     },
-    _getValidTemplate:function(rowChange,column){
-      return this._columnTemplates.find(function(temp){
+    _getValidTemplate:function(rowChange,row,column){
+      var template = this._columnTemplates.find(function(temp){
         return temp.getAttribute('column-key') === column.key;
-      })
+      });
+      if(template){
+        this.templatize(template);
+        var itemNode = this.stamp({
+          row:row,
+          column:column
+        });
+        return itemNode
+      }
     },
     attached: function () {
 

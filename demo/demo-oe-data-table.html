@@ -613,13 +613,13 @@
                   <oe-data-table columns=[[currencyColumns]] items=[[items]] label="Country">
                     <template column-key="amount">
                       <div class="flex layout horizontal center">
-                        <img height="16" width="16" src="https://rawgit.com/changecoin/currency-font/master/svg/200/[[row.currency]].svg" />&nbsp;
+                        <img height="16" width="16" src="https://rawgit.com/changecoin/currency-font/master/svg/200/[[_toLowerCase(row.currency)]].svg" />&nbsp;
                         <oe-info class="amount-info" precision=[[row.precision]] type="decimal" value=[[row.amount]]></oe-info>
                       </div>
                     </template>
                     <template column-key="code">
                         <div class="flex layout horizontal center">  
-                          <img style="height:30px;width:40px;" src="https://cdn.rawgit.com/hjnilsson/country-flags/5f6e1339/svg/[[row.code]].svg" /> &nbsp; &nbsp; &nbsp;
+                          <img style="height:30px;width:40px;" src="https://cdn.rawgit.com/hjnilsson/country-flags/5f6e1339/svg/[[_toLowerCase(row.code)]].svg" /> &nbsp; &nbsp; &nbsp;
                           <span> [[row.name]] </span> 
                         </div>
                     </template>
@@ -627,6 +627,9 @@
                 </template>
                 <script>
                   var flagsTable2 = document.getElementById('flags-table2');
+                  flagsTable2._toLowerCase = function(str){
+                    return str.toLowerCase();
+                  }
                   flagsTable2.set('currencyColumns', [{
                     key: 'code',
                     label: 'Country',
@@ -642,32 +645,32 @@
                     type: 'string'
                   }]);
 
-                  flagsTable2.set('items', [{
-                    code: 'in',
+                  flagsTable2.set('items',  [{
+                    code: 'IN',
                     name: 'India',
-                    currency: 'inr',
+                    currency: 'INR',
                     amount: 1960,
                     precision: 2,
                     capital: 'New Delhi',
                     flag: 'https://cdn.rawgit.com/hjnilsson/country-flags/5f6e1339/svg/in.svg'
                   }, {
-                    code: 'us',
+                    code: 'US',
                     name: 'United States Of America',
-                    currency: 'usd',
+                    currency: 'USD',
                     amount: 1555.34,
                     precision: 2,
                     capital: 'Washington DC'
                   }, {
-                    code: 'gb',
+                    code: 'GB',
                     name: 'United Kingdom',
-                    currency: 'gbp',
+                    currency: 'GBP',
                     amount: 1360,
                     precision: 2,
                     capital: 'London'
                   }, {
-                    code: 'jp',
+                    code: 'JP',
                     name: 'Japan',
-                    currency: 'jpy',
+                    currency: 'JPY',
                     amount: 2360.23,
                     precision: 0,
                     capital: 'Tokyo'

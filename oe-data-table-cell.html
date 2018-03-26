@@ -126,9 +126,6 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
     listeners: {
       'tap': '_handleCellTap'
     },
-    behaviors: [
-      Polymer.Templatizer
-    ],
     _buildCustomRenderer: function (rowChange) {
 
       this.set('_hasCustomRenderer', Boolean(this.row && this.column && (this.column.renderer || this.columnTemplate)));
@@ -192,13 +189,8 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
           this.cancelAsync(this._customRenderAsyncTask);
           this._customRenderAsyncTask = this.async(function(){
             container = this.$$('#custom-container');
-            this.templatize(this.columnTemplate);
-            var itemNode = this.stamp({
-              row: this.row,
-              column: this.column
-            });
             container.innerHTML = '';
-            container.appendChild(itemNode.root);
+            container.appendChild(this.columnTemplate.root);
           },300);
         }
       }
