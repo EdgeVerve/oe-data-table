@@ -169,7 +169,15 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
                   var renderFunction = new Function('return ' + renderer)();
                   ele.innerHTML = renderFunction.call(this, this.column, this.row);
                 } else {
-                  ele.innerHTML = renderer;
+                  var customFn;
+                  if(window.OEUtils && window.OEUtils.renderFunctions){
+                    customFn = window.OEUtils.renderFunctions[renderer];
+                  }
+                  if(customFn && (typeof customFn === 'function')){
+                    ele.innerHTML = customFn.call(this, this.column, this.row);
+                  }else{
+                    ele.innerHTML = renderer;
+                  }                  
                 }
               } else if (typeof renderer === 'function') {
                 ele.innerHTML = renderer.call(this, this.column, this.row);

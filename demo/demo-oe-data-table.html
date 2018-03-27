@@ -466,7 +466,11 @@
             <h1> Cell Rendering </h1>
             <p>
               The oe-data-table supports rendering of custiom elements in a cell. A custom element can be rendered by setting a fuction
-              to renderer property of the column, which returns the element / DOM string to show in that cell.
+              to renderer property of the column, which returns the element / DOM string to show in that cell. 
+            </p>
+            <p>
+              The renderer can be also be a string that specifies the DOM string to be placed or a function name. In case the renderer is a function name , 
+              The actual function should be present in the Global path `window.OEUtils.renderFunctions`. The function will be called with current column and row value.
             </p>
             <p>
               The renderer function can return a polymer styled template string for displaying data in the cell. The data of the current
@@ -503,6 +507,9 @@
                 </template>
                 <script>
                   var flagsTable = document.getElementById('flags-table');
+                  window.OEUtils = window.OEUtils || {}
+                  window.OEUtils.renderFunctions = window.OEUtils.renderFunctions || {}
+
 
                   var flagRenderer = function (column, row) { // eslint-disable-line no-unused-vars
                     var elementToReturn =
@@ -515,6 +522,8 @@
                     return elementToReturn;
 
                   }
+
+                  window.OEUtils.renderFunctions['flagFn'] = flagRenderer;
 
                   var amountRenderer = function (column, row) { // eslint-disable-line no-unused-vars
                     var elementToReturn =
@@ -531,7 +540,7 @@
                     key: 'code',
                     label: 'Country',
                     type: 'string',
-                    renderer: flagRenderer
+                    renderer: 'flagFn'
                   }, {
                     key: 'amount',
                     label: 'Amount',

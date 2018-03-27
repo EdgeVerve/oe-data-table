@@ -1006,8 +1006,7 @@ Custom property | Description | Default
         if (rowList) {
           rowList.notifyResize();
         }
-
-      }, 100);
+      }, 500);
       var size = ((itemsToShow > 5 && itemsToShow < pageSize) ? itemsToShow : pageSize)
       this.set('_maxDomElement',size*2);
       return size * 48;
