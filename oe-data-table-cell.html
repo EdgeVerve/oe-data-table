@@ -114,6 +114,11 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
 
       columnTemplate: {
         type: Object
+      },
+
+      isFirstCell:{
+        type:Boolean,
+        value:false
       }
     },
 
@@ -190,7 +195,7 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
               container.appendChild(domBind);
 
               this.set('_lastRenderedRenderer', renderer);
-
+              this.fire('oe-cell-rendered',this.clientHeight);
             }, 300);
           }
         } else {
@@ -199,6 +204,7 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
             container = this.$$('#custom-container');
             container.innerHTML = '';
             container.appendChild(this.columnTemplate.root);
+            this.fire('oe-cell-rendered',this.clientHeight);
           },300);
         }
       }

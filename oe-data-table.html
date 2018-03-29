@@ -505,7 +505,7 @@ Custom property | Description | Default
           </template>
           <div style$="height: [[_computeGridHeight(pageSize,_items.length)]]px">
             <template is="dom-if" if=[[_items.length]] restamp=true>
-              <iron-list id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key">
+              <iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key">
                 <template>
                   <div class$="table-row [[_computeClassforRow(row,_computeSelection)]]" tabindex$="[[tabIndex]]" on-tap="_rowClicked">
                     <template is="dom-if" if="[[!disableSelection]]">
@@ -521,7 +521,7 @@ Custom property | Description | Default
                       </div>
                     </template>
                     <template is="dom-repeat" items="[[columns]]" as="column" filter="_getVisibleColumns" observe="hidden">
-                      <oe-data-table-cell read-only=[[_computeReadOnly(disableEdit,disabled)]] key=[[key]] row={{row}} column=[[column]] class$="table-data [[_computeCellClass(row.*,column)]]" column-template=[[_getValidTemplate(row.*,row,column)]] style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-cell>
+                      <oe-data-table-cell is-first-row=[[_isFirstRow(rowIndex,row)]] read-only=[[_computeReadOnly(disableEdit,disabled)]] key=[[key]] row={{row}} column=[[column]] class$="table-data [[_computeCellClass(row.*,column)]]" column-template=[[_getValidTemplate(row.*,row,column)]] style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-cell>
                     </template>
                     <template is="dom-if" if=[[rowActions.length]]>
                       <div class="row-actions" style$="flex: [[_computeRowActionWidth(rowActions.length)]]">
@@ -769,7 +769,8 @@ Custom property | Description | Default
     listeners: {
       'change-column-width': '_changeColumnWidth',
       'set-active-cell': '_setActiveCell',
-      'customize-view': 'customizeView'
+      'customize-view': 'customizeView',
+      'oe-cell-rendered':'_updateIronList'
     },
 
     observers: [
@@ -812,8 +813,21 @@ Custom property | Description | Default
       }
      
     },
-
-
+    _isFirstRow:function(idx,row){
+      return (idx === 0);
+    },
+    _updateIronList:function(e){
+      if(e.detail > this.maxRowHeight){
+        this.maxRowHeight = e.detail;
+        this.debounce('rowHeight',this.updateRowHeight,300)
+      }
+    },
+    updateRowHeight:function(){
+      var rowList = this.$$('#row-list');
+      if (rowList) {
+        rowList.notifyResize();
+      }
+    },
     ready: function () {
       if (!this.ctor) {
         const childTemplates = this.queryAllEffectiveChildren('template[column-key]');
@@ -858,7 +872,7 @@ Custom property | Description | Default
       }
     },
     attached: function () {
-
+      this.maxRowHeight = 48;
       this.async(function () {
         var form = this.$['form-component'];
         form.addEventListener('oe-action-add', this._formHandleAdd.bind(this));
@@ -1002,11 +1016,9 @@ Custom property | Description | Default
     },
     _computeGridHeight: function (pageSize, itemsToShow) {
       this.async(function () {
-        var rowList = this.$$('#row-list');
-        if (rowList) {
-          rowList.notifyResize();
-        }
-      }, 500);
+        this.updateRowHeight();
+        this.maxRowHeight = 48;
+      }, 0);
       var size = ((itemsToShow > 5 && itemsToShow < pageSize) ? itemsToShow : pageSize)
       this.set('_maxDomElement',size*2);
       return size * 48;
