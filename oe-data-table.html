@@ -48,6 +48,8 @@ Column property | Description
 ----------------|-------------
 `key` | The key of the row to get data from.
 `label` | The string to be shown in column header.
+`tooltip` | The string to be shown in column header as a tooltip.
+`valueAsTooltip`| Boolean flag to show value of a column as a tooltip on hover. Useful when the values are large and are hidden due to column width
 `type` | The type of the content that is shown in the column. For example date, timestamp, number, string.
 `uitype` | (Deprecated. use type) The type of the content that is shown in the column. For example date, timestamp.
 `uiType` | The input control that has to be used for inline editing.
@@ -55,6 +57,7 @@ Column property | Description
 `width` | Width of the column in `px`.
 `minWidth` | Min Width of the column in `px`, by default grid level min width will be taken.
 `sort` |  Sort order of the current column. Takes either `asc` or `desc`.
+`alignment` | Alignment of the cell content , can have `left`,`right` or `center` .
 `firstToSort` | Whether to sort first by desc or asc, by default it is asc.
 `formatter` | A custom formatting function which returns the value to show in the cell.
 `renderer` | A custom rendering function which returns the element to show in the cell.
@@ -113,7 +116,10 @@ Custom property | Description | Default
         height: 64px;
         padding: 0 14px 0 24px;
         box-sizing: border-box;
-
+        background: #FFFFFF;
+        box-shadow: 1px 1px 2px 0 rgba(0,0,0,0.16);
+        border-radius: 4px 4px 0 0;
+        margin-bottom: 4px;
         @apply(--layout-horizontal);
         @apply(--layout-center);
         @apply(--layout-justified);
@@ -135,14 +141,37 @@ Custom property | Description | Default
 
       #table-header {
         font-size: 12px;
-        height: 56px;
+        height: 55px;
         color: rgba(0, 0, 0, 0.54);
         font-weight: 700;
         font-style: normal;
         overflow-x: hidden;
         border-bottom: 1px solid #ededed;
-
+        background: #FFF;
+        @apply(--oe-data-table-column-header);
         @apply(--layout);
+      }
+
+      .multi-select-true{
+        background:var(--primary-light-color,#d1e9fd);
+        border: 1px solid #b9cfe2;
+      }
+      .multi-select-true .header-title{
+        margin:0px 16px;
+      }
+
+      .selected-items-count{
+        font-size: 14px;
+        color: rgba(0,0,0,0.87)
+      }
+      .grid-info > iron-icon{
+        cursor: pointer;
+        --iron-icon-width:16px;
+        --iron-icon-height:16px;
+      }
+      .grid-info{
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
       }
 
       .header-icon {
@@ -220,7 +249,7 @@ Custom property | Description | Default
       .table-row {
         min-height: 48px;
         border-bottom: 1px solid #ededed;
-
+        background: #FFF;
         @apply(--layout);
         @apply(--oe-data-table-row);
       }
@@ -379,11 +408,16 @@ Custom property | Description | Default
     <paper-material class="data-table">
       <iron-collapse opened="{{showGrid(_hideGrid,_customizeView)}}">
         <template is="dom-if" if="[[!hideHeader]]">
-          <div id="grid-header" class="grid-header">
-
-            <div class="header-title">
-              [[label]]
-              <content select="[header-title]"></content>
+          <div id="grid-header" class$="multi-select-[[_isMultiSelected(selectedItems.length)]] grid-header">
+            <div class="grid-info">
+              <iron-icon icon="arrow-back" on-tap="_toggleSelectAll" hidden=[[!_isMultiSelected(selectedItems.length)]]></iron-icon>
+              <div class="header-title">
+                [[label]]
+                <content select="[header-title]"></content>
+              </div>
+              <div class="selected-items-count" hidden=[[!_isMultiSelected(selectedItems.length)]]>
+                [[selectedItems.length]] items selected
+              </div>
             </div>
             <div class="icon-group">
               <template is="dom-if" if="[[!disabled]]">
@@ -392,24 +426,32 @@ Custom property | Description | Default
                   <paper-tooltip for="refresh-icon"> Refresh </paper-tooltip>
                 </template>
                 <template is="dom-if" if="[[!selectedItems.length]]">
-                  <div class="header-icon">
-                    <paper-icon-button icon="icons:add-circle-outline" on-tap="_showAddForm"></paper-icon-button>
-                    <paper-tooltip> New </paper-tooltip>
-                  </div>
-                  <div class="header-icon">
-                    <paper-icon-button icon="image:tune" on-tap="_openColumnCustomizer"></paper-icon-button>
-                    <paper-tooltip> Customize View </paper-tooltip>
-                  </div>
+                  <template is="dom-if" if="[[!disableAdd]]">
+                    <div class="header-icon">
+                      <paper-icon-button icon="icons:add-circle-outline" on-tap="_showAddForm"></paper-icon-button>
+                      <paper-tooltip> New </paper-tooltip>
+                    </div>
+                  </template>
+                  <template is="dom-if" if="[[!disableConfigEditor]]">
+                    <div class="header-icon">
+                      <paper-icon-button icon="image:tune" on-tap="_openColumnCustomizer"></paper-icon-button>
+                      <paper-tooltip> Customize View </paper-tooltip>
+                    </div>
+                  </template>
                 </template>
                 <template is="dom-if" if="[[selectedItems.length]]">
+                  <template is="dom-if" if="[[!disableEdit]]">
                   <div class="header-icon" hidden$=[[_hideEditIcon(selectedItems.length)]]>
                     <paper-icon-button icon="editor:mode-edit" on-tap="_showEditForm"></paper-icon-button>
                     <paper-tooltip> Edit </paper-tooltip>
                   </div>
+                  </template>
+                  <template is="dom-if" if="[[!disableDelete]]">
                   <div class="header-icon">
                     <paper-icon-button id="delete-icon" icon="delete" on-tap="_deleteSelectedRows"></paper-icon-button>
                     <paper-tooltip> Delete </paper-tooltip>
                   </div>
+                  </template>
                 </template>
                 <template is="dom-repeat" items=[[toolbarActions]] as="action">
                   <div class="header-icon">
@@ -479,7 +521,7 @@ Custom property | Description | Default
                       </div>
                     </template>
                     <template is="dom-repeat" items="[[columns]]" as="column" filter="_getVisibleColumns" observe="hidden">
-                      <oe-data-table-cell class$="table-data [[_computeCellClass(row.*,column)]]" key=[[key]] row={{row}} column=[[column]] style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-cell>
+                      <oe-data-table-cell read-only=[[disableEdit]] key=[[key]] row={{row}} column=[[column]] class$="table-data [[_computeCellClass(row.*,column)]]" style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-cell>
                     </template>
                     <template is="dom-if" if=[[rowActions.length]]>
                       <div class="row-actions" style$="flex: [[_computeRowActionWidth(rowActions.length)]]">
@@ -540,7 +582,7 @@ Custom property | Description | Default
       <iron-collapse opened="{{_hideGrid}}">
         <div class="form-content">
           <paper-icon-button icon="icons:arrow-back" on-tap="_goBack"></paper-icon-button>
-          <lazy-component id="form-component" url={{editorFormUrl}} model={{modelToEdit}} emit-on-save={{emitOnSave}}></lazy-component>
+          <lazy-component id="form-component" url={{dataTableFormUrl}} model={{modelToEdit}} emit-on-save={{emitOnSave}}></lazy-component>
         </div>
       </iron-collapse>
     </paper-material>
@@ -567,11 +609,50 @@ Custom property | Description | Default
         value: false
       },
 
+      /**
+      * Disable Add, Edit, Delete and Column-Config options
+      */
       disabled: {
         type: Boolean,
         value: false
       },
 
+      /**
+      * Disable adding new records
+      */
+      disableAdd: {
+        type: Boolean,
+        value: false
+      },
+      /**
+      * Disable editing records
+      */
+      disableEdit: {
+        type: Boolean,
+        value: false
+      },
+      /**
+      * Disable deleting records
+      */
+      disableDelete: {
+        type: Boolean,
+        value: false
+      },
+      /**
+      * Disable editing column  configuration.
+      */
+      disableConfigEditor: {
+        type: Boolean,
+        value: false
+      },
+      /**
+      * Disable row selection
+      */
+      disableSelection: {
+        type: Boolean,
+        value: false
+      },
+      
       /**
        * Array of page numbers that has to be shown in Rows per page dropdown
        */
@@ -709,6 +790,7 @@ Custom property | Description | Default
                 column[kebabCaseToCamelCase(attribute.name)] = attribute.value
               }
             }
+            column.disabled = children[i].hasAttribute('disabled');
             columns.push(column);
           }
         }
@@ -895,18 +977,30 @@ Custom property | Description | Default
 
     _showAddForm: function (event) { // eslint-disable-line no-unused-vars
       var form = this.$['form-component'];
-      form.newRecord(this.defaultRecord);
-      if (this.recordHandling !== 'remote') {
-        form.set('emitOnSave', 'oe-action-add');
-      } else {
-        form.set('emitOnSave', '');
+      
+      function addNewRecord(){
+        form.newRecord(this.defaultRecord);
+        if (this.recordHandling !== 'remote') {
+          form.set('emitOnSave', 'oe-action-add');
+        } else {
+          form.set('emitOnSave', '');
+        }
+        this.set('_hideGrid', true);
+        form.removeEventListener('lazy-component-loaded',addNewRecord);
       }
-      this.set('_hideGrid', true);
+
+      if(this.dataTableFormUrl !== this.editorFormUrl){
+        form.addEventListener('lazy-component-loaded',addNewRecord.bind(this));
+        this.set('dataTableFormUrl',this.editorFormUrl);
+      }else{
+        addNewRecord.call(this);
+      }
     },
 
     _showEditForm: function (event) { // eslint-disable-line no-unused-vars
       var form = this.$['form-component'];
-      if (this.selectedItems.length) {
+
+      function editRecord(){
         form.set('model', JSON.parse(JSON.stringify(this.selectedItems[0])));
         if (this.recordHandling !== 'remote') {
           form.set('emitOnSave', 'oe-action-update');
@@ -915,8 +1009,17 @@ Custom property | Description | Default
         }
         this.set('_hideGrid', true);
         this.set('_modelBeingUpdated', this.selectedItems[0]);
+        form.removeEventListener('lazy-component-loaded',editRecord);
       }
 
+      if (this.selectedItems.length) {
+        if(this.dataTableFormUrl !== this.editorFormUrl){
+          form.addEventListener('lazy-component-loaded',editRecord.bind(this));
+          this.set('dataTableFormUrl',this.editorFormUrl);
+        }else{
+          editRecord.call(this);
+        }
+      }
     },
 
     _goBack: function (event) { // eslint-disable-line no-unused-vars
@@ -1049,8 +1152,8 @@ Custom property | Description | Default
 
       this._resetActiveCell();
       var elementToSet = event.detail.element;
-      if (elementToSet) {
-        elementToSet._enableEditMode();
+      if (elementToSet && !this.disableEdit) {
+        elementToSet.enterEditMode();
       }
       this.set('_activeCell', elementToSet);
     },
@@ -1059,7 +1162,7 @@ Custom property | Description | Default
     _resetActiveCell: function (event) { // eslint-disable-line no-unused-vars
       var activeCell = this._activeCell;
       if (activeCell) {
-        activeCell._disableEditMode();
+        activeCell.exitEditMode();
         this.set('_activeCell', null);
       }
     },
@@ -1281,10 +1384,14 @@ Custom property | Description | Default
       return selectedItemsLength !== 1;
     },
 
-	_getRestApiRoot: function(){
-	  var restApiRoot = (window.OEUtils && window.OEUtils.restApiRoot) ? window.OEUtils.restApiRoot : '/api';
-	  return restApiRoot;
-	}
+    _getRestApiRoot: function(){
+      var restApiRoot = (window.OEUtils && window.OEUtils.restApiRoot) ? window.OEUtils.restApiRoot : '/api';
+      return restApiRoot;
+    },
+
+    _isMultiSelected:function(selectedItemsLength){
+      return selectedItemsLength > 1;
+    }
   });
 
 </script>
