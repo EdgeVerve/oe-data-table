@@ -104,7 +104,8 @@
                     key: 'id',
                     label: 'Id',
                     type: 'number',
-                    readOnly: true
+                    readOnly: true,
+                    tooltip:"Id"
                   }, {
                     key: 'name',
                     label: 'Name',
@@ -117,7 +118,9 @@
                   }, {
                     key: 'details',
                     label: 'Details',
-                    type: 'object'
+                    type: 'object',
+                    tooltip:"Details of the user",
+                    valueAsTooltip:true
                   }]);
 
                   dataTable.set('items', [{

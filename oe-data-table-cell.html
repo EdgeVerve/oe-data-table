@@ -38,7 +38,7 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
     </template>
     <div hidden$="{{!_inEdit}}" id="injectionPoint"></div>
    <template is="dom-if" if="[[column.valueAsTooltip]]" restamp="true">
-        <paper-tooltip  offset="0" position="bottom" id="[[column.label]]">  [[_displayValue]]  </paper-tooltip>  
+        <paper-tooltip  offset$="[[_getOffset(isFirstRow)]]" position="top" id="[[column.label]]">  [[_displayValue]]  </paper-tooltip>  
       </template>
   </template>
 </dom-module>
@@ -116,7 +116,7 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
         type: Object
       },
 
-      isFirstCell:{
+      isFirstRow:{
         type:Boolean,
         value:false
       }
@@ -374,6 +374,10 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
         style = ['number', 'decimal'].indexOf(column.type || column.uitype) > -1 ? 'text-align: right' : null;
       }
       return style; 
+    },
+
+    _getOffset:function(isFirstRow){
+      return isFirstRow?-20:0;
     }
 
   });
