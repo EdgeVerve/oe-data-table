@@ -192,11 +192,14 @@
                   var code = result[res].code;
                   var desc = result[res].description;
                   this.refCodeMap[propertyName][code] = desc;
-                  this.listDataMap[propertyName].push({ code: code, description: desc });
+                  this.listDataMap[propertyName].push({
+                    code: code,
+                    description: desc
+                  });
                 });
               });
               this.set('columns', this._getColumnsFromModelDef(modelDefinition));
-            }).catch(error => { });
+            }).catch(error => {});
 
           }.bind(this));
         }
@@ -276,21 +279,29 @@
         if (this.dataController) {
 
           var dataController = this.dataController.controller || this._dataController;
-          this.filterSort = this.filterSort || {filter:{},sort:[]};
+          this.filterSort = this.filterSort || {
+            filter: {},
+            sort: []
+          };
 
-          if(event && event.detail){
+          if (event && event.detail) {
             var payload = event.detail;
 
-            if(payload.filterColumn){
+            if (payload.filterColumn) {
               this.filterSort.filter[payload.filterColumn.key] = payload.filterColumn.value;
             }
-            if(event.detail.sortColumn){
-              this.filterSort.sort = this.columns.filter(function(col){return col.sort}).map(function(col){ return ""+col.key+" "+col.sort.toUpperCase()});
+            if (event.detail.sortColumn) {
+              this.filterSort.sort = this.columns.filter(function (col) {
+                return col.sort
+              }).map(function (col) {
+                return "" + col.key + " " + col.sort.toUpperCase()
+              });
             }
           }
 
 
-          dataController.call(this, this.currentPage, this.pageSize,this.filterSort, function (err, data, isLastPage) {
+          dataController.call(this, this.currentPage, this.pageSize, this.filterSort, function (err, data,
+            isLastPage) {
             if (err) {
               this.fire('oe-show-error', err);
             } else {
@@ -418,10 +429,10 @@
       // data = this.dataController ? items : items.slice(this._startRow - 1, this._endRow);
 
       this.set('_startRow', (this.currentPage - 1) * this.pageSize + 1);
-		this.set('_endRow', this._startRow + items.length - 1);
-		if(this._endRow == 0){
-			this.set('_startRow',0);
-		}
+      this.set('_endRow', this._startRow + items.length - 1);
+      if (this._endRow == 0) {
+        this.set('_startRow', 0);
+      }
       this.fire('oe-data-table-page-loaded', items);
       done(null, items);
 
@@ -494,26 +505,28 @@
         });
       }
 
-      if(filterSort){
+      if (filterSort) {
 
-        if(filter.order || filterSort.sort.length){
+        if (filter.order || filterSort.sort.length) {
           filter.order = filter.order || filterSort.sort;
         }
 
         var columnWhere = {};
         var columnFilter = filterSort.filter;
-        columnWhere.and = Object.keys(columnFilter).filter(function(key){
+        columnWhere.and = Object.keys(columnFilter).filter(function (key) {
           return columnFilter[key] && columnFilter[key].length;
-        }).map(function(prop){
+        }).map(function (prop) {
           var query = {};
-          var pattern = '/.*'+columnFilter[prop]+'.*/i' ;
-          query[prop] = {"regexp":pattern};
+          var pattern = '/.*' + columnFilter[prop] + '.*/i';
+          query[prop] = {
+            "regexp": pattern
+          };
           return query
         });
-        
-        if(filter.where || columnWhere.and.length){
+
+        if (filter.where || columnWhere.and.length) {
           filter.where = filter.where || {};
-          filter.where = Object.assign(filter.where,columnWhere);
+          filter.where = Object.assign(filter.where, columnWhere);
         }
 
       }
@@ -545,7 +558,14 @@
       var ajaxRequest = document.createElement('oe-ajax');
       ajaxRequest.contentType = 'application/json';
       ajaxRequest.handleAs = 'json';
-      ajaxRequest.url = this.dataController.restUrl + '/count';
+      var url = this.dataController.restUrl;
+      //check if the filter is appended as a part of the url. eg: /api/cars?filter[where][carClass]=fullsize
+      //if appended , remove the filter to avoid incorrect count
+      var index = url.indexOf("?");
+      if (index > -1) {
+          url = url.slice(url, index);
+      }
+      ajaxRequest.url = url + '/count';
 
       var userPassedFilter = this.dataController.filter;
 
@@ -555,7 +575,7 @@
         };
       }
 
-      if(filter && filter.where){
+      if (filter && filter.where) {
         ajaxRequest.params = {
           where: JSON.stringify(filter.where)
         };
