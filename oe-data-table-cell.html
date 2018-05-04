@@ -281,6 +281,16 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
     },
 
     exitEditMode: function () {
+      if(this._element){
+        var key = this.column.key || this.column.field;
+        var rowPath = 'row.' + key;
+        this.set(rowPath, this._element.value);
+        this.fire('oe-data-table-cell-value-changed', {
+          row: this.row,
+          column: this.column
+        });
+        this._computeCellData(rowPath,this.column)
+      }
       this.set('_inEdit', false);
     },
 
