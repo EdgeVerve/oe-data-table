@@ -18,7 +18,7 @@
 <dom-module id="oe-data-table-filter">
 
   <template>
-    <style>
+    <style include="iron-flex iron-flex-alignment">
       :host {
         display: block;
         margin: 0 !important;
@@ -80,32 +80,32 @@
     </style>
 
     <div class="input-container">
-      <paper-checkbox checked={{_selectAllItems}} on-change="_toggleSelectAll"> </paper-checkbox>
+      <paper-checkbox checked={{_selectAllItems}} hidden$=[[isServerData]] on-change="_toggleSelectAll"> </paper-checkbox>
       <paper-input label="Search [[column.label]]" no-label-float value={{searchText}} on-input="_computeCheckBox"></paper-input>
     </div>
+    <template is="dom-if" if=[[!isServerData]]>
+      <template is="dom-if" if=[[!searchText.length]] on-dom-change="_updateListSize">
+        <iron-list id="list" items=[[_filterItems(_items,searchText)]]>
+          <template>
+            <paper-item tabindex="-1">
+              <paper-checkbox checked={{_getSelectionState(item,_computeSelection)}} on-change="_toggleCheckboxSelection"> [[item]] </paper-checkbox>
+            </paper-item>
+          </template>
+        </iron-list>
 
-    <template is="dom-if" if=[[!searchText.length]] on-dom-change="_updateListSize">
-      <iron-list id="list" items=[[_filterItems(_items,searchText)]]>
-        <template>
-          <paper-item tabindex="-1">
-            <paper-checkbox checked={{_getSelectionState(item,_computeSelection)}} on-change="_toggleCheckboxSelection"> [[item]] </paper-checkbox>
-          </paper-item>
-        </template>
-      </iron-list>
+      </template>
 
+      <template is="dom-if" if=[[searchText.length]] on-dom-change="_updateListSize">
+        <iron-list id="list" items=[[_filterItems(_items,searchText)]]>
+          <template>
+            <paper-item>
+              <paper-checkbox checked={{_getSelectionState(item,_computeSelection)}} on-change="_toggleCheckboxSelection"> [[item]] </paper-checkbox>
+            </paper-item>
+          </template>
+        </iron-list>
+
+      </template>
     </template>
-
-    <template is="dom-if" if=[[searchText.length]] on-dom-change="_updateListSize">
-      <iron-list id="list" items=[[_filterItems(_items,searchText)]]>
-        <template>
-          <paper-item>
-            <paper-checkbox checked={{_getSelectionState(item,_computeSelection)}} on-change="_toggleCheckboxSelection"> [[item]] </paper-checkbox>
-          </paper-item>
-        </template>
-      </iron-list>
-
-    </template>
-
     <div class="action-buttons">
       <paper-button on-tap="_resetFilter"> Reset </paper-button>
       <paper-button on-tap="_closeFilter"> Cancel </paper-button>
@@ -135,6 +135,9 @@
        */
       items: {
         type: Array
+      },
+      isServerData:{
+        type:Boolean
       }
 
     },
@@ -159,12 +162,29 @@
     },
 
     _applyFilter: function (evt) { // eslint-disable-line no-unused-vars
+      if(this.isServerData){
+        var filter = {
+          key:this.column.key,
+          value:this.searchText
+        };
+        this.fire('apply-criteria',{filterColumn:filter});
+        return;
+      }
       this.set('column.selectedItems', this._selectedItems);
       this.fire('apply-criteria');
       this.domHost.$.dialog.close();
     },
 
     _resetFilter: function (evt) { // eslint-disable-line no-unused-vars
+      if(this.isServerData){
+        this.searchText = "";
+        var filter = {
+          key:this.column.key,
+          value:null
+        };
+        this.fire('apply-criteria',{filterColumn:filter});
+        return;
+      }
       this._selectedItems.forEach(function (item) {
         this.set('_selectionState.' + item, false);
       }.bind(this));

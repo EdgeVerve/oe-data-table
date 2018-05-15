@@ -27,8 +27,8 @@
   <link rel="import" href="../../oe-input/oe-decimal.html">
   <link rel="import" href="../oe-data-table.html">
   <link rel="import" href="../../oe-ui-forms/meta-polymer.html">
-
-  <style is="custom-style" include="demo-pages-shared-styles">
+  <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
+  <style is="custom-style" include="demo-pages-shared-styles iron-flex iron-flex-alignment">
     body {
       padding: 0;
     }
@@ -65,7 +65,7 @@
         <paper-menu id="links-menu">
           <paper-item> Overview </paper-item>
           <paper-item> Declaring columns </paper-item>
-          <paper-item> Column sizing & resizing</paper-item>
+          <paper-item> Column sizing &amp; resizing</paper-item>
           <paper-item> Sorting and filtering </paper-item>
           <paper-item> Row selection </paper-item>
           <paper-item> Value Formatting </paper-item>
@@ -104,7 +104,8 @@
                     key: 'id',
                     label: 'Id',
                     type: 'number',
-                    readOnly: true
+                    readOnly: true,
+                    tooltip:"Id"
                   }, {
                     key: 'name',
                     label: 'Name',
@@ -117,7 +118,9 @@
                   }, {
                     key: 'details',
                     label: 'Details',
-                    type: 'object'
+                    type: 'object',
+                    tooltip:"Details of the user",
+                    valueAsTooltip:true
                   }]);
 
                   dataTable.set('items', [{
@@ -466,7 +469,11 @@
             <h1> Cell Rendering </h1>
             <p>
               The oe-data-table supports rendering of custiom elements in a cell. A custom element can be rendered by setting a fuction
-              to renderer property of the column, which returns the element / DOM string to show in that cell.
+              to renderer property of the column, which returns the element / DOM string to show in that cell. 
+            </p>
+            <p>
+              The renderer can be also be a string that specifies the DOM string to be placed or a function name. In case the renderer is a function name , 
+              The actual function should be present in the Global path `window.OEUtils.renderFunctions`. The function will be called with current column and row value.
             </p>
             <p>
               The renderer function can return a polymer styled template string for displaying data in the cell. The data of the current
@@ -503,6 +510,9 @@
                 </template>
                 <script>
                   var flagsTable = document.getElementById('flags-table');
+                  window.OEUtils = window.OEUtils || {}
+                  window.OEUtils.renderFunctions = window.OEUtils.renderFunctions || {}
+
 
                   var flagRenderer = function (column, row) { // eslint-disable-line no-unused-vars
                     var elementToReturn =
@@ -516,9 +526,11 @@
 
                   }
 
+                  window.OEUtils.renderFunctions['flagFn'] = flagRenderer;
+
                   var amountRenderer = function (column, row) { // eslint-disable-line no-unused-vars
                     var elementToReturn =
-                      '<div class="flex layout horizontal center"> <img height="16" width="16" src="https://rawgit.com/changecoin/currency-font/master/svg/200/[[currencyCodeToLowerCase(row.currency)]].svg" /> &nbsp; <oe-info class="amount-info" precision=[[row.precision]] type="decimal" value=[[row.amount]]></oe-info> </span> </div>';
+                      '<div class="flex layout horizontal center"> <img height="16" width="16" src="https://rawgit.com/changecoin/currency-font/master/svg/200/[[currencyCodeToLowerCase(row.currency)]].svg" /> &nbsp; <oe-info class="amount-info" precision=[[row.precision]] type="decimal" value=[[row.amount]]></oe-info></div>';
 
                     this._customElement.currencyCodeToLowerCase = function (code) {
                       return code ? code.toLowerCase() : null;
@@ -531,7 +543,7 @@
                     key: 'code',
                     label: 'Country',
                     type: 'string',
-                    renderer: flagRenderer
+                    renderer: 'flagFn'
                   }, {
                     key: 'amount',
                     label: 'Amount',
@@ -590,6 +602,91 @@
                     image: 'flag'
                   });
 
+                </script>
+              </template>
+            </demo-snippet>
+            <p>
+              In addition to providing the cell rendering as a function or a string , the cell template for a particular column can be provided in 
+              the light dom of the oe-data-table.
+              The template should contain a <strong>column-key</strong> attribute to specify the column for which the template should be used.
+              The following properties will be avialable inside the template.
+              <ul>
+                <li>`row` - The current row data in the list</li>
+                <li>`column` - The column value provided for this column key</li>
+              </ul>
+            </p>
+            <p>
+              The above example with render function can also be achieved via the light dom as shown below.
+            </p>
+            <demo-snippet>
+              <template>
+                <template is="dom-bind" id="flags-table2">
+                  <h3> Table with light DOM column templates</h3>
+                  <oe-data-table columns=[[currencyColumns]] items=[[items]] label="Country">
+                    <template column-key="amount">
+                      <div class="flex layout horizontal center">
+                        <img height="16" width="16" src="https://rawgit.com/changecoin/currency-font/master/svg/200/[[_toLowerCase(row.currency)]].svg" />&nbsp;
+                        <oe-info class="amount-info" precision=[[row.precision]] type="decimal" value=[[row.amount]]></oe-info>
+                      </div>
+                    </template>
+                    <template column-key="code">
+                        <div class="flex layout horizontal center">  
+                          <img style="height:30px;width:40px;" src="https://cdn.rawgit.com/hjnilsson/country-flags/5f6e1339/svg/[[_toLowerCase(row.code)]].svg" /> &nbsp; &nbsp; &nbsp;
+                          <span> [[row.name]] </span> 
+                        </div>
+                    </template>
+                  </oe-data-table>
+                </template>
+                <script>
+                  var flagsTable2 = document.getElementById('flags-table2');
+                  flagsTable2._toLowerCase = function(str){
+                    return str.toLowerCase();
+                  }
+                  flagsTable2.set('currencyColumns', [{
+                    key: 'code',
+                    label: 'Country',
+                    type: 'string'
+                  }, {
+                    key: 'amount',
+                    label: 'Amount',
+                    type: 'decimal',
+                    width: 150
+                  }, {
+                    key: 'capital',
+                    label: 'Capital',
+                    type: 'string'
+                  }]);
+
+                  flagsTable2.set('items',  [{
+                    code: 'IN',
+                    name: 'India',
+                    currency: 'INR',
+                    amount: 1960,
+                    precision: 2,
+                    capital: 'New Delhi',
+                    flag: 'https://cdn.rawgit.com/hjnilsson/country-flags/5f6e1339/svg/in.svg'
+                  }, {
+                    code: 'US',
+                    name: 'United States Of America',
+                    currency: 'USD',
+                    amount: 1555.34,
+                    precision: 2,
+                    capital: 'Washington DC'
+                  }, {
+                    code: 'GB',
+                    name: 'United Kingdom',
+                    currency: 'GBP',
+                    amount: 1360,
+                    precision: 2,
+                    capital: 'London'
+                  }, {
+                    code: 'JP',
+                    name: 'Japan',
+                    currency: 'JPY',
+                    amount: 2360.23,
+                    precision: 0,
+                    capital: 'Tokyo'
+                  }]);
                 </script>
               </template>
             </demo-snippet>
@@ -1593,11 +1690,17 @@
             <div>
             <h1> Other Options </h1>
             <p> 
+              When disabled attribute is set the editing/adding a record is prevented but selection is allowed.</p>
+              <p>
+                In addition the row can be selected by clicking anywhere on the row and the selected row can be changed via UP/DOWN arrow keys.
+              </p>
+            <p>
+              The arrow key navigation only works when a single row is selected.
             </p>
             <p> </p>
             <demo-snippet>
               <template>
-                <oe-data-table disable-config-editor disable-edit disable-delete disable-add id="options-table" label="Simple Table"></oe-data-table>
+                <oe-data-table disabled disable-config-editor disable-edit disable-delete disable-add id="options-table" label="Simple Table"></oe-data-table>
                 <script>
                   var dataTable = document.getElementById('options-table');
 

@@ -142,7 +142,7 @@
     },
 
     listeners: {
-      'apply-criteria': '_organizeData',
+      'apply-criteria': 'render',
       'oe-data-table-cell-value-changed': '_organizeData'
     },
 
@@ -192,11 +192,14 @@
                   var code = result[res].code;
                   var desc = result[res].description;
                   this.refCodeMap[propertyName][code] = desc;
-                  this.listDataMap[propertyName].push({ code: code, description: desc });
+                  this.listDataMap[propertyName].push({
+                    code: code,
+                    description: desc
+                  });
                 });
               });
               this.set('columns', this._getColumnsFromModelDef(modelDefinition));
-            }).catch(error => { });
+            }).catch(error => {});
 
           }.bind(this));
         }
@@ -276,14 +279,36 @@
         if (this.dataController) {
 
           var dataController = this.dataController.controller || this._dataController;
+          this.filterSort = this.filterSort || {
+            filter: {},
+            sort: []
+          };
 
-          dataController.call(this, this.currentPage, this.pageSize, function (err, data, isLastPage) {
+          if (event && event.detail) {
+            var payload = event.detail;
+
+            if (payload.filterColumn) {
+              this.filterSort.filter[payload.filterColumn.key] = payload.filterColumn.value;
+            }
+            if (event.detail.sortColumn) {
+              this.filterSort.sort = this.columns.filter(function (col) {
+                return col.sort
+              }).map(function (col) {
+                return "" + col.key + " " + col.sort.toUpperCase()
+              });
+            }
+          }
+
+
+          dataController.call(this, this.currentPage, this.pageSize, this.filterSort, function (err, data,
+            isLastPage) {
             if (err) {
               this.fire('oe-show-error', err);
             } else {
               this.set('_isLastPage', isLastPage);
               this.set('_pageSize', this.pageSize);
               this.set('_hasPagination', true);
+              this.set('isServerData', true);
               this._paginate(data, isLastPage, function (err, paginatedData) {
                 if (err) {
                   return;
@@ -296,6 +321,7 @@
 
         } else if (this.items) {
           this.set('_hasPagination', false);
+          this.set('isServerData', false);
           this._processData(this.items);
         }
 
@@ -404,6 +430,9 @@
 
       this.set('_startRow', (this.currentPage - 1) * this.pageSize + 1);
       this.set('_endRow', this._startRow + items.length - 1);
+      if (this._endRow == 0) {
+        this.set('_startRow', 0);
+      }
       this.fire('oe-data-table-page-loaded', items);
       done(null, items);
 
@@ -453,7 +482,7 @@
       });
     },
 
-    _dataController: function (pageNumberToFetch, pageSize, done) {
+    _dataController: function (pageNumberToFetch, pageSize, filterSort, done) {
 
       if (!this.dataController.restUrl) {
         done('"dataController" has to be provided with restUrl property in order to use build in pagination option');
@@ -476,6 +505,33 @@
         });
       }
 
+      if (filterSort) {
+
+        if (filter.order || filterSort.sort.length) {
+          filter.order = filter.order || filterSort.sort;
+        }
+
+        var columnWhere = {};
+        var columnFilter = filterSort.filter;
+        columnWhere.and = Object.keys(columnFilter).filter(function (key) {
+          return columnFilter[key] && columnFilter[key].length;
+        }).map(function (prop) {
+          var query = {};
+          var pattern = '/.*' + columnFilter[prop] + '.*/i';
+          query[prop] = {
+            "regexp": pattern
+          };
+          return query
+        });
+
+        if (filter.where || columnWhere.and.length) {
+          filter.where = filter.where || {};
+          filter.where = Object.assign(filter.where, columnWhere);
+        }
+
+      }
+
+
       ajaxRequest.params = {
         filter: JSON.stringify(filter)
       };
@@ -483,7 +539,7 @@
       ajaxRequest.addEventListener('response', function (event) {
         var data = event.detail.response,
           isLastPage = data.length <= pageSize;
-        this._fetchRowCount();
+        this._fetchRowCount(filter);
         done(null, data.slice(0, pageSize), isLastPage);
       }.bind(this));
 
@@ -497,18 +553,31 @@
 
     },
 
-    _fetchRowCount: function () {
+    _fetchRowCount: function (filter) {
 
       var ajaxRequest = document.createElement('oe-ajax');
       ajaxRequest.contentType = 'application/json';
       ajaxRequest.handleAs = 'json';
-      ajaxRequest.url = this.dataController.restUrl + '/count';
+      var url = this.dataController.restUrl;
+      //check if the filter is appended as a part of the url. eg: /api/cars?filter[where][carClass]=fullsize
+      //if appended , remove the filter to avoid incorrect count
+      var index = url.indexOf("?");
+      if (index > -1) {
+          url = url.slice(url, index);
+      }
+      ajaxRequest.url = url + '/count';
 
       var userPassedFilter = this.dataController.filter;
 
       if (userPassedFilter && userPassedFilter.where) {
         ajaxRequest.params = {
           where: JSON.stringify(userPassedFilter.where)
+        };
+      }
+
+      if (filter && filter.where) {
+        ajaxRequest.params = {
+          where: JSON.stringify(filter.where)
         };
       }
 
@@ -528,10 +597,10 @@
       ajaxRequest.generateRequest();
     },
 
-    render: function () {
+    render: function (event) {
       this.set('_items', []);
       this.async(function () {
-        this._organizeData();
+        this._organizeData(event);
       });
     },
 

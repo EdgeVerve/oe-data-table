@@ -93,7 +93,7 @@ Custom property | Description | Default
 <dom-module id="oe-data-table">
 
   <template>
-    <style>
+    <style include="iron-flex iron-flex-alignment">
       :host {
         width: 100%;
         display: block;
@@ -492,7 +492,7 @@ Custom property | Description | Default
             </div>
           </template>
           <template is="dom-repeat" items="{{columns}}" as="column" filter="_getVisibleColumns" observe="hidden">
-            <oe-data-table-header-cell col-index=[[index]] class="table-data" items=[[items]] column={{column}} has-pagination=[[_hasPagination]]
+            <oe-data-table-header-cell col-index=[[index]] class="table-data" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]]
               style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-header-cell>
           </template>
           <template is="dom-if" if=[[rowActions.length]]>
@@ -505,7 +505,7 @@ Custom property | Description | Default
           </template>
           <div style$="height: [[_computeGridHeight(pageSize,_items.length)]]px">
             <template is="dom-if" if=[[_items.length]] restamp=true>
-              <iron-list id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key">
+              <iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key">
                 <template>
                   <div class$="table-row [[_computeClassforRow(row,_computeSelection)]]" tabindex$="[[tabIndex]]" on-tap="_rowClicked">
                     <template is="dom-if" if="[[!disableSelection]]">
@@ -521,7 +521,7 @@ Custom property | Description | Default
                       </div>
                     </template>
                     <template is="dom-repeat" items="[[columns]]" as="column" filter="_getVisibleColumns" observe="hidden">
-                      <oe-data-table-cell read-only=[[disableEdit]] key=[[key]] row={{row}} column=[[column]] class$="table-data [[_computeCellClass(row.*,column)]]" style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-cell>
+                      <oe-data-table-cell is-first-row=[[_isFirstRow(rowIndex,row)]] read-only=[[_computeReadOnly(disableEdit,disabled)]] key=[[key]] row={{row}} column=[[column]] class$="table-data [[_computeCellClass(row.*,column)]]" column-template=[[_getValidTemplate(row.*,row,column)]] style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-cell>
                     </template>
                     <template is="dom-if" if=[[rowActions.length]]>
                       <div class="row-actions" style$="flex: [[_computeRowActionWidth(rowActions.length)]]">
@@ -762,20 +762,79 @@ Custom property | Description | Default
     },
 
     behaviors: [
-      OEUtils.DataTableBehaviour
+      OEUtils.DataTableBehaviour,
+      Polymer.Templatizer
     ],
 
     listeners: {
       'change-column-width': '_changeColumnWidth',
       'set-active-cell': '_setActiveCell',
-      'customize-view': 'customizeView'
+      'customize-view': 'customizeView',
+      'oe-cell-rendered':'_updateIronList'
     },
 
     observers: [
-      '_updateRowWidth(_items.*)'
+      '_updateRowWidth(_items.*)',
+      '_keyHandlers(disabled,_items.length)'
     ],
-
+    _keyHandlers:function(){
+      if(this._items.length == 0){
+        return;
+      }
+      this.async(function(){
+        var ironList = this.querySelector('#row-list');
+        if(this.disabled){
+          this.listen(ironList, 'keydown', '_keyDownListener');
+        }else{
+          this.unlisten(ironList, 'keydown', '_keyDownListener');
+        }
+      })  
+    },
+    _keyDownListener:function(e){
+      if(this.selectedItems.length !== 1){
+        return;
+      }
+      if(e.keyCode === 40 || e.keyCode === 38){
+        var selectedIndex = this._items.indexOf(this.selectedItems[0]);
+        if(e.keyCode === 40){
+          //down arrow
+          if(selectedIndex+1 === this._items.length){
+            return;
+          }
+          selectedIndex++;
+        }else if(e.keyCode === 38){
+          //up arrow
+          if(selectedIndex === 0){
+            return;
+          }
+          selectedIndex--;
+        }
+        this.toggleSelection(this._items[selectedIndex]);
+      }
+     
+    },
+    _isFirstRow:function(idx,row){
+      return (idx === 0);
+    },
+    _updateIronList:function(e){
+      if(e.detail > this.maxRowHeight){
+        this.maxRowHeight = e.detail;
+        this.debounce('rowHeight',this.updateRowHeight,300)
+      }
+    },
+    updateRowHeight:function(){
+      var rowList = this.$$('#row-list');
+      if (rowList) {
+        rowList.notifyResize();
+      }
+    },
     ready: function () {
+      if (!this.ctor) {
+        const childTemplates = this.queryAllEffectiveChildren('template[column-key]');
+        if (childTemplates) {
+            this.set('_columnTemplates',childTemplates);
+        }
+      }
       var children = this.children;
       if (children.length > 1 && children[1].tagName === 'OE-DATA-TABLE-COLUMN') {
         var columns = [],
@@ -799,9 +858,21 @@ Custom property | Description | Default
 
       this.fire('oe-data-table-ready');
     },
-
+    _getValidTemplate:function(rowChange,row,column){
+      var template = this._columnTemplates.find(function(temp){
+        return temp.getAttribute('column-key') === column.key;
+      });
+      if(template){
+        this.templatize(template);
+        var itemNode = this.stamp({
+          row:row,
+          column:column
+        });
+        return itemNode
+      }
+    },
     attached: function () {
-
+      this.maxRowHeight = 48;
       this.async(function () {
         var form = this.$['form-component'];
         form.addEventListener('oe-action-add', this._formHandleAdd.bind(this));
@@ -940,15 +1011,14 @@ Custom property | Description | Default
     _disableNext: function (isLastPage) {
       return isLastPage;
     },
-
+    _computeReadOnly: function(disableEdit,disabled){
+      return (disableEdit||disabled) ;
+    },
     _computeGridHeight: function (pageSize, itemsToShow) {
       this.async(function () {
-        var rowList = this.$$('#row-list');
-        if (rowList) {
-          rowList.notifyResize();
-        }
-
-      }, 100);
+        this.updateRowHeight();
+        this.maxRowHeight = 48;
+      }, 0);
       var size = ((itemsToShow > 5 && itemsToShow < pageSize) ? itemsToShow : pageSize)
       this.set('_maxDomElement',size*2);
       return size * 48;
@@ -978,7 +1048,8 @@ Custom property | Description | Default
     _showAddForm: function (event) { // eslint-disable-line no-unused-vars
       var form = this.$['form-component'];
       
-      function addNewRecord(){
+      function addNewRecord(ev){
+        ev && ev.stopPropagation();
         form.newRecord(this.defaultRecord);
         if (this.recordHandling !== 'remote') {
           form.set('emitOnSave', 'oe-action-add');
@@ -1000,7 +1071,8 @@ Custom property | Description | Default
     _showEditForm: function (event) { // eslint-disable-line no-unused-vars
       var form = this.$['form-component'];
 
-      function editRecord(){
+      function editRecord(ev){
+        ev && ev.stopPropagation();
         form.set('model', JSON.parse(JSON.stringify(this.selectedItems[0])));
         if (this.recordHandling !== 'remote') {
           form.set('emitOnSave', 'oe-action-update');
@@ -1145,6 +1217,7 @@ Custom property | Description | Default
     _rowClicked: function (event) {
       // event.model.row will contain the object
       this.fire('oe-data-table-row-clicked', event);
+      this.toggleSelection(event.model.row);
     },
 
     //sets the active cell that is being edited

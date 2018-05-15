@@ -29,6 +29,11 @@
       <oe-data-table columns='[{ "key" : "id", "label" : "Id", "type" : "number" }]' items='[{"id":1, "name": "Admin"}, {"id":2, "name": "Developer"}, {"id":3, "name": "Designer"}, {"id":4, "name": "Tester"}]'></oe-data-table>
     </template>
   </test-fixture>
+  <test-fixture id="disabled-table">
+      <template>
+        <oe-data-table disabled columns='[{ "key" : "id", "label" : "Id", "type" : "number" }]' items='[{"id":1, "name": "Admin"}, {"id":2, "name": "Developer"}, {"id":3, "name": "Designer"}, {"id":4, "name": "Tester"}]'></oe-data-table>
+      </template>
+    </test-fixture>
   <test-fixture id="custom-columns">
     <template>
       <oe-data-table></oe-data-table>
@@ -90,6 +95,44 @@
         test('rendering of rows', function () {
           expect(dataTable.querySelectorAll('.table-row').length).to.be.equal(4);
         });
+      });
+
+      suite('Disabled table',function(){
+        var table;
+        setup(function(done){
+          table = fixture('disabled-table');
+          table.async(done, 1);
+        });
+
+        test('Toggle a row by clicking on it.',function(done){
+          expect(table.selectedItems.length).to.be.equal(0);
+          var row = table.querySelector('#row-list .table-row');
+          row.click();
+          flush(function(){
+            expect(table.selectedItems.length).to.be.equal(1);
+            row.click();
+            flush(function(){
+              expect(table.selectedItems.length).to.be.equal(0);
+              done();
+            });
+          });
+        });
+        
+        // test('Change the selected row by using arrow keys.',function(done){
+        //   expect(table.selectedItems.length).to.be.equal(0);
+        //   var row = table.querySelector('#row-list .table-row');
+        //   row.click();
+        //   flush(function(){
+        //     var ironList = table.querySelector('#row-list');
+        //     expect(table.selectedItems[0].id).to.be.equal(1);
+        //     var ev = new KeyboardEvent('keydown', {keyCode:40});
+        //     ironList.dispatchEvent(ev);
+        //     flush(function(){
+        //       expect(table.selectedItems[0].id).to.be.equal(2);
+        //       done();
+        //     });
+        //   });
+        // });
       });
 
       suite('Table actions', function () {
