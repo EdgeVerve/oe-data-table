@@ -1039,6 +1039,30 @@ Custom property | Description | Default
           row: model.row
         });
       }
+      if(actionObj.formUrl){
+        var form = this.$['form-component'];
+
+        var _setRecord = function(ev){
+          ev && ev.stopPropagation();
+          form.set('model', JSON.parse(JSON.stringify(model.row)));
+          this.set('_hideGrid', true);
+          this.set('_modelBeingUpdated', model.row);
+          form.removeEventListener('lazy-component-loaded',_setRecord);
+        }
+        
+        var _showGridView = function(ev){
+          this.set('_hideGrid', false);
+          form.removeEventListener('show-grid-view',_showGridView);
+        }
+
+        form.addEventListener('show-grid-view',_showGridView.bind(this));
+        if(this.dataTableFormUrl !== actionObj.formUrl){
+          form.addEventListener('lazy-component-loaded',_setRecord.bind(this));
+          this.set('dataTableFormUrl',actionObj.formUrl);
+        }else{
+          _setRecord.call(this);
+        }
+      }
     },
 
     _computeRowActionWidth: function (rowActions) {

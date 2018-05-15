@@ -1,0 +1,56 @@
+<!--
+  ©2016-2017 EdgeVerve Systems Limited (a fully owned Infosys subsidiary),
+  Bangalore, India. All Rights Reserved.
+-->
+      <link rel="import" href="../../../oe-info/oe-info.html">
+      <link rel="import" href="../../../iron-flex-layout/iron-flex-layout-classes.html">
+      <dom-module id="literal-view">
+        <template>
+          <style include="iron-flex iron-flex-alignment">
+            :host {
+              margin: 10px;
+            }
+      
+            .form-header {
+              padding: 16px;
+            }
+      
+            #fields {
+              padding: 16px;
+              width:50%;
+            }
+      
+
+
+          </style>
+          <div class="content layout vertical">
+            <div class="evform layout vertical">
+              <div class="form-header layout horizontal center">
+                <h2 class="flex">Literal</h2>
+              </div>
+      
+              <div id="fields" class="layout horizontal wrap justified">
+                  <oe-info value="[[literal.key]]" label="Key"></oe-info>
+                  <oe-info value="[[literal.value]]" label="Value"></oe-info>
+              </div>
+            </div>
+          </div>
+        </template>
+        <script>
+          Polymer({
+            is: 'literal-view',
+            modelAlias:"literal",
+            properties: {
+              literal: {
+                type: 'object',
+                notify: true,
+                value: function () {
+                  return {}
+                }
+              }
+            }
+          });
+      
+        </script>
+      </dom-module>
+      

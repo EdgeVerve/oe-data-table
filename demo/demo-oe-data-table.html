@@ -887,6 +887,10 @@
               current row.
             </p>
             <p>
+              If the row action object has a formUrl property, that form will be loaded inside the data-table and the current row's data 
+              will be set on the form element.The data will be set on 'vm' property or based on the modelAlias property of the Element.The user can then come back to the listing view by clicking the back arrow key above the form or by firing `show-grid-view` from inside the form element.
+            </p>
+            <p>
               Check out the below example, where we display the details of an user, on click of the info icon.
             </p>
             <demo-snippet>
@@ -894,20 +898,16 @@
                 <template is="dom-bind" id="myapp">
                   <oe-data-table label="User" disable-selection id="table" items=[[items]] columns=[[columns]] row-actions=[[rowActions]] on-oe-data-table-row-action="handleRowActions">
                   </oe-data-table>
-                  <template is="dom-if" if=[[userDetail]]>
-                    <div class="user-info">
-                      <oe-info label="Key" value=[[userDetail.key]]></oe-info>
-                      <oe-info label="Value" value=[[userDetail.value]]></oe-info>
-                    </div>
-                  </template>
-                  <template is="dom-if" if=[[userEdit]]>
-                    <lazy-component url="templates/literal-default.html" model={{userEditClone}} emit-on-save="oe-action-update" on-oe-action-update="rowUpdated">
-                    </lazy-component>
+                  <template is="dom-if" if=[[eventString]]>
+                    <h3>Event Data</h3>
+                    <pre style="padding:8px;">
+[[eventString]]
+                    </pre>                   
                   </template>
                 </template>
                 <script>
                   var myapp = document.getElementById('myapp');
-
+                  
                   myapp.set('columns', [{
                     key: 'key',
                     label: 'Key',
@@ -939,22 +939,21 @@
                   myapp.set('rowActions', [{
                     icon: 'info',
                     action: 'info',
-                    title: 'details'
+                    title: 'details',
+                    formUrl:'templates/literal-view.html'
                   }, {
                     icon: 'editor:mode-edit',
                     title: 'edit',
-                    action: 'edit'
+                    action: 'edit',
+                    formUrl:'templates/literal-default.html'
+                  },{
+                    icon: 'star',
+                    action: 'bookmark',
+                    title: 'bookmark'
                   }]);
 
                   myapp.handleRowActions = function (event) {
-                    if (event.detail.action.title == 'details') {
-                      myapp.set('userEdit', null);
-                      myapp.set('userDetail', event.detail.row);
-                    } else {
-                      myapp.set('userDetail', null);
-                      myapp.set('userEditClone', JSON.parse(JSON.stringify(event.detail.row)));
-                      myapp.set('userEdit', event.detail.row);
-                    }
+                    myapp.set('eventString',JSON.stringify(event.detail,null,2));
                   }
 
                   myapp.rowUpdated = function (event) {
@@ -965,12 +964,11 @@
                       (index >= 0) && myapp.splice('items', index, 1, newRecord);
                       myapp.set('userEdit', null);
                     }
-                  }
-
-                </script>
+                  }</script>
               </template>
             </demo-snippet>
           </div>
+         
           <div>
             <h1> Pagination </h1>
             <p>
