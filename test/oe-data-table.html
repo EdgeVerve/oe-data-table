@@ -574,7 +574,24 @@
           }],
           editorFormUrl = '../demo/templates/literal-default.html'; // eslint-disable-line no-unused-vars
 
+          var rowActions = [{
+            icon: 'info',
+            action: 'info',
+            title: 'details',
+            formUrl:'../demo/templates/literal-view.html'
+          }]
+
         setup(function (done) {
+          var server = sinon.fakeServer.create();
+          server.autoRespond = true;
+          server.respondImmediately = true;
+          
+          server.respondWith('post', /api\/Literals/, function (req) {
+            req.respond(200, {
+              'Content-Type': 'application/json'
+            },req.requestBody);
+          });
+
           dataTable = fixture('row-edit');
           setTimeout(done, 500);
         });
@@ -649,18 +666,50 @@
                 flush(function () {
                   var saveButton = dataTable.querySelectorAll(
                     'paper-button[oe-action-model="literal"]');
-                  saveButton = saveButton[0]
+                  saveButton = saveButton[0];
+                  var form = saveButton.domHost;
+                  form.set(form.modelAlias,{'key':'test1','value':'Test 1'});
                   MockInteractions.tap(saveButton);
-                  dataTable.async(function () {
-                    expect(dataTable.items.length).to.be.equal(4);
-                    done();
-                  }, 1000)
+                  flush(function(){
+                    dataTable.async(function () {
+                      expect(dataTable.items.length).to.be.equal(4);
+                      done();
+                    }, 1000)
+                  });
                 });
               })
             })
           })
         });
 
+        test('open row in a custom form', function (done) {
+          flush(function () {
+            dataTable.set('columns', columns);
+            flush(function () {
+              dataTable.set('items', items);
+              dataTable.set('rowActions', rowActions);
+              flush(function () {
+                expect(dataTable.items.length).to.be.equal(4);
+                var infoIcon = dataTable.querySelector('.row-action');
+                MockInteractions.tap(infoIcon);
+                Polymer.dom.flush();
+                flush(function () {
+                  dataTable.async(function () {
+                    expect(dataTable.dataTableFormUrl).to.be.equal(rowActions[0].formUrl);
+                    flush(function(){
+                      var newForm = dataTable.querySelector('literal-view');
+                      newForm.fire('show-grid-view');
+                      flush(function(){
+                        expect(dataTable._hideGrid).to.be.equal(false);
+                        done();
+                      })
+                    })
+                  }, 1000);
+                });
+              })
+            })
+          })
+        });
       });
 
       suite('Inline edit', function () {
