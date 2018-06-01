@@ -527,7 +527,7 @@ Custom property | Description | Default
                       <div class="row-actions" style$="flex: [[_computeRowActionWidth(rowActions.length)]]">
                         <template is="dom-repeat" items=[[rowActions]] as="action">
                           <div>
-                            <paper-icon-button class="row-action" row$=[[row]] icon="[[action.icon]]" on-tap="_rowActionClicked"></paper-icon-button>
+                            <paper-icon-button class="row-action" row$=[[row]] rowIndex$=[[rowIndex]]  icon="[[action.icon]]" on-tap="_rowActionClicked"></paper-icon-button>
                             <paper-tooltip position="left"> [[action.title]] </paper-tooltip>
                           </div>
                         </template>
@@ -1029,14 +1029,16 @@ Custom property | Description | Default
       var model = event.model;
       this.fire('oe-data-table-row-action', {
         action: model.action,
-        row: model.row
+        row: model.row,
+        rowIndex:model.rowIndex
       });
       var actionObj = model.action;
       if (actionObj.action) {
         var eventName = 'oe-data-table-row-action-' + actionObj.action;
         this.fire(eventName, {
           action: actionObj,
-          row: model.row
+          row: model.row,
+          rowIndex:model.rowIndex
         });
       }
       if(actionObj.formUrl){
