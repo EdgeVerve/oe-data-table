@@ -328,10 +328,20 @@
       }
     },
 
-    _pageSizeChanged: function (pageSize) { // eslint-disable-line no-unused-vars
-      if (this.rowCount && this._isLastPage && (this._pageSize < this.pageSize)) {
-        this.set('currentPage', Math.ceil(this.rowCount / this.pageSize));
+    _pageSizeChanged: function (pageSize, oldSize) { // eslint-disable-line no-unused-vars
+      /* When page size changes, we make sure the current top record is 
+      in the view for new page-size. */
+      var cPage = this.currentPage || 1;
+      var nPage = cPage;
+      if(pageSize && oldSize) {
+        var firstVisibleIndex = (cPage - 1)*oldSize + 1;
+        nPage = Math.ceil(firstVisibleIndex/pageSize);
+      }
+      if(nPage != cPage) {
+        /*Current Page observer will call _organizeData */
+        this.set('currentPage', nPage);
       } else {
+        /* If we are on same page, call _organizeData explicitly */
         this._organizeData();
       }
     },
