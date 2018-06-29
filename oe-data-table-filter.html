@@ -107,7 +107,7 @@
       </template>
     </template>
     <div class="action-buttons">
-      <paper-button on-tap="_resetFilter"> Reset </paper-button>
+      <paper-button on-tap="_resetFilter" disabled=[[!_hasFilterSelected(_computeSelection)]]> Reset </paper-button>
       <paper-button on-tap="_closeFilter"> Cancel </paper-button>
       <paper-button on-tap="_applyFilter"> Apply </paper-button>
     </div>
@@ -154,6 +154,7 @@
 
     ready: function () {
       this.set('_selectionState', {});
+      this.set('_computeSelection',true);
     },
 
     _computeCellData: function (row, column) {
@@ -197,6 +198,17 @@
 
     _closeFilter: function (event) { // eslint-disable-line no-unused-vars
       this.domHost.$.dialog.close();
+    },
+
+    _hasFilterSelected:function(change){
+      var selection = this._selectionState;
+      if(!selection){
+        return false;
+      }
+      var selected = Object.keys(selection).find(function(s){
+        return selection[s];
+      }.bind(this));
+      return !!selected;
     },
 
     _itemsChanged: function (change) { // eslint-disable-line no-unused-vars
