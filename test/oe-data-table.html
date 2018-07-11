@@ -29,6 +29,11 @@
       <oe-data-table columns='[{ "key" : "id", "label" : "Id", "type" : "number" }]' items='[{"id":1, "name": "Admin"}, {"id":2, "name": "Developer"}, {"id":3, "name": "Designer"}, {"id":4, "name": "Tester"}]'></oe-data-table>
     </template>
   </test-fixture>
+  <test-fixture id="client-pagination">
+    <template>
+      <oe-data-table columns='[{ "key" : "id", "label" : "Id", "type" : "number" }]' items='[{"id":1, "name": "Admin"}, {"id":2, "name": "Developer"}, {"id":3, "name": "Designer"}, {"id":4, "name": "Tester"}]' page-size="2" pagination-type="page"></oe-data-table>
+    </template>
+  </test-fixture>
   <test-fixture id="disabled-table">
       <template>
         <oe-data-table disabled columns='[{ "key" : "id", "label" : "Id", "type" : "number" }]' items='[{"id":1, "name": "Admin"}, {"id":2, "name": "Developer"}, {"id":3, "name": "Designer"}, {"id":4, "name": "Tester"}]'></oe-data-table>
@@ -174,6 +179,38 @@
             done();
           });
           MockInteractions.tap(iconToTap);
+        });
+      });
+
+      suite('Client side pagination', function () {
+
+        var dataTable;
+
+        setup(function (done) {
+          dataTable = fixture('client-pagination');
+          dataTable.async(done, 1);
+        });
+
+        test('Display rows based on page size.', function (done) {
+          flush(function(){
+            var rowItems = dataTable.querySelectorAll('.table-row');
+            expect(rowItems.length).to.be.equal(dataTable.pageSize);
+            done();
+          });
+        });
+
+        test('Change page based on pagination panel control', function (done) {
+          flush(function(){
+            var rowItems = dataTable.$$('#row-list');
+            var icons = dataTable.$$('.pagination-panel').querySelectorAll('.paper-icon-button');
+            var nextIcon = icons[1];
+            expect(rowItems.items[0].id).to.be.equal(1);
+            MockInteractions.tap(nextIcon);
+            flush(function(){
+              expect(rowItems.items[0].id).to.be.equal(3);
+              done();
+            });
+          });
         });
       });
 
