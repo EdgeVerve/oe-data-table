@@ -527,7 +527,7 @@ Custom property | Description | Default
                       <div class="row-actions" style$="flex: [[_computeRowActionWidth(rowActions.length)]]">
                         <template is="dom-repeat" items=[[rowActions]] as="action">
                           <div>
-                            <paper-icon-button class="row-action" row$=[[row]] icon="[[action.icon]]" on-tap="_rowActionClicked"></paper-icon-button>
+                            <paper-icon-button class="row-action" row$=[[row]] rowIndex$=[[rowIndex]]  icon="[[action.icon]]" on-tap="_rowActionClicked"></paper-icon-button>
                             <paper-tooltip position="left"> [[action.title]] </paper-tooltip>
                           </div>
                         </template>
@@ -1029,15 +1029,41 @@ Custom property | Description | Default
       var model = event.model;
       this.fire('oe-data-table-row-action', {
         action: model.action,
-        row: model.row
+        row: model.row,
+        rowIndex:model.rowIndex
       });
       var actionObj = model.action;
       if (actionObj.action) {
         var eventName = 'oe-data-table-row-action-' + actionObj.action;
         this.fire(eventName, {
           action: actionObj,
-          row: model.row
+          row: model.row,
+          rowIndex:model.rowIndex
         });
+      }
+      if(actionObj.formUrl){
+        var form = this.$['form-component'];
+
+        var _setRecord = function(ev){
+          ev && ev.stopPropagation();
+          form.set('model', JSON.parse(JSON.stringify(model.row)));
+          this.set('_hideGrid', true);
+          this.set('_modelBeingUpdated', model.row);
+          form.removeEventListener('lazy-component-loaded',_setRecord);
+        }
+        
+        var _showGridView = function(ev){
+          this.set('_hideGrid', false);
+          form.removeEventListener('show-grid-view',_showGridView);
+        }
+
+        form.addEventListener('show-grid-view',_showGridView.bind(this));
+        if(this.dataTableFormUrl !== actionObj.formUrl){
+          form.addEventListener('lazy-component-loaded',_setRecord.bind(this));
+          this.set('dataTableFormUrl',actionObj.formUrl);
+        }else{
+          _setRecord.call(this);
+        }
       }
     },
 
