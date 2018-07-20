@@ -313,6 +313,11 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
       var editorAttributes = column.editorAttributes;
       var elem = document.createElement(uitype);
       if (elem.set) {
+        if(typeMapping.attributes){
+          typeMapping.attributes.forEach(function(attr){
+            elem.set(attr.name, attr.value);
+          });
+        }
         if (editorAttributes) {
           Object.keys(editorAttributes).forEach(function (prop) {
             elem.set(prop, editorAttributes[prop]);
