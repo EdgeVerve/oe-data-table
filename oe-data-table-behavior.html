@@ -553,23 +553,25 @@
         }
 
         var columnWhere = {};
-        var columnFilter = filterSort.filter;
-        columnWhere.and = Object.keys(columnFilter).filter(function (key) {
-          return columnFilter[key] && columnFilter[key].length;
-        }).map(function (prop) {
-          var query = {};
-          var pattern = '/.*' + columnFilter[prop] + '.*/i';
-          query[prop] = {
-            "regexp": pattern
-          };
-          return query
-        });
+        if(filterSort.filter){
+          var columnFilter = filterSort.filter;
+          
+          columnWhere.and = Object.keys(columnFilter).filter(function (key) {
+            return columnFilter[key] && columnFilter[key].length;
+          }).map(function (prop) {
+            var query = {};
+            var pattern = '/.*' + columnFilter[prop] + '.*/i';
+            query[prop] = {
+              "regexp": pattern
+            };
+            return query
+          });
 
-        if (filter.where || columnWhere.and.length) {
-          filter.where = filter.where || {};
-          filter.where = Object.assign(filter.where, columnWhere);
+          if (filter.where || columnWhere.and.length) {
+            filter.where = filter.where || {};
+            filter.where = Object.assign(filter.where, columnWhere);
+          }
         }
-
       }
 
 
