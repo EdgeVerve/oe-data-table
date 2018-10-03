@@ -177,27 +177,27 @@
             var refCodeModelPromisesMap = new Map();
             var refCodeModelDataMap = new Map();
 
-            properties && Object.keys(properties).forEach(prop => {
+            properties && Object.keys(properties).forEach(function (prop) {
               var refCodeType = properties[prop].refcodetype;
               if (refCodeType) {
                 refCodeModelPromisesMap.set(prop, this._getRefCodeModel(refCodeType));
               }
             });
 
-            Promise.all(refCodeModelPromisesMap.values()).then(modelMap => {
+            Promise.all(refCodeModelPromisesMap.values()).then(function (modelMap) {
               var entries = refCodeModelPromisesMap.entries();
-              modelMap.forEach(model => {
+              modelMap.forEach(function (model) {
                 var prop = entries.next().value[0];
                 refCodeModelDataMap.set(prop, this._getRefCodes(model.resturl));
               });
               return Promise.all(refCodeModelDataMap.values());
-            }).then(resultMap => {
+            }).then(function (resultMap) {
               var entries = refCodeModelDataMap.entries();
-              resultMap.forEach(result => {
+              resultMap.forEach(function (result) {
                 var propertyName = entries.next().value[0];
                 this.refCodeMap[propertyName] = {};
                 this.listDataMap[propertyName] = [];
-                result && Object.keys(result).forEach(res => {
+                result && Object.keys(result).forEach(function (res) {
                   var code = result[res].code;
                   var desc = result[res].description;
                   this.refCodeMap[propertyName][code] = desc;
@@ -208,7 +208,7 @@
                 });
               });
               this.set('columns', this._getColumnsFromModelDef(modelDefinition));
-            }).catch(error => {});
+            }).catch(function (error) {});
 
           }.bind(this));
         }
@@ -689,17 +689,17 @@
     },
 
     _getRefCodes: function (url) {
-      return new Promise((resolve, reject) => {
+      return new Promise(function (resolve, reject) {
         const xhr = new XMLHttpRequest();
         xhr.open("GET", url);
-        xhr.onload = () => resolve(JSON.parse(xhr.responseText));
-        xhr.onerror = () => reject(xhr.statusText);
+        xhr.onload = function () { resolve(JSON.parse(xhr.responseText)) };
+        xhr.onerror = function () { reject(xhr.statusText) };
         xhr.send();
       });
     },
 
     _getRefCodeModel: function (modelName) {
-      return new Promise((resolve, reject) => {
+      return new Promise(function (resolve, reject) {
         OEUtils.getModelDefinition(modelName, function (err, model) {
           if (err) {
             return reject(err);
