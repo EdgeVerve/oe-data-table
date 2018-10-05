@@ -173,6 +173,7 @@
             if (err) {
               return;
             }
+            var self = this;
             var properties = modelDefinition.properties;
             var refCodeModelPromisesMap = new Map();
             var refCodeModelDataMap = new Map();
@@ -180,7 +181,7 @@
             properties && Object.keys(properties).forEach(function (prop) {
               var refCodeType = properties[prop].refcodetype;
               if (refCodeType) {
-                refCodeModelPromisesMap.set(prop, this._getRefCodeModel(refCodeType));
+                refCodeModelPromisesMap.set(prop, self._getRefCodeModel(refCodeType));
               }
             });
 
@@ -188,26 +189,26 @@
               var entries = refCodeModelPromisesMap.entries();
               modelMap.forEach(function (model) {
                 var prop = entries.next().value[0];
-                refCodeModelDataMap.set(prop, this._getRefCodes(model.resturl));
+                refCodeModelDataMap.set(prop, self._getRefCodes(model.resturl));
               });
               return Promise.all(refCodeModelDataMap.values());
             }).then(function (resultMap) {
               var entries = refCodeModelDataMap.entries();
               resultMap.forEach(function (result) {
                 var propertyName = entries.next().value[0];
-                this.refCodeMap[propertyName] = {};
-                this.listDataMap[propertyName] = [];
+                self.refCodeMap[propertyName] = {};
+                self.listDataMap[propertyName] = [];
                 result && Object.keys(result).forEach(function (res) {
                   var code = result[res].code;
                   var desc = result[res].description;
-                  this.refCodeMap[propertyName][code] = desc;
-                  this.listDataMap[propertyName].push({
+                  self.refCodeMap[propertyName][code] = desc;
+                  self.listDataMap[propertyName].push({
                     code: code,
                     description: desc
                   });
                 });
               });
-              this.set('columns', this._getColumnsFromModelDef(modelDefinition));
+              self.set('columns', self._getColumnsFromModelDef(modelDefinition));
             }).catch(function (error) {});
 
           }.bind(this));
