@@ -412,7 +412,7 @@ Custom property | Description | Default
             <div class="grid-info">
               <iron-icon icon="arrow-back" on-tap="_toggleSelectAll" hidden=[[!_isMultiSelected(selectedItems.length)]]></iron-icon>
               <div class="header-title">
-                [[label]]
+                <oe-i18n-msg msgid="[[label]]">[[label]]</oe-i18n-msg>
                 <content select="[header-title]"></content>
               </div>
               <div class="selected-items-count" hidden=[[!_isMultiSelected(selectedItems.length)]]>
@@ -423,19 +423,21 @@ Custom property | Description | Default
               <template is="dom-if" if="[[!disabled]]">
                 <template is="dom-if" if="[[dataController]]">
                   <paper-icon-button id="refresh-icon" icon="icons:refresh" on-tap="render"></paper-icon-button>
-                  <paper-tooltip for="refresh-icon"> Refresh </paper-tooltip>
+                  <paper-tooltip for="refresh-icon"> 
+                    <oe-i18n-msg msgid="Refresh">Refresh</oe-i18n-msg> 
+                  </paper-tooltip>
                 </template>
                 <template is="dom-if" if="[[!selectedItems.length]]">
                   <template is="dom-if" if="[[!disableAdd]]">
                     <div class="header-icon">
                       <paper-icon-button icon="icons:add-circle-outline" on-tap="_showAddForm"></paper-icon-button>
-                      <paper-tooltip> New </paper-tooltip>
+                      <paper-tooltip><oe-i18n-msg msgid="New">New</oe-i18n-msg></paper-tooltip>
                     </div>
                   </template>
                   <template is="dom-if" if="[[!disableConfigEditor]]">
                     <div class="header-icon">
                       <paper-icon-button icon="image:tune" on-tap="_openColumnCustomizer"></paper-icon-button>
-                      <paper-tooltip> Customize View </paper-tooltip>
+                      <paper-tooltip><oe-i18n-msg msgid="Customize View">Customize View</oe-i18n-msg> </paper-tooltip>
                     </div>
                   </template>
                 </template>
@@ -443,13 +445,13 @@ Custom property | Description | Default
                   <template is="dom-if" if="[[!disableEdit]]">
                   <div class="header-icon" hidden$=[[_hideEditIcon(selectedItems.length)]]>
                     <paper-icon-button icon="editor:mode-edit" on-tap="_showEditForm"></paper-icon-button>
-                    <paper-tooltip> Edit </paper-tooltip>
+                    <paper-tooltip><oe-i18n-msg msgid="Edit">Edit</oe-i18n-msg> </paper-tooltip>
                   </div>
                   </template>
                   <template is="dom-if" if="[[!disableDelete]]">
                   <div class="header-icon">
                     <paper-icon-button id="delete-icon" icon="delete" on-tap="_deleteSelectedRows"></paper-icon-button>
-                    <paper-tooltip> Delete </paper-tooltip>
+                    <paper-tooltip> <oe-i18n-msg msgid="Delete">Delete</oe-i18n-msg> </paper-tooltip>
                   </div>
                   </template>
                 </template>
@@ -560,7 +562,7 @@ Custom property | Description | Default
         </div>
         <template is="dom-if" if=[[_showPaginationPanel]]>
           <div class="pagination-panel">
-            <div class="pagination-dropdown-title"> Rows per page: </div>
+            <div class="pagination-dropdown-title"> <oe-i18n-msg msgid="Rows per page">Rows per page </oe-i18n-msg>: </div>
             <paper-dropdown-menu no-label-float vertical-align="bottom" horizontal-align="left">
               <paper-listbox class="dropdown-content" attr-for-selected="value" selected={{pageSize}}>
                 <template is="dom-repeat" items=[[rowsPerPageItems]]>
