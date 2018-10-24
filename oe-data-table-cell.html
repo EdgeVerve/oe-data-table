@@ -125,7 +125,8 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
     observers: [
       '_buildCustomRenderer(row.*, column)',
       '_buildCustomRenderer(columnTemplate)',
-      '_computeCellData(row.*, column)'
+      '_computeCellData(row.*, column)',
+      '_setARIALabel(_displayValue)'
     ],
 
     listeners: {
@@ -248,7 +249,11 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
         this.set('_displayValue', cellValue);
       }
     },
-
+    _setARIALabel:function(displayVal){
+      if(typeof displayVal !== "undefined" && typeof displayVal !== "object" && displayVal != null){
+        this.setAttribute('aria-label',displayVal);
+      }
+    },
     _handleCellTap: function (event) {
       if (!this.column.readOnly && !this.readOnly) {
         event.stopPropagation();

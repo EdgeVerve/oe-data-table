@@ -496,13 +496,13 @@ Custom property | Description | Default
           <template is="dom-if" if="[[!disableSelection]]">
             <div class="selection-cell">
               <paper-checkbox 
-              role="gridcell" data-col-index="-1" data-row-index="-1" tabindex="0"
+              role="gridcell" data-cell-type="selection" data-col-index="-1" data-row-index="-1" tabindex="0"
               class="selection-checkbox" checked=[[_selectedAll]] disabled$=[[!multiSelection]] on-change="_toggleSelectAll"></paper-checkbox>
             </div>
           </template>
           <template is="dom-repeat" items="{{columns}}" as="column" filter="_getVisibleColumns" observe="hidden">
             <oe-data-table-header-cell  
-            role="gridcell" data-col-index$=[[index]] data-row-index="-1" tabindex="0"
+            role="gridcell" data-cell-type="header" data-col-index$=[[index]] data-row-index="-1" tabindex="0"
             class="table-data" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]]
             style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-header-cell>
           </template>
@@ -518,11 +518,11 @@ Custom property | Description | Default
             <template is="dom-if" if=[[_items.length]] restamp=true>
               <iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth">
                 <template>
-                  <div role="row" class$="table-row [[_computeClassforRow(row,_computeSelection)]]" tabindex="-1" on-tap="_rowClicked" row-index$="[[rowIndex]]">
+                  <div role="row" class$="table-row [[_computeClassforRow(row,_computeSelection)]]" tabindex="-1" on-tap="_rowClicked" data-row-index$="[[rowIndex]]">
                     <template is="dom-if" if="[[!disableSelection]]">
                       <div class="selection-cell">
                         <paper-checkbox  
-                        role="gridcell" data-col-index="-1" data-row-index$="[[rowIndex]]" data-row-type="row" tabindex="-1"
+                        role="gridcell" data-cell-type="selection" data-col-index="-1" data-row-index$="[[rowIndex]]" tabindex="-1"
                         class="selection-checkbox" on-change="_toggleSelection" on-keydown="_goToCell" on-tap="_checkboxTapped" checked={{_getSelectionState(row,_computeSelection)}}></paper-checkbox>
                         <template is="dom-if" if="[[selectionCellContent]]">
                           <div class="selection-cell-content" style$="[[_computeSelectionCellContentStyle(row,selectionCellContent)]];">
@@ -535,7 +535,7 @@ Custom property | Description | Default
                     </template>
                     <template is="dom-repeat" items="[[columns]]" as="column" filter="_getVisibleColumns" observe="hidden">
                       <oe-data-table-cell 
-                      role="gridcell" data-row-index$="[[rowIndex]]" data-col-index$="[[index]]" data-row-type="row" tabindex="-1"
+                      role="gridcell" data-cell-type="data-cell" data-row-index$="[[rowIndex]]" data-col-index$="[[index]]" tabindex="-1"
                       is-first-row=[[_isFirstRow(rowIndex,row)]] read-only=[[_computeReadOnly(disableEdit,disabled)]] key=[[rowIndex]] row={{row}} column=[[column]] class$="table-data [[_computeCellClass(row.*,column)]]" column-template=[[_getValidTemplate(row.*,row,column)]] style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-cell>
                     </template>
                     <template is="dom-if" if=[[rowActions.length]]>

@@ -152,79 +152,105 @@
 
     listeners: {
       'apply-criteria': 'render',
-      'oe-data-table-cell-value-changed': '_organizeData'
+      'oe-data-table-cell-value-changed': '_organizeData',
+      'keydown': '__cellNavigationHandler'
     },
 
     observers: [
       '_itemsChanged(items.*)',
-      '_organizeData(currentPage)',
-      '__navigationSetup(items.*,columns.*)'
+      '_organizeData(currentPage)'
     ],
+    __cellNavigationHandler: function (ev) {
 
-    __navigationSetup: function (itemsDelta, columnsDelta) {
-      //max
       var maxColumns = this.columns.filter(function (c) {
         return !c.hidden;
       }).length;
+      var allRows = this.querySelectorAll('.table-row[role="row"]');
+      var maxRow, minRow;
+      [].forEach.call(allRows, function (row) {
+        var rowIndex = parseInt(row.dataset.rowIndex);
+        minRow = minRow < rowIndex ? minRow : rowIndex;
+        maxRow = maxRow > rowIndex ? maxRow : rowIndex;
+      });
+      if ([33, 34, 35, 36, 37, 38, 39, 40, 13].indexOf(ev.keyCode) === -1) {
+        return;
+      }
+      var _activeEl = document.activeElement;
+      if (_activeEl && _activeEl.getAttribute('role') === "gridcell") {
+        var cellInfo = _activeEl.dataset;
+        var curRow = parseInt(cellInfo.rowIndex);
+        var curCol = parseInt(cellInfo.colIndex);
+        ev.stopPropagation();
+        ev.preventDefault();
 
-     
-      function arrowNavigationHandler(ev) {
-        
-        if ([37, 38, 39, 40, 13].indexOf(ev.keyCode) === -1) {
-          return;
-        }
-        var _activeEl = document.activeElement;
-        if (_activeEl && _activeEl.getAttribute('role') === "gridcell") {
-          var cellInfo = _activeEl.dataset;
-          var curRow = parseInt(cellInfo.rowIndex);
-          var curCol = parseInt(cellInfo.colIndex);
-
-          switch (ev.keyCode) {
-            case 13://Enter key
-              if (this.disabled && curRow !== -1) {
-                this.toggleSelection(this._items[curRow]);
-                return;
-              } else if (_activeEl.tagName.toLowerCase() === 'oe-data-table-cell') {
-                this.fire('set-active-cell', {
-                  element: _activeEl
-                });
-                return;
-              }
-              break;
-            case 37://Left arrow
-              curCol--;
-              if(curCol < -1){
-                curRow--;
-                curCol = maxColumns - 1;
-              }
-              break;
-            case 38://Up arrow
+        switch (ev.keyCode) {
+          case 13://Enter key
+            if (cellInfo.cellType === "header") {
+              //Header cell changes sort
+              _activeEl._changeSortOrder();
+            } else if (this.disabled && cellInfo.cellType === "data-cell") {
+              this.toggleSelection(this._items[curRow]);
+              return;
+            } else if (cellInfo.cellType === "data-cell") {
+              this.fire('set-active-cell', {
+                element: _activeEl
+              });
+              return;
+            }
+            break;
+          case 33://page Up
+            curRow -= 5;
+            if (curRow < minRow) {
+              curRow = minRow;
+            }
+            break;
+          case 34://page Down
+            curRow += 5;
+            if (curRow > maxRow) {
+              curRow = maxRow;
+            }
+            break;
+          case 35://End
+            if (ev.ctrlKey) {
+              curRow = maxRow;
+            }
+            curCol = maxColumns - 1;
+            break;
+          case 36://Home
+            if (ev.ctrlKey) {
+              curRow = minRow;
+            }
+            curCol = -1;
+            break;
+          case 37://Left arrow
+            curCol--;
+            if (curCol < -1) {
               curRow--;
-              break;
-            case 39://Right arrow;
-              curCol++;
-              if(curCol >= maxColumns){
-                curRow++;
-                curCol = -1;
-              }
-              break;
-            case 40://Down arrow
+              curCol = maxColumns - 1;
+            }
+            break;
+          case 38://Up arrow
+            curRow--;
+            break;
+          case 39://Right arrow;
+            curCol++;
+            if (curCol >= maxColumns) {
               curRow++;
-              break;
-          }
-          var queryStr = '[role="gridcell"][data-col-index="'+curCol+'"][data-row-index="'+curRow+'"]';
-          var targetCell = this.querySelector(queryStr);
-          if (targetCell && targetCell.focus) {
-            targetCell.focus();
-          }
+              curCol = -1;
+            }
+            break;
+          case 40://Down arrow
+            curRow++;
+            break;
+        }
+        var queryStr = '[role="gridcell"][data-col-index="' + curCol + '"][data-row-index="' + curRow + '"]';
+        var targetCell = this.querySelector(queryStr);
+        if (targetCell && targetCell.focus) {
+          targetCell.focus();
+          targetCell.scrollIntoViewIfNeeded();
         }
       }
-
-      this.removeEventListener('keydown', arrowNavigationHandler.bind(this));
-      this.addEventListener('keydown', arrowNavigationHandler.bind(this));
-      Polymer.dom.flush()
     },
-
 
     attached: function () {
       this._setSelectedItems([]);

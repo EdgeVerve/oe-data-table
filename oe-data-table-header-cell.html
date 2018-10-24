@@ -173,6 +173,11 @@
       var sortBy = {};
       sortBy[this.column.key] = sortOrders[sort];
       this.fire('apply-criteria',{sortColumn:sortBy});
+      switch(this.column.sort){
+        case 'asc':this.setAttribute('aria-sort','ascending');break;
+        case 'desc':this.setAttribute('aria-sort','descending');break;
+        default:this.setAttribute('aria-sort','none');break;
+      } 
     },
 
     _handleResize: function (event) {
