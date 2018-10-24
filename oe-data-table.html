@@ -2,6 +2,7 @@
   ©2016-2017 EdgeVerve Systems Limited (a fully owned Infosys subsidiary),
   Bangalore, India. All Rights Reserved.
 -->
+<link rel="import" href="./styles/mdl-grid-css.html">
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-list/iron-list.html">
 <link rel="import" href="../iron-icons/iron-icons.html">
@@ -178,6 +179,11 @@ Custom property | Description | Default
         display: inline-block;
       }
 
+      .search-div {
+				display: inline-block;
+				width: 200px;
+			}
+
       paper-progress {
         position: absolute;
         width: 100%;
@@ -346,6 +352,10 @@ Custom property | Description | Default
         @apply(--layout-end-justified);
       }
 
+      .table-header-style {
+				padding: 8px 0;
+			}
+
       .row-details {
         padding: 0 32px;
       }
@@ -403,6 +413,68 @@ Custom property | Description | Default
       .empty-state{
         height: 100%;
       }
+
+      .searchBox {
+				opacity: 0.56;
+				border: 1px solid #979797;
+				border-radius: 48px;
+				height: 40px;
+			}
+
+			.search-icon-width {
+				width: 23px !important;
+				margin-top: 10px;
+				margin-left: 10px;
+			}
+
+			oe-input {
+				--paper-input-container: {
+					padding-bottom: 0;
+					height: 1px;
+				}
+				;
+				--paper-input-container-underline: {
+					display: none;
+					border-bottom-color: var(--primary-light-color);
+				}
+				;
+				--paper-input-container-underline-focus: {
+					display: none;
+				}
+				;
+			}
+
+			.mycell {
+				display: block !important;
+			}
+
+			.clearButton {
+				bottom: 0;
+				margin-right: 2px;
+				position: absolute;
+			}
+
+
+
+			.expandedView {
+				visibility: hidden;
+			}
+
+			.hookClass {
+				display: none;
+			}
+
+
+			.expanded {
+				display: block;
+				height: 300px;
+				overflow-y: auto;
+
+			}
+
+			.margin-right-45 {
+				margin-right: 20px;
+			}
     </style>
 
     <paper-material class="data-table">
@@ -427,32 +499,55 @@ Custom property | Description | Default
                     <oe-i18n-msg msgid="Refresh">Refresh</oe-i18n-msg> 
                   </paper-tooltip>
                 </template>
-                <template is="dom-if" if="[[!selectedItems.length]]">
-                  <template is="dom-if" if="[[!disableAdd]]">
-                    <div class="header-icon">
-                      <paper-icon-button icon="icons:add-circle-outline" on-tap="_showAddForm"></paper-icon-button>
-                      <paper-tooltip><oe-i18n-msg msgid="New">New</oe-i18n-msg></paper-tooltip>
-                    </div>
-                  </template>
-                  <template is="dom-if" if="[[!disableConfigEditor]]">
-                    <div class="header-icon">
-                      <paper-icon-button icon="image:tune" on-tap="_openColumnCustomizer"></paper-icon-button>
-                      <paper-tooltip><oe-i18n-msg msgid="Customize View">Customize View</oe-i18n-msg> </paper-tooltip>
-                    </div>
+                <template is="dom-if" if="[[showEditOptions]]">
+                  <template is="dom-if" if="[[!selectedItems.length]]">
+                
+                    <template is="dom-if" if="[[!disableAdd]]">
+                      <div class="header-icon">
+                        <paper-icon-button icon="icons:add-circle-outline" on-tap="_showAddForm"></paper-icon-button>
+                        <paper-tooltip>
+                          <oe-i18n-msg msgid="New">New</oe-i18n-msg>
+                        </paper-tooltip>
+                      </div>
+                    </template>
                   </template>
                 </template>
-                <template is="dom-if" if="[[selectedItems.length]]">
-                  <template is="dom-if" if="[[!disableEdit]]">
-                  <div class="header-icon" hidden$=[[_hideEditIcon(selectedItems.length)]]>
-                    <paper-icon-button icon="editor:mode-edit" on-tap="_showEditForm"></paper-icon-button>
-                    <paper-tooltip><oe-i18n-msg msgid="Edit">Edit</oe-i18n-msg> </paper-tooltip>
+                <template is="dom-if" if="{{!disableGlobalSearch}}">
+                  <div class="search-div" id="{{id}}-searchDiv">
+                    <div class="mdl-cell mdl-cell--12-col searchBox layout horizontal full-width">
+                      <div class="mdl-cell mdl-cell--middle search-icon-width">
+                        <iron-icon id="searchIcon" class="primary-dark-text-s" icon="icons:search"></iron-icon>
+                      </div>
+                      <div class="full-width primary-dark-text-s">
+                        <oe-input  id="{{id}}-searchStringInput" class="content-align-vertical-center" value="{{filterVal::input}}" label="l_Search" no-label-float></oe-input>
+                      </div>
+                    
+                    </div>
                   </div>
-                  </template>
-                  <template is="dom-if" if="[[!disableDelete]]">
+                </template>
+                <template is="dom-if" if="[[!selectedItems.length]]">
+                <template is="dom-if" if="[[!disableConfigEditor]]">
                   <div class="header-icon">
-                    <paper-icon-button id="delete-icon" icon="delete" on-tap="_deleteSelectedRows"></paper-icon-button>
-                    <paper-tooltip> <oe-i18n-msg msgid="Delete">Delete</oe-i18n-msg> </paper-tooltip>
+                    <paper-icon-button icon="image:tune" on-tap="_openColumnCustomizer"></paper-icon-button>
+                    <paper-tooltip><oe-i18n-msg msgid="Customize View">Customize View</oe-i18n-msg> </paper-tooltip>
                   </div>
+                </template>
+                </template>
+
+                <template is="dom-if" if="[[showEditOptions]]">
+                  <template is="dom-if" if="[[selectedItems.length]]">
+                    <template is="dom-if" if="[[!disableEdit]]">
+                    <div class="header-icon" hidden$=[[_hideEditIcon(selectedItems.length)]]>
+                      <paper-icon-button icon="editor:mode-edit" on-tap="_showEditForm"></paper-icon-button>
+                      <paper-tooltip><oe-i18n-msg msgid="Edit">Edit</oe-i18n-msg> </paper-tooltip>
+                    </div>
+                    </template>
+                    <template is="dom-if" if="[[!disableDelete]]">
+                    <div class="header-icon">
+                      <paper-icon-button id="delete-icon" icon="delete" on-tap="_deleteSelectedRows"></paper-icon-button>
+                      <paper-tooltip> <oe-i18n-msg msgid="Delete">Delete</oe-i18n-msg> </paper-tooltip>
+                    </div>
+                    </template>
                   </template>
                 </template>
                 <template is="dom-repeat" items=[[toolbarActions]] as="action">
@@ -487,54 +582,72 @@ Custom property | Description | Default
             </div>
           </div>
         </template>
-        <div id="table-header" style$="margin-right: [[_scrollBarWidth]]px;">
+        <div id="table-header" class="table-header-style" style$="margin-right: [[_scrollBarWidth]]px;max-height: [[maxHeaderHeight]]px;overflow: hidden;">
           <template is="dom-if" if="[[!disableSelection]]">
-            <div class="selection-cell">
+            <div class="selection-cell" style="align-items: normal;">
               <paper-checkbox class="selection-checkbox" checked=[[_selectedAll]] disabled$=[[!multiSelection]] on-change="_toggleSelectAll"></paper-checkbox>
             </div>
           </template>
           <template is="dom-repeat" items="{{columns}}" as="column" filter="_getVisibleColumns" observe="hidden">
-            <oe-data-table-header-cell col-index=[[index]] class="table-data" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]]
+            <oe-data-table-header-cell id="header-cell-{{index}}" col-index=[[index]] class="table-data" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]]
               style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-header-cell>
           </template>
           <template is="dom-if" if=[[rowActions.length]]>
             <div class="table-data" style$="flex: [[_computeRowActionWidth(rowActions.length)]]"></div>
           </template>
+          <template is="dom-if" if=[[showAccordian]]>
+						<div class="table-data" style="flex: 0 0 48px"></div>
+					</template>
         </div>
         <div class$="table-body [[_computeTableBodyClass(aggregatorAlignTop)]]">
           <template is="dom-if" if={{_loadingData}}>
             <paper-progress indeterminate></paper-progress>
           </template>
-          <div style$="height: [[__tableRowHeight]]px">
+          <div style$="height: [[_computeGridHeight(pageSize,_items.length)]]px">
             <template is="dom-if" if=[[_items.length]] restamp=true>
-              <iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key">
+              <iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key" selection-enabled multi-selection>
                 <template>
-                  <div class$="table-row [[_computeClassforRow(row,_computeSelection)]]" tabindex$="[[tabIndex]]" on-tap="_rowClicked">
-                    <template is="dom-if" if="[[!disableSelection]]">
-                      <div class="selection-cell">
-                        <paper-checkbox class="selection-checkbox" on-change="_toggleSelection" on-keydown="_goToCell" on-tap="_checkboxTapped" checked={{_getSelectionState(row,_computeSelection)}}></paper-checkbox>
-                        <template is="dom-if" if="[[selectionCellContent]]">
-                          <div class="selection-cell-content" style$="[[_computeSelectionCellContentStyle(row,selectionCellContent)]];">
-                            <template is="dom-if" if="[[_enableSelectionCellContent(row, selectionCellContent)]]">
-                              <div> [[_getFirstLetter(row,selectionCellContent.content)]] </div>
-                            </template>
-                          </div>
-                        </template>
-                      </div>
-                    </template>
-                    <template is="dom-repeat" items="[[columns]]" as="column" filter="_getVisibleColumns" observe="hidden">
-                      <oe-data-table-cell is-first-row=[[_isFirstRow(rowIndex,row)]] read-only=[[_computeReadOnly(disableEdit,disabled)]] key=[[key]] row={{row}} column=[[column]] class$="table-data [[_computeCellClass(row.*,column)]]" column-template=[[_getValidTemplate(row.*,row,column)]] style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-cell>
-                    </template>
-                    <template is="dom-if" if=[[rowActions.length]]>
-                      <div class="row-actions" style$="flex: [[_computeRowActionWidth(rowActions.length)]]">
-                        <template is="dom-repeat" items=[[rowActions]] as="action">
-                          <div>
-                            <paper-icon-button class="row-action" row$=[[row]] rowIndex$=[[rowIndex]]  icon="[[action.icon]]" on-tap="_rowActionClicked"></paper-icon-button>
-                            <paper-tooltip position="left"> [[action.title]] </paper-tooltip>
-                          </div>
-                        </template>
-                      </div>
-                    </template>
+                  <div tabindex$="[[tabIndex]]"  id="row-{{rowIndex}}">
+                    <div class$="table-row [[_computeClassforRow(row,_computeSelection)]]" tabindex$="[[tabIndex]]" on-tap="_rowClicked">
+                      <template is="dom-if" if="[[!disableSelection]]">
+                        <div class="selection-cell">
+                          <paper-checkbox class="selection-checkbox" on-change="_toggleSelection" on-keydown="_goToCell" on-tap="_checkboxTapped" checked={{_getSelectionState(row,_computeSelection)}}></paper-checkbox>
+                          <template is="dom-if" if="[[selectionCellContent]]">
+                            <div class="selection-cell-content" style$="[[_computeSelectionCellContentStyle(row,selectionCellContent)]];">
+                              <template is="dom-if" if="[[_enableSelectionCellContent(row, selectionCellContent)]]">
+                                <div> [[_getFirstLetter(row,selectionCellContent.content)]] </div>
+                              </template>
+                            </div>
+                          </template>
+                        </div>
+                      </template>
+                      <template is="dom-repeat" items="[[columns]]" as="column" filter="_getVisibleColumns" observe="hidden">
+                        <oe-data-table-cell id="cell-{{index}}" is-first-row=[[_isFirstRow(rowIndex,row)]] read-only=[[_computeReadOnly(disableEdit,disabled)]] key=[[key]] row={{row}} column=[[column]] items="{{_items}}" row-index=[[rowIndex]] class$="table-data [[_computeCellClass(row.*,column)]]" column-template=[[_getValidTemplate(row.*,row,column)]] style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-cell>
+                      </template>
+                      <template is="dom-if" if=[[rowActions.length]]>
+                        <div class="row-actions" style$="flex: [[_computeRowActionWidth(rowActions.length)]]">
+                          <template is="dom-repeat" items=[[rowActions]] as="action">
+                            <div>
+                              <template is="dom-if" if={{action.icon}}>
+                                <paper-icon-button class="row-action" row$=[[row]] icon="[[action.icon]]" on-tap="_rowActionClicked"></paper-icon-button>
+                                <paper-tooltip position="left"> [[action.title]] </paper-tooltip>
+                              </template>
+                              <template is="dom-if" if={{!action.icon}}>
+                                <paper-button class="row-action" row$=[[row]] on-tap="_rowActionClicked">[[action.title]]</paper-button>
+                              </template>
+                            </div>
+                          </template>
+                        </div>
+                      </template>
+                      <template is="dom-if" if=[[showAccordian]]>
+												<div class="row-actions" style="flex: 0 0 48px">
+													<iron-icon id="paper-expand-[[rowIndex]]" icon="icons:expand-more" row$="[[row]]" selected$="[[selected]]" rowIndex$="[[rowIndex]]"
+													 on-tap="_rowAccordianClicked"></iron-icon>
+												</div>
+											</template>
+                    </div>
+                    <div id="expandedView-[[rowIndex]]" class="hookClass">
+                    </div>
                   </div>
                 </template>
               </iron-list>
@@ -553,7 +666,7 @@ Custom property | Description | Default
                 </template>
                 <template is="dom-repeat" items="{{columns}}" as="column">
                   <oe-data-table-summary-cell class="summary-cell table-data" style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]];">
-                    <div class="summary-cell-content" style$="[[_computeCellAlignment(column)]]"> [[_computeSummary(column,_items.*)]] </div>
+                    <div class="summary-cell-content margin-right-45" style$="[[_computeCellAlignment(column)]]"> [[_computeSummary(column,_items.*)]] </div>
                   </oe-data-table-summary-cell>
                 </template>
               </div>
@@ -759,6 +872,41 @@ Custom property | Description | Default
        */
       rowActions: {
         type: Array
+      },
+
+
+
+			filterVal: {
+				type: String,
+				notify: true,
+				observer: '_filterDebounce'
+			},
+
+			searchFields: {
+				type: Array,
+				notify: true
+			},
+
+			expandedRow: {
+				type: Number,
+				notify: true
+			},
+
+			accordianUrls: {
+				type: Array,
+				notify: true
+			},
+
+      maxHeaderHeight: {
+        type: Number,
+        value: 50,
+        notify: true
+      },
+
+      showEditOptions: {
+        type: Boolean,
+        value: false,
+        notify: true
       }
 
     },
@@ -780,7 +928,8 @@ Custom property | Description | Default
       '_keyHandlers(disabled,_items.length)',
       '_showPagination(dataController)',
       '_showPagination(paginationType)',
-      '_computeGridHeight(pageSize,_items.length)'
+      '_computeGridHeight(pageSize,_items.length)',
+      'accordianUrlsChanged(accordianUrls.splices)',
     ],
     _keyHandlers:function(){
       if(this._items.length == 0){
@@ -818,6 +967,54 @@ Custom property | Description | Default
       }
      
     },
+
+    createExpandedView: function () {
+
+      var self = this;
+
+      if (this.$$('#expandedView-' + self.expandedRow)) {
+        var elem = document.createElement(self.accordianElement);
+        elem.id = 'expanded-hook-' + self.expandedRow;
+        elem.data = self.items[self.expandedRow];
+        elem.style["height", "100%"];
+        this.$$('#expandedView-' + self.expandedRow).appendChild(elem);
+      }
+    },
+
+    _rowAccordianClicked: function (e) {
+      var rowIndex = Number(e.currentTarget.getAttribute('rowIndex'));
+
+      this.expandedRow = rowIndex;
+
+      if (e.currentTarget.icon === "icons:expand-more") {
+
+        var element =
+
+          this.$$('#expandedView-' + this.expandedRow).classList.remove("expanded");
+        this.$$('#expandedView-' + this.expandedRow).classList.add("expanded");
+        this.$$("#paper-expand-" + rowIndex).setAttribute('icon', 'icons:expand-less');
+
+        this.createExpandedView();
+      }
+      else {
+
+        this.$$('#expandedView-' + this.expandedRow).classList.remove("expanded");
+        this.$$('#expandedView-' + this.expandedRow).classList.add("hookClass");
+        this.$$("#paper-expand-" + rowIndex).setAttribute('icon', 'icons:expand-more');
+        var expandedHook = this.$$("#expanded-hook-" + rowIndex);
+        expandedHook.parentNode.removeChild(expandedHook);
+
+      }
+    },
+
+    clearSearch: function () {
+      var headercells = document.getElementsByTagName('oe-data-table-header-cell');
+      for (var i = 0; i < headercells.length; i++) {
+        headercells[i].resetSearch();
+      }
+      this.items = JSON.parse(JSON.stringify(this.originalData));
+    },
+
     _isFirstRow:function(idx,row){
       return (idx === 0);
     },
@@ -834,6 +1031,63 @@ Custom property | Description | Default
       var rowList = this.$$('#row-list');
       if (rowList) {
         rowList.notifyResize();
+      }
+    },
+    _filterDebounce: function (newValue, oldValue) {
+			// Making a copy of the original data array - required because we want to retain the original array and filter again as and when user removes characters from the filter text area
+			if (!oldValue) {
+				this.copyDataObjectList = JSON.parse(JSON.stringify(this.items));
+				// this.copyDataObjectList = _.cloneDeep(this.items);
+				var searchFields = [];
+				if (this.columns) {
+					for (var i = 0; i < this.columns.length; i++) {
+						searchFields.push(this.columns[i].key);
+					}
+				}
+				this.searchFields = searchFields;
+			}
+			// Filtering logic which changes the passed dataObject array based on the passed fields to search in.
+			if (typeof newValue !== "undefined" && newValue && this.copyDataObjectList) {
+				var self = this;
+				this.items = this.copyDataObjectList.filter(function (dataElement) {
+					return self._ifFieldsContainSearchText(dataElement);
+				});
+			}
+			else
+				this.items = JSON.parse(JSON.stringify(this.copyDataObjectList));
+		},
+		// returns true if the enetered text filed in search box matched with any of the object "data" fields specified in "fields"
+		_ifFieldsContainSearchText: function (dataElement) {
+			// Filtering logic when the filter text matches with any of the field values in the data
+			for (var field in this.searchFields) {
+				fieldValue = dataElement[this.searchFields[field]];
+				// field = _.get(dataElement, this.searchFields[field]);
+				if (fieldValue) {
+					if (fieldValue.toString().toLowerCase().indexOf(this.filterVal.toLowerCase()) >= 0)
+						return true;
+				}
+			}
+			return false;
+		},
+		updateColumns: function () {
+			console.log(this.columns);
+			if (this.columns.length > 0 && this.showActions === true) {
+				console.log("OK");
+				// this.columns.add({'key': 'actions', 'label', 'Actions'})
+			}
+		},
+    accordianUrlsChanged: function () {
+      if (typeof (this.accordianUrls) === "string") {
+        try {
+          var urls = JSON.parse(this.accordianUrls);
+          this.accordianUrls = urls;
+        } catch (err) {
+          return;
+        }
+      }
+      if (this.accordianUrls && this.accordianUrls.length > 0) {
+        for (var i = 0; i < this.accordianUrls.length; i++)
+          this.importHref(this.accordianUrls[i]);
       }
     },
     ready: function () {
@@ -956,7 +1210,9 @@ Custom property | Description | Default
       var items = this.dataController ? this._items : this.items;
       if (evt.currentTarget.checked) {
         items.forEach(function (item) {
-          this.selectItem(item);
+          if(!item.isDisabled){
+            this.selectItem(item);
+          }
         }.bind(this));
       } else {
         this.selectedItems.forEach(function (item) {
@@ -1023,7 +1279,6 @@ Custom property | Description | Default
       return (disableEdit||disabled) ;
     },
     _computeGridHeight: function (pageSize, itemsToShow) {
-      this.async(function () {
         this.updateRowHeight();
         this.maxRowHeight = 48;
         var size = ((itemsToShow > 5 && itemsToShow < pageSize) ? itemsToShow : pageSize)
@@ -1035,7 +1290,7 @@ Custom property | Description | Default
         }
         var height = size * 48 + (hasScroll?16:0);
         this.set('__tableRowHeight',height);
-      }, 0);
+        return height;
     },
 
     _rowActionClicked: function (event) {

@@ -2,6 +2,7 @@
   ©2016-2017 EdgeVerve Systems Limited (a fully owned Infosys subsidiary),
   Bangalore, India. All Rights Reserved.
 -->
+<link rel="import" href="./styles/mdl-grid-css.html">
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../paper-dialog/paper-dialog.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
@@ -17,7 +18,7 @@
 <dom-module id="oe-data-table-header-cell">
 
   <template>
-    <style include="iron-flex iron-flex-alignment">
+    <style include="iron-flex iron-flex-alignment mdl-grid-css">
       :host {
         position: relative;
         user-select: none;
@@ -45,6 +46,8 @@
 
       .header-title {
         vertical-align: bottom;
+        text-align: left;
+				line-height: 1;
       }
 
       .header-title.sorted {
@@ -56,7 +59,7 @@
       }
 
       .filter-icon {
-        right: 10px;
+        right: 24px;
         padding: 2px;
         display: none;
         cursor: pointer;
@@ -89,24 +92,99 @@
       .cell-align-right{
         @apply(--layout-end-justified);
       }
+      .search-div {
+        bottom: 3px;
+        position: absolute;
+        width: 45%;
+        opacity: 0.56;
+        height: 20px;
+        border-left: none; 
+        border-top: none; 
+        border-right: none; 
+        /* border-bottom: 2px solid black; */
+      }
 
+      .date-search-div {
+        width: 50%;
+        position: absolute;
+        bottom: -4px;
+      }
+
+      .clear-search {
+        bottom: 9px;
+        position: absolute;
+        width: 50%;
+        height: 20px;
+      }
+
+      oe-input {
+        --paper-input-container: {
+            padding-top: 0;
+            padding-right: 0;
+            padding-bottom: 0;
+            text-align: right;
+            background: var(--background-primary);
+            width: auto !important;
+        };
+
+
+        --paper-input-container-underline: {
+          display: none;
+          border-bottom-color: transparent;
+        };
+        --paper-input-container-underline-focus: {
+          display: none;
+        }
+        --paper-input-container-label: {
+          font-size: 14px;
+          color: var(--primary-dark-color);
+          text-align: left;
+        }
+        --paper-input-container-input: {
+          text-align: left;
+        }
+      }
+
+      .maincell {
+        display: block !important;
+      }
       
 
 
     </style>
 
-    <div id="cell" class$="[[_computeCellAlignment(column)]] layout horizontal center" on-tap="_changeSortOrder">
-      <div class="header-content layout horizontal center">
+    <div id="cell" class$="[[_computeCellAlignment(column)]] layout horizontal center maincell" >
+      <div style="position: absolute;top:0;" class="header-content layout horizontal center" on-tap="_changeSortOrder">
         <iron-icon class="sort-icon" icon="icons:[[_getSortIcon(column.sort)]]" hidden$=[[!column.sort]]></iron-icon>
         <span class$="header-title [[_getSortedClass(column.sort)]]">
           <oe-i18n-msg msgid=[[_computeColumnLabel(column)]]></oe-i18n-msg> 
 		   <paper-tooltip id="header-tooltip-[[_computeColumnLabel(column)]]"  offset="0" position="bottom">  <oe-i18n-msg msgid=[[column.tooltip]]>[[column.tooltip]]</oe-i18n-msg> </paper-tooltip>
         </span>
       </div>
+      <template is="dom-if" if="[[showColumnSearch(column)]]">
+				<template is="dom-if" if="[[!column.dateSearchType]]">
+					<div class="search-div">
+						<oe-input id="{{id}}-searchStringInput" class="" value="{{filterValue::input}}" label="[[getSerchLabel(column)]]" no-label-float></oe-input>
+						
+					</div>
+				</template>
+				<template is="dom-if" if="[[column.dateSearchType]]">
+					<div class="date-search-div">
+						<oe-date format="DD/MM/YYYY"></oe-date>
+					</div>
+				</template>
+
+			</template>
+			<template is="dom-if" if="[[showClearSearch(column)]]">
+				<div class="clear-search">
+					<paper-button on-tap="clearAllSearches">Clear</paper-button>
+				</div>
+
+			</template>
     </div>
-    <iron-icon hidden$=[[_disableFilter(column)]] class="filter-icon" icon="icons:filter-list" on-tap="openFilter"></iron-icon>
+    <iron-icon hidden$=[[_disableFilter(column)]] style="top: 0;"  class="filter-icon" icon="icons:filter-list" on-tap="openFilter"></iron-icon>
     <paper-dialog id="dialog" on-iron-overlay-opened="_positionFilterDialog">
-      <oe-data-table-filter is-server-data=[[isServerData]] column=[[column]] items=[[items]]></oe-data-table-filter>
+      <oe-data-table-filter is-server-data=[[isServerData]] column=[[column]] items=[[items]] filter-value="{{filterValue}}"></oe-data-table-filter>
     </paper-dialog>
     <div id="resize-handler" on-mousedown="_handleResize"></div>
   </template>
@@ -131,14 +209,39 @@
       },
 
       items: {
-        type: Array
+        type: Array,
+        notify: true
       },
       isServerData:{
         type:Boolean
-      }
+      },
+      filterValue: {
+				type: String,
+				notify: true
+			}
 
     },
-
+    
+    clearAllSearches: function () {
+			var headerColumns = this.$.cell.parentElement.parentElement.querySelectorAll("oe-data-table-filter");
+			for (var i = 0; i < headerColumns.length; i++) {
+				headerColumns[i].filterValue = "";
+			}
+		},
+		getSerchLabel(column) {
+			return column.searchLabel ? column.searchLabel : "Search";
+		},
+    showColumnSearch(column) {
+			if (column && !column.clearSearch && !column.hideSearch)
+				return true;
+			return false;
+		},
+		showClearSearch(column) {
+			if (column && column.clearSearch === true)
+				return true;
+			return false;
+		},
+    
     attached: function () {
       this.cell = this.$.cell;
     },

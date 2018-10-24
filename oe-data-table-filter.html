@@ -134,10 +134,16 @@
        * data object array.
        */
       items: {
-        type: Array
+        type: Array,
+        notify: true
       },
       isServerData:{
         type:Boolean
+      },
+      filterValue: {
+        type: String,
+        notify: true,
+        observer: 'searchCriteria'
       }
 
     },
@@ -155,6 +161,27 @@
     ready: function () {
       this.set('_selectionState', {});
       this.set('_computeSelection',true);
+    },
+
+    searchCriteria: function(value){
+        this.searchText = value;
+        if(this.items.length === 0 && this.itemsCopy){
+          this.items = JSON.parse(JSON.stringify(this.itemsCopy));
+        }
+        this._itemsChanged();
+       
+        this._items = this._filterItems(this._items, this.searchText);
+    
+        if(this._items.length === 0){
+          
+          this.itemsCopy = JSON.parse(JSON.stringify(this.items));
+          this.items = [];
+        }
+        else{
+          
+          this.set('column.selectedItems', this._items);
+          this.fire('apply-criteria');
+        }
     },
 
     _computeCellData: function (row, column) {
@@ -225,6 +252,15 @@
 
         this.items.forEach(function (d) {
           var val = d[this.column.key || this.column.field]
+          if(val === undefined && this.column.key){
+           
+           var multiKeys = this.column.key.split(".");
+           
+           if(multiKeys.length === 2){
+             val = d[multiKeys[0]][multiKeys[1]];
+           }
+
+         }
           if (uniqueData.indexOf(val) == -1) {
             //if(searchText && val.toString().toLowerCase().indexOf(searchText) == -1) return;
             uniqueData.push(val);

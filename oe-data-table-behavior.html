@@ -410,6 +410,15 @@
         filters && Object.keys(filters).forEach(function (key) {
           var filter = filters[key];
           if (filter.selectedItems && filter.selectedItems.length) {
+            val = d[key];
+            if(val === undefined){
+              var multiKeys = key.split(".");
+            
+              if(multiKeys.length === 2){
+                val = d[multiKeys[0]][multiKeys[1]];
+              }
+
+            }
             isValid = isValid && filter.selectedItems.indexOf(d[key]) != -1;
           }
         });
