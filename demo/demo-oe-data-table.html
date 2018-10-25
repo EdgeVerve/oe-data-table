@@ -874,7 +874,7 @@
               </template>
             </demo-snippet>
           </div>
-          <div>
+          <div>   
             <h1> Row Action </h1>
             <p>
               The oe-data-table component supports adding icon buttons on each row, which can be used to perform some action actions on
@@ -901,7 +901,7 @@
                   <template is="dom-if" if=[[eventString]]>
                     <h3>Event Data</h3>
                     <pre style="padding:8px;">
-[[eventString]]
+                        [[eventString]]
                     </pre>                   
                   </template>
                 </template>
@@ -968,13 +968,17 @@
               </template>
             </demo-snippet>
           </div>
-         
+          
           <div>
             <h1> Pagination </h1>
             <p>
               The oe-data-table component supports virtual pagination by default. If the number of "items" is too high, only limited rows
               will be in the DOM and the data will be attached to the DOM dynamically while scrolling. The rows per page
               section can be customized by setting an array of page numbers to "rowsPerPageItems" property.
+            </p>
+            <p>
+              In addition the users can use pagination panel instead of infinite scroll by setting the 'pagination-type="page"' property. This allows the user to 
+              see the limited number of items at the current page.The default value of 'pagination-type' is "scroll".
             </p>
             <p>
               The oe-data-table component also supports server side pagination. In order to enable server side pagination, we need to set
@@ -984,13 +988,15 @@
               of the component has options to change page size, goto a desired page.
             </p>
             <p>
-              Check the below example for the usage of virtual pagination and server side pagination using the "dataController" property.
+              Check the below example for the usage of virtual pagination , client side pagination and server side pagination using the "dataController" property.
             </p>
             <demo-snippet>
               <template>
                 <template is="dom-bind" id="pagination-table">
-                  <h3> Default Pagination </h3>
+                  <h3> Default Virtual Pagination </h3>
                   <oe-data-table id="table" label="Phone" columns=[[columns]] items=[[defaultItems]]></oe-data-table>
+                  <h3> Client Pagination </h3>
+                  <oe-data-table id="table" label="Phone Pagination" columns=[[columns]] items=[[defaultItems2]] pagination-type="page"></oe-data-table>
                   <h3> Server side pagination </h3>
                   <oe-data-table label="Literal" columns=[[literalColumns]] data-controller=[[dataController]]></oe-data-table>
                 </template>
@@ -1030,6 +1036,27 @@
                   }, {
                     user: 'Oliver',
                     phone: 8776767666
+                  },{
+                    user: 'Bruce',
+                    phone: 8772367666
+                  },{
+                    user: 'Clark',
+                    phone: 8773467666
+                  },{
+                    user: 'Diana',
+                    phone: 8246767666
+                  },{
+                    user: 'Barry',
+                    phone: 8776767876
+                  },{
+                    user: 'Hal',
+                    phone: 8776760366
+                  },{
+                    user: 'Carter',
+                    phone: 8776517666
+                  },{
+                    user: 'Victor',
+                    phone: 9076767666
                   }];
 
                   paginationTable.set('columns', [{
@@ -1059,6 +1086,7 @@
                   //setting after a small delay for letting browser to finish rendering the other demos
                   paginationTable.async(function () {
                     paginationTable.set('defaultItems', defaultItems);
+                    paginationTable.set('defaultItems2', defaultItems.slice());
                   }, 2000);
 
                 </script>

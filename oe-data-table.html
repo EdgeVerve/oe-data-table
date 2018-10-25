@@ -503,7 +503,7 @@ Custom property | Description | Default
           <template is="dom-if" if={{_loadingData}}>
             <paper-progress indeterminate></paper-progress>
           </template>
-          <div style$="height: [[_computeGridHeight(pageSize,_items.length)]]px">
+          <div style$="height: [[__tableRowHeight]]px">
             <template is="dom-if" if=[[_items.length]] restamp=true>
               <iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key">
                 <template>
@@ -558,7 +558,7 @@ Custom property | Description | Default
             </div>
           </template>
         </div>
-        <template is="dom-if" if={{dataController}}>
+        <template is="dom-if" if=[[_showPaginationPanel]]>
           <div class="pagination-panel">
             <div class="pagination-dropdown-title"> Rows per page: </div>
             <paper-dropdown-menu no-label-float vertical-align="bottom" horizontal-align="left">
@@ -775,7 +775,10 @@ Custom property | Description | Default
 
     observers: [
       '_updateRowWidth(_items.*)',
-      '_keyHandlers(disabled,_items.length)'
+      '_keyHandlers(disabled,_items.length)',
+      '_showPagination(dataController)',
+      '_showPagination(paginationType)',
+      '_computeGridHeight(pageSize,_items.length)'
     ],
     _keyHandlers:function(){
       if(this._items.length == 0){
@@ -821,6 +824,9 @@ Custom property | Description | Default
         this.maxRowHeight = e.detail;
         this.debounce('rowHeight',this.updateRowHeight,300)
       }
+    },
+    _showPagination:function(change){
+      this.set('_showPaginationPanel',!!(this.dataController || this.paginationType === "page"));
     },
     updateRowHeight:function(){
       var rowList = this.$$('#row-list');
@@ -1018,10 +1024,16 @@ Custom property | Description | Default
       this.async(function () {
         this.updateRowHeight();
         this.maxRowHeight = 48;
+        var size = ((itemsToShow > 5 && itemsToShow < pageSize) ? itemsToShow : pageSize)
+        this.set('_maxDomElement',size*2);
+        var rowList = this.$$("#row-list");
+        var hasScroll = false;
+        if(rowList){
+          hasScroll = this.$$("#row-list").scrollWidth > this.$$("#row-list").clientWidth;
+        }
+        var height = size * 48 + (hasScroll?16:0);
+        this.set('__tableRowHeight',height);
       }, 0);
-      var size = ((itemsToShow > 5 && itemsToShow < pageSize) ? itemsToShow : pageSize)
-      this.set('_maxDomElement',size*2);
-      return size * 48;
     },
 
     _rowActionClicked: function (event) {

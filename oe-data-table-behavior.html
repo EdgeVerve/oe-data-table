@@ -137,6 +137,15 @@
        */
       _loadingData: {
         type: Boolean
+      },
+      /**
+       *  Property determining the type of pagination on the client side.
+       *  "scroll" - support infinite scrolling for pagination , 
+       *  "page" - show distinct records per page.
+       */
+       paginationType: {
+        type: String,
+        value:"scroll"
       }
 
     },
@@ -275,7 +284,7 @@
 
     _organizeData: function (event) { // eslint-disable-line no-unused-vars
       if (this.columns) {
-
+        
         if (this.dataController) {
 
           var dataController = this.dataController.controller || this._dataController;
@@ -319,10 +328,32 @@
             }
           }.bind(this));
 
+        }else if ((this.paginationType === "page") && this.items){
+          this._processData(this.items,function(processedData){
+            //Array Index
+            var startIndex = (this.currentPage - 1) * this.pageSize;
+            var pageItems = processedData.slice(startIndex,startIndex+this.pageSize);
+
+            if(startIndex > processedData.length){
+              this.set('currentPage',Math.ceil(processedData.length/this.pageSize));
+              return;
+            }
+
+            this.set('_startRow',startIndex+1);
+            this.set('_endRow', startIndex + pageItems.length);
+
+            this.set('rowCount',processedData.length);
+            this.set('_isLastPage',this._endRow == this.rowCount);
+
+            this.set('isServerData', false);
+            this.set('_items', pageItems);
+          }.bind(this));
         } else if (this.items) {
           this.set('_hasPagination', false);
           this.set('isServerData', false);
-          this._processData(this.items);
+          this._processData(this.items,function(processedData){
+            this.set('_items', processedData);
+          }.bind(this));
         }
 
       }
@@ -346,7 +377,7 @@
       }
     },
 
-    _processData: function (data) {
+    _processData: function (data,cb) {
       var self = this;
       self._sort(data, function (err, sortedData) {
         if (err) {
@@ -356,7 +387,7 @@
           if (err) {
             return;
           }
-          self.set('_items', filteredData);
+          cb(filteredData);
         });
       });
 
@@ -522,23 +553,25 @@
         }
 
         var columnWhere = {};
-        var columnFilter = filterSort.filter;
-        columnWhere.and = Object.keys(columnFilter).filter(function (key) {
-          return columnFilter[key] && columnFilter[key].length;
-        }).map(function (prop) {
-          var query = {};
-          var pattern = '/.*' + columnFilter[prop] + '.*/i';
-          query[prop] = {
-            "regexp": pattern
-          };
-          return query
-        });
+        if(filterSort.filter){
+          var columnFilter = filterSort.filter;
+          
+          columnWhere.and = Object.keys(columnFilter).filter(function (key) {
+            return columnFilter[key] && columnFilter[key].length;
+          }).map(function (prop) {
+            var query = {};
+            var pattern = '/.*' + columnFilter[prop] + '.*/i';
+            query[prop] = {
+              "regexp": pattern
+            };
+            return query
+          });
 
-        if (filter.where || columnWhere.and.length) {
-          filter.where = filter.where || {};
-          filter.where = Object.assign(filter.where, columnWhere);
+          if (filter.where || columnWhere.and.length) {
+            filter.where = filter.where || {};
+            filter.where = Object.assign(filter.where, columnWhere);
+          }
         }
-
       }
 
 
