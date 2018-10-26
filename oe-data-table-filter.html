@@ -165,14 +165,14 @@
 
     searchCriteria: function(value){
         this.searchText = value;
-        if(this.items.length === 0 && this.itemsCopy){
+        if(this.items && this.items.length === 0 && this.itemsCopy){
           this.items = JSON.parse(JSON.stringify(this.itemsCopy));
         }
         this._itemsChanged();
        
         this._items = this._filterItems(this._items, this.searchText);
     
-        if(this._items.length === 0){
+        if(this._items && this._items.length === 0){
           
           this.itemsCopy = JSON.parse(JSON.stringify(this.items));
           this.items = [];

@@ -59,11 +59,11 @@
       }
 
       .filter-icon {
-        right: 24px;
+       
         padding: 2px;
         display: none;
         cursor: pointer;
-        position: absolute;
+       
         border-radius: 4px;
         background: rgba(238, 238, 238, 0.4);
       }
@@ -87,20 +87,22 @@
         @apply(--layout-center-center);
       }
       .cell-align-left .header-content{
-        @apply(--layout-horizontal-reverse);
+        /* @apply(--layout-horizontal-reverse); */
       }
-      .cell-align-right{
-        @apply(--layout-end-justified);
+      .cell-align-right .header-content{
+        @apply(--layout-horizontal-reverse);
       }
       .search-div {
         bottom: 3px;
-        position: absolute;
-        width: 45%;
+        /* position: absolute; */
+        width: 100%;
         opacity: 0.56;
         height: 20px;
         border-left: none; 
         border-top: none; 
         border-right: none; 
+        margin-top: 10px;
+        background: #c1c0c047;
         /* border-bottom: 2px solid black; */
       }
 
@@ -124,7 +126,7 @@
             padding-bottom: 0;
             text-align: right;
             background: var(--background-primary);
-            width: auto !important;
+            width: 100% !important;
         };
 
 
@@ -149,40 +151,40 @@
         display: block !important;
       }
       
-
+      .absoluteCell{
+        position: absolute;
+        top: 4px;
+      }
 
     </style>
 
     <div id="cell" class$="[[_computeCellAlignment(column)]] layout horizontal center maincell" >
-      <div style="position: absolute;top:0;" class="header-content layout horizontal center" on-tap="_changeSortOrder">
+      <div  class="header-content layout horizontal center" style$="[[_computeCellStyle(column)]]" on-tap="_changeSortOrder">
         <iron-icon class="sort-icon" icon="icons:[[_getSortIcon(column.sort)]]" hidden$=[[!column.sort]]></iron-icon>
         <span class$="header-title [[_getSortedClass(column.sort)]]">
           <oe-i18n-msg msgid=[[_computeColumnLabel(column)]]></oe-i18n-msg> 
 		   <paper-tooltip id="header-tooltip-[[_computeColumnLabel(column)]]"  offset="0" position="bottom">  <oe-i18n-msg msgid=[[column.tooltip]]>[[column.tooltip]]</oe-i18n-msg> </paper-tooltip>
         </span>
       </div>
-      <template is="dom-if" if="[[showColumnSearch(column)]]">
-				<template is="dom-if" if="[[!column.dateSearchType]]">
-					<div class="search-div">
-						<oe-input id="{{id}}-searchStringInput" class="" value="{{filterValue::input}}" label="[[getSerchLabel(column)]]" no-label-float></oe-input>
-						
-					</div>
-				</template>
-				<template is="dom-if" if="[[column.dateSearchType]]">
-					<div class="date-search-div">
-						<oe-date format="DD/MM/YYYY"></oe-date>
-					</div>
-				</template>
+      <template is="dom-if" if="[[isInlineFilter]]">
+        <template is="dom-if" if="[[showColumnSearch(column)]]">				
+            <div class="search-div">
+              <oe-input id="{{id}}-searchStringInput" class="" value="{{filterValue}}" label="[[getSerchLabel(column)]]" no-label-float></oe-input>
+              
+            </div>
 
-			</template>
-			<template is="dom-if" if="[[showClearSearch(column)]]">
-				<div class="clear-search">
-					<paper-button on-tap="clearAllSearches">Clear</paper-button>
-				</div>
+        </template>
+        <template is="dom-if" if="[[showClearSearch(column)]]">
+          <div class="clear-search">
+            <paper-button on-tap="clearAllSearches">Clear</paper-button>
+          </div>
 
-			</template>
+        </template>
+      </template>
     </div>
-    <iron-icon hidden$=[[_disableFilter(column)]] style="top: 0;"  class="filter-icon" icon="icons:filter-list" on-tap="openFilter"></iron-icon>
+    <template is="dom-if" if="[[!isInlineFilter]]">
+      <iron-icon hidden$=[[_disableFilter(column)]]   class="filter-icon" icon="icons:filter-list" on-tap="openFilter"></iron-icon>
+    </template>
     <paper-dialog id="dialog" on-iron-overlay-opened="_positionFilterDialog">
       <oe-data-table-filter is-server-data=[[isServerData]] column=[[column]] items=[[items]] filter-value="{{filterValue}}"></oe-data-table-filter>
     </paper-dialog>
@@ -217,11 +219,17 @@
       },
       filterValue: {
 				type: String,
+        value: "",
 				notify: true
 			}
 
     },
     
+    _computeCellStyle: function(column){
+      if(column.hideSearch){
+        return "position: absolute; top: 4px;";
+      }
+    },
     clearAllSearches: function () {
 			var headerColumns = this.$.cell.parentElement.parentElement.querySelectorAll("oe-data-table-filter");
 			for (var i = 0; i < headerColumns.length; i++) {

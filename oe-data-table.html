@@ -499,7 +499,7 @@ Custom property | Description | Default
                     <oe-i18n-msg msgid="Refresh">Refresh</oe-i18n-msg> 
                   </paper-tooltip>
                 </template>
-                <template is="dom-if" if="[[showEditOptions]]">
+                <!-- <template is="dom-if" if="[[showEditOptions]]"> -->
                   <template is="dom-if" if="[[!selectedItems.length]]">
                 
                     <template is="dom-if" if="[[!disableAdd]]">
@@ -511,7 +511,7 @@ Custom property | Description | Default
                       </div>
                     </template>
                   </template>
-                </template>
+                <!-- </template> -->
                 <template is="dom-if" if="{{!disableGlobalSearch}}">
                   <div class="search-div" id="{{id}}-searchDiv">
                     <div class="mdl-cell mdl-cell--12-col searchBox layout horizontal full-width">
@@ -519,7 +519,7 @@ Custom property | Description | Default
                         <iron-icon id="searchIcon" class="primary-dark-text-s" icon="icons:search"></iron-icon>
                       </div>
                       <div class="full-width primary-dark-text-s">
-                        <oe-input  id="{{id}}-searchStringInput" class="content-align-vertical-center" value="{{filterVal::input}}" label="l_Search" no-label-float></oe-input>
+                        <oe-input  id="{{id}}-searchStringInput" class="content-align-vertical-center" value="{{filterVal}}" label="Search" no-label-float></oe-input>
                       </div>
                     
                     </div>
@@ -534,7 +534,7 @@ Custom property | Description | Default
                 </template>
                 </template>
 
-                <template is="dom-if" if="[[showEditOptions]]">
+                <!-- <template is="dom-if" if="[[showEditOptions]]"> -->
                   <template is="dom-if" if="[[selectedItems.length]]">
                     <template is="dom-if" if="[[!disableEdit]]">
                     <div class="header-icon" hidden$=[[_hideEditIcon(selectedItems.length)]]>
@@ -549,7 +549,7 @@ Custom property | Description | Default
                     </div>
                     </template>
                   </template>
-                </template>
+                <!-- </template> -->
                 <template is="dom-repeat" items=[[toolbarActions]] as="action">
                   <div class="header-icon">
                     <paper-icon-button icon="[[action.icon]]" on-tap="_tableActionTapped"></paper-icon-button>
@@ -589,7 +589,7 @@ Custom property | Description | Default
             </div>
           </template>
           <template is="dom-repeat" items="{{columns}}" as="column" filter="_getVisibleColumns" observe="hidden">
-            <oe-data-table-header-cell id="header-cell-{{index}}" col-index=[[index]] class="table-data" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]]
+            <oe-data-table-header-cell id="header-cell-{{index}}" col-index=[[index]] class="table-data" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]] is-inline-filter="[[isInlineFilter]]"
               style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-header-cell>
           </template>
           <template is="dom-if" if=[[rowActions.length]]>
@@ -874,7 +874,11 @@ Custom property | Description | Default
         type: Array
       },
 
-
+      disableGlobalSearch: {
+        type: Boolean,
+        value: true,
+        notify: true
+      },
 
 			filterVal: {
 				type: String,
@@ -906,6 +910,15 @@ Custom property | Description | Default
       showEditOptions: {
         type: Boolean,
         value: false,
+        notify: true
+      },
+      
+      /*
+       *  Setting to `true` shows the inline filter, otherwise oe-data-table-filter is used
+       */
+      isInlineFilter: {
+        type: Boolean,
+        value: true,
         notify: true
       }
 
