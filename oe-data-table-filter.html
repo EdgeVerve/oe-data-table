@@ -253,13 +253,7 @@
         this.items.forEach(function (d) {
           var val = d[this.column.key || this.column.field]
           if(val === undefined && this.column.key){
-           
-           var multiKeys = this.column.key.split(".");
-           
-           if(multiKeys.length === 2){
-             val = d[multiKeys[0]][multiKeys[1]];
-           }
-
+            val = OEUtils.deepValue(d,this.column.key);
          }
           if (uniqueData.indexOf(val) == -1) {
             //if(searchText && val.toString().toLowerCase().indexOf(searchText) == -1) return;
