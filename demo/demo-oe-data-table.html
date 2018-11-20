@@ -85,7 +85,6 @@
           <paper-item> Accordion View </paper-item>
           <paper-item> Using oe-combo </paper-item>
           <paper-item> Inline Filtering </paper-item>
-          <paper-item> Global Search </paper-item>
         </paper-menu>
       </div>
     </paper-header-panel>
@@ -2196,7 +2195,7 @@
 
                   ];
                   dataTable.set('items', data);
-                  dataTable.set('isInlineFilter', false);
+                  dataTable.set('enableInlineFilter', true);
                   
 
                 </script>
@@ -2204,69 +2203,6 @@
             </demo-snippet>
         </div>
 
-
-
-        <div>
-          <h1> Global Search </h1>
-         
-          <p>Golbal search on visible items</p>
-          <p>Set disableGlobalSearch to false/true to show/hide. By default, value is true(disable).</p>
-         
-          <demo-snippet>
-            <template>
-              
-              <oe-data-table  disable-global-search=false disable-selection=true  disable-config-editor disable-edit disable-delete disable-add id="global-search-table" label="Inline Filter"></oe-data-table>
-              <script>
-                var dataTable = document.getElementById('global-search-table');
-                dataTable.set("disableGlobalSearch", false);
-                dataTable.set('isInlineFilter', false);
-               
-                dataTable.set('columns', [{
-                  key: 'account',
-                  label: 'Account',
-                  type: 'number',
-                  width: 20
-                }, {
-                  key: 'checknumber',
-                  label: 'Check Number',
-                  type: 'string',
-                  width: 20
-                }
-                ]);
-
-                var data = [{
-                  account: 861363459,
-                  checknumber: 223457
-                  
-                  },
-                  {
-                    account: 794659139,
-                    checknumber: 23456
-                  },
-                  {
-                    account: 479677228,
-                    checknumber: 223431
-                  },
-                  {
-                    account: 334547856,
-                    checknumber: 2234567
-                  },
-                  {
-                    account: 452135542,
-                    checknumber: 123564
-                  }
-
-                ];
-                dataTable.set('items', data);
-                
-                
-
-              </script>
-            </template>
-          </demo-snippet>
-
-          
-      </div>
       </iron-pages>
       </div>
     </paper-header-panel>

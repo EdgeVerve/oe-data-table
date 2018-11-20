@@ -166,10 +166,10 @@
 		   <paper-tooltip id="header-tooltip-[[_computeColumnLabel(column)]]"  offset="0" position="bottom">  <oe-i18n-msg msgid=[[column.tooltip]]>[[column.tooltip]]</oe-i18n-msg> </paper-tooltip>
         </span>
       </div>
-      <template is="dom-if" if="[[isInlineFilter]]">
+      <template is="dom-if" if="[[enableInlineFilter]]">
         <template is="dom-if" if="[[showColumnSearch(column)]]">				
             <div class="search-div">
-              <oe-input id="{{id}}-searchStringInput" class="" value="{{filterValue}}" label="[[getSerchLabel(column)]]" no-label-float></oe-input>
+              <oe-input id="searchStringInput" class="" value="{{filterValue}}" label="[[getSerchLabel(column)]]" no-label-float></oe-input>
               
             </div>
 
@@ -182,7 +182,7 @@
         </template>
       </template>
     </div>
-    <template is="dom-if" if="[[!isInlineFilter]]">
+    <template is="dom-if" if="[[!enableInlineFilter]]">
       <iron-icon hidden$=[[_disableFilter(column)]]   class="filter-icon" icon="icons:filter-list" on-tap="openFilter"></iron-icon>
     </template>
     <paper-dialog id="dialog" on-iron-overlay-opened="_positionFilterDialog">

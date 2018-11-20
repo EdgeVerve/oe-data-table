@@ -12,7 +12,6 @@ Property | Description
 `showAccordian` | To display accordian view in each row
 `accordianUrls` | Array of strings with the url for the imports to be done
 `accordianElement` | Component name to be displayed in accordian expanded view
-`disableGlobalSearch` | If set to true, global search would be disabled
 `disableConfigEditor` | If set to true, config editor would be disabled
 `maxHeaderHeight` | Set height of the header (in px)
 `showEditOptions` | To display edit options in header toolbar
