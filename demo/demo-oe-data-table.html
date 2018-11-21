@@ -81,9 +81,9 @@
           <paper-item> Customize View</paper-item>
           <paper-item> Menu Actions</paper-item>
           <paper-item> Column Aggregation</paper-item>
-          <paper-item> Other Options </paper-item>
+          <!-- <paper-item> Other Options </paper-item> -->
           <paper-item> Accordion View </paper-item>
-          <paper-item> Using oe-combo </paper-item>
+          <paper-item> Conditional oe-combo using showCell</paper-item>
           <paper-item> Inline Filtering </paper-item>
         </paper-menu>
       </div>
@@ -1716,7 +1716,7 @@
               </template>
             </demo-snippet>
           </div>
-          <div>
+          <!-- <div>
             <h1> Other Options </h1>
             <p> 
               When disabled attribute is set the editing/adding a record is prevented but selection is allowed.</p>
@@ -1789,7 +1789,7 @@
                 </script>
               </template>
             </demo-snippet>
-          </div>
+          </div> -->
 
           <div>
             <h1> Accordion View </h1>
@@ -1950,13 +1950,14 @@
 
 
           <div>
-              <h1> Using oe-combo </h1>
+              <h1> Conditional oe-combo using showCell</h1>
              
               <p>To use oe-combo, following attributes need to be defined.</p>
               <p>externalEl: true,</p>
               <p>uiType: 'oe-combo'</p>
               <p>type: 'combo'</p>
               <p>editorAttributes</p>
+              <p>showCell:if the cell needs to be shown</p>
               <demo-snippet>
                 <template>
                   
@@ -2097,7 +2098,7 @@
             <demo-snippet>
               <template>
                 
-                <oe-data-table  disable-selection=true disabled disable-config-editor disable-edit disable-delete disable-add id="inlinefilter-table" label="Inline Filter"></oe-data-table>
+                <oe-data-table  disabled disable-config-editor disable-edit disable-delete disable-add id="inlinefilter-table" label="Inline Filter"></oe-data-table>
                 <script>
                   var dataTable = document.getElementById('inlinefilter-table');
                   
@@ -2112,8 +2113,7 @@
                     key: 'checknumber',
                     label: 'Check Number',
                     type: 'string',
-                    width: 20,
-                    hideSearch: true
+                    width: 20
                   }
                   ]);
 
@@ -2167,7 +2167,8 @@
                     key: 'checknumber',
                     label: 'Check Number',
                     type: 'string',
-                    width: 20
+                    width: 20,
+                    hideSearch: false
                   }
                   ]);
 

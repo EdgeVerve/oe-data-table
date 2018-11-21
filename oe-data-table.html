@@ -430,7 +430,12 @@ Custom property | Description | Default
 			}
     </style>
 
-    <paper-material class="data-table">
+    <paper-material class="data-table"
+      role="grid"
+      aria-label$="[[label]]"
+      aria-rowcount$="[[_totalRowsCount(rowCount)]]"
+      data-per-page$="[[pageSize]]"
+      data-wrap-cols="true">
       <iron-collapse opened="{{showGrid(_hideGrid,_customizeView)}}">
         <template is="dom-if" if="[[!hideHeader]]">
           <div id="grid-header" class$="multi-select-[[_isMultiSelected(selectedItems.length)]] grid-header">
@@ -512,14 +517,18 @@ Custom property | Description | Default
             </div>
           </div>
         </template>
-        <div id="table-header" class="table-header-style" style$="margin-right: [[_scrollBarWidth]]px;max-height: [[maxHeaderHeight]]px;overflow: hidden;">
+        <div role="row" id="table-header" class="table-header-style" style$="margin-right: [[_scrollBarWidth]]px;max-height: [[maxHeaderHeight]]px;overflow: hidden;">
           <template is="dom-if" if="[[!disableSelection]]">
             <div class="selection-cell">
-              <paper-checkbox class="selection-checkbox" checked=[[_selectedAll]] disabled$=[[!multiSelection]] on-change="_toggleSelectAll"></paper-checkbox>
+              <paper-checkbox 
+                role="gridcell" data-cell-type="selection" data-col-index="-1" data-row-index="-1" tabindex="0"
+                class="selection-checkbox" checked=[[_selectedAll]] disabled$=[[!multiSelection]] on-change="_toggleSelectAll"></paper-checkbox>
             </div>
           </template>
           <template is="dom-repeat" items="{{columns}}" as="column" filter="_getVisibleColumns" observe="hidden">
-            <oe-data-table-header-cell id="header-cell-{{index}}" col-index=[[index]] class="table-data" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]] enable-inline-filter="[[enableInlineFilter]]"
+            <oe-data-table-header-cell 
+              role="gridcell" data-cell-type="header" data-col-index$=[[index]] data-row-index="-1" tabindex="0"
+              id="header-cell-{{index}}" col-index=[[index]] class="table-data" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]] enable-inline-filter="[[enableInlineFilter]]"
               style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-header-cell>
           </template>
           <template is="dom-if" if=[[rowActions.length]]>
@@ -538,10 +547,12 @@ Custom property | Description | Default
               <iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key" selection-enabled multi-selection>
                 <template>
                   <div tabindex$="[[tabIndex]]"  id="row-{{rowIndex}}">
-                    <div class$="table-row [[_computeClassforRow(row,_computeSelection)]]" tabindex$="[[tabIndex]]" on-tap="_rowClicked">
+                    <div role="row" class$="table-row [[_computeClassforRow(row,_computeSelection)]]" tabindex="-1" on-tap="_rowClicked" data-row-index$="[[rowIndex]]">
                       <template is="dom-if" if="[[!disableSelection]]">
                         <div class="selection-cell">
-                          <paper-checkbox class="selection-checkbox" on-change="_toggleSelection" on-keydown="_goToCell" on-tap="_checkboxTapped" checked={{_getSelectionState(row,_computeSelection)}}></paper-checkbox>
+                          <paper-checkbox 
+                            role="gridcell" data-cell-type="selection" data-col-index="-1" data-row-index$="[[rowIndex]]" tabindex="-1"
+                            class="selection-checkbox" on-change="_toggleSelection" on-keydown="_goToCell" on-tap="_checkboxTapped" checked={{_getSelectionState(row,_computeSelection)}}></paper-checkbox>
                           <template is="dom-if" if="[[selectionCellContent]]">
                             <div class="selection-cell-content" style$="[[_computeSelectionCellContentStyle(row,selectionCellContent)]];">
                               <template is="dom-if" if="[[_enableSelectionCellContent(row, selectionCellContent)]]">
@@ -552,7 +563,9 @@ Custom property | Description | Default
                         </div>
                       </template>
                       <template is="dom-repeat" items="[[columns]]" as="column" filter="_getVisibleColumns" observe="hidden">
-                        <oe-data-table-cell id="cell-{{index}}" is-first-row=[[_isFirstRow(rowIndex,row)]] read-only=[[_computeReadOnly(disableEdit,disabled)]] key=[[key]] row={{row}} column=[[column]] items="{{_items}}" row-index=[[rowIndex]] class$="table-data [[_computeCellClass(row.*,column)]]" column-template=[[_getValidTemplate(row.*,row,column)]] style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-cell>
+                        <oe-data-table-cell 
+                          role="gridcell" data-cell-type="data-cell" data-row-index$="[[rowIndex]]" data-col-index$="[[index]]" tabindex="-1"
+                          id="cell-{{index}}" is-first-row=[[_isFirstRow(rowIndex,row)]] read-only=[[_computeReadOnly(disableEdit,disabled)]] key=[[rowIndex]] row={{row}} column=[[column]] items="{{_items}}" class$="table-data [[_computeCellClass(row.*,column)]]" column-template=[[_getValidTemplate(row.*,row,column)]] style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-cell>
                       </template>
                       <template is="dom-if" if=[[rowActions.length]]>
                         <div class="row-actions" style$="flex: [[_computeRowActionWidth(rowActions.length)]]">
@@ -613,11 +626,11 @@ Custom property | Description | Default
                 </template>
               </paper-listbox>
             </paper-dropdown-menu>
-            <div class="row-details">
+            <div class="row-details" tabindex="-1">
               <span> [[_startRow]]-[[_endRow]] of [[_totalRowsCount(rowCount)]] </span>
             </div>
-            <paper-icon-button disabled$="[[_disablePrevious(currentPage)]]" icon="image:navigate-before" on-tap="_previousPage"> </paper-icon-button>
-            <paper-icon-button disabled$="[[_disableNext(_isLastPage)]]" icon="image:navigate-next" on-tap="_nextPage"> </paper-icon-button>
+            <paper-icon-button aria-label="previous page" disabled$="[[_disablePrevious(currentPage)]]" icon="image:navigate-before" on-tap="_previousPage"> </paper-icon-button>
+            <paper-icon-button aria-label="next page" disabled$="[[_disableNext(_isLastPage)]]" icon="image:navigate-next" on-tap="_nextPage"> </paper-icon-button>
           </div>
         </template>
       </iron-collapse>

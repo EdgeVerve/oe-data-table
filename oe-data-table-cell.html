@@ -134,7 +134,8 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
       '_buildCustomRenderer(row.*, column)',
       '_buildCustomRenderer(columnTemplate)',
       '_computeCellData(row.*, column)',
-      '_buildNewElement(row, column)'
+      '_buildNewElement(row, column)',
+      '_setARIALabel(_displayValue)'
     ],
 
     listeners: {
@@ -256,13 +257,17 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
           this.set('_displayValue', valueToDisplay);
         }.bind(this)).catch(function (error) {
           this.set('_displayValue', null);
-          // this.fire('oe-show-error', error);
+          this.fire('oe-show-error', error);
         }.bind(this));
       } else {
         this.set('_displayValue', cellValue);
       }
     },
-
+    _setARIALabel:function(displayVal){
+      if(typeof displayVal !== "undefined" && typeof displayVal !== "object" && displayVal != null){
+        this.setAttribute('aria-label',displayVal);
+      }
+    },
     _handleCellTap: function (event) {
       if (!this.column.readOnly && !this.readOnly) {
 
@@ -300,8 +305,8 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
       }
     },
 
-    exitEditMode: function () {
-      if(this._element){
+    exitEditMode: function (useEditedValue) {
+      if(this._element && useEditedValue){
         var key = this.column.key || this.column.field;
         var rowPath = 'row.' + key;
         this.set(rowPath, this._element.value);
@@ -312,6 +317,7 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
         this._computeCellData(rowPath,this.column)
       }
       this.set('_inEdit', false);
+      this.focus();
     },
 
     _extractDropdownAndAddToBody: function (elem) {
@@ -406,10 +412,16 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
     },
 
     _handleActionKeyPress: function (event) {
-      if (event.which == 13) {
+      var key = event.which || event.keyCode;
+      if (key === 13) {
+        //Enter Key
+        this.exitEditMode(true);
+        event.stopPropagation();
+      } else if (key === 27) {
         this.exitEditMode();
-      } else if (event.which == 9) {
-        this.exitEditMode();
+        event.stopPropagation();
+      } else if (key === 9) {
+        this.exitEditMode(true);
         // if tab is pressed move to the next element
         this.async(function () {
           var elementToNavigate = event.shiftKey ? this.previousElementSibling : this.nextElementSibling;
@@ -422,7 +434,7 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
         });
       }
     },
-
+    
     _computeCellAlignment: function (column) {
       var style = null;
       if(column.alignment){

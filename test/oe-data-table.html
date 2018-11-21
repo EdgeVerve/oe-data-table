@@ -84,6 +84,26 @@
       <oe-data-table config-code="BranchDetail"></oe-data-table>
     </template>
   </test-fixture>
+  <test-fixture id="accordion-view">
+    <template>
+      <oe-data-table label="Accordion View"></oe-data-table>
+    </template>
+  </test-fixture>
+  <test-fixture id="inline-filter">
+    <template>
+      <oe-data-table label="Inline Filtering"></oe-data-table>
+    </template>
+  </test-fixture>
+  <test-fixture id="conditional-oecombo">
+    <template>
+      <oe-data-table label="Conditional oe-combo"></oe-data-table>
+    </template>
+  </test-fixture>
+  <test-fixture id="multilevel-keys">
+    <template>
+      <oe-data-table label="Multilevel Keys"></oe-data-table>
+    </template>
+  </test-fixture>
   <script>
     'use strict';
 
@@ -290,8 +310,8 @@
         test('Values of custom columns should be sortable', function (done) {
           var headerCells = dataTable.$$('#table-header').querySelectorAll('.table-data');
           var lastCell = headerCells[headerCells.length - 1];
-          MockInteractions.tap(lastCell.$.cell);
-          MockInteractions.tap(lastCell.$.cell);
+          MockInteractions.tap(lastCell.$.cell.firstElementChild);
+          MockInteractions.tap(lastCell.$.cell.firstElementChild);
           dataTable.async(function () {
             expect(dataTable._items[0].averageB).to.be.equal(88);
             done();
@@ -1218,6 +1238,287 @@
           });
         });
 
+      });
+
+
+
+
+      suite('Accordion View', function () {
+        var dataTable;
+
+        var columns = [
+          {
+            key: 'account',
+            label: 'Account',
+            type: 'number'
+          }, {
+            key: 'checknumber',
+            label: 'Check Number',
+            type: 'string'
+          }];
+
+          var data = [{
+            account: 861363459,
+            checknumber: 223457
+          },
+          {
+            account: 794659139,
+            checknumber: 23456
+          },
+          {
+            account: 479677228,
+            checknumber: 223431
+          },
+          {
+            account: 334547856,
+            checknumber: 2234567
+          }];
+          
+
+          setup(function (done) {
+            dataTable = fixture('accordion-view');
+            dataTable.set('columns', columns);
+            dataTable.set('items', data);
+            dataTable.set('accordianUrls', ["../demo/templates/demo-accordian.html"]);
+            dataTable.set('accordianElement', "demo-accordian");
+            dataTable.set('showAccordian', true);
+
+            // some logic in async of data table, hence wait for 1 milli second
+            setTimeout(done, 1);
+          });
+
+          test('Checking for accordion button', function () {
+            for(var i = 0; i < data.length; i ++ ){
+              expect(dataTable.querySelectorAll('.table-row')[i].querySelectorAll(".row-actions").length).to.be.equal(1);
+            }
+          });
+          
+          test('Checking for accordion element added', function(){
+            expect(document.getElementById("expanded-hook-0")).to.be.null;
+            dataTable.querySelectorAll('.table-row')[0].querySelector(".row-actions").querySelector("iron-icon").click();
+            expect(dataTable.querySelectorAll('.table-row')[0].querySelector(".row-actions").querySelector("iron-icon").icon).to.be.equal("icons:expand-less");
+            expect(dataTable.$$('#expanded-hook-0')).to.not.be.null;
+            dataTable.querySelectorAll('.table-row')[0].querySelector(".row-actions").querySelector("iron-icon").click();
+            expect(dataTable.querySelectorAll('.table-row')[0].querySelector(".row-actions").querySelector("iron-icon").icon).to.be.equal("icons:expand-more");
+            expect(dataTable.$$('#expanded-hook-0')).to.be.null;
+          });
+
+      });
+
+
+
+
+      suite('Inline Filtering', function () {
+        var dataTable;
+
+        var columns = [
+          {
+            key: 'account',
+            label: 'Account',
+            type: 'number'
+          }, {
+            key: 'checknumber',
+            label: 'Check Number',
+            type: 'string',
+            hideSearch: true
+          }];
+
+           var data = [{
+            account: 861363459,
+            checknumber: 223457
+            
+            },
+            {
+              account: 794659139,
+              checknumber: 23456
+            },
+            {
+              account: 479677228,
+              checknumber: 223431
+            },
+            {
+              account: 334547856,
+              checknumber: 2234567
+            },
+            {
+              account: 452135542,
+              checknumber: 123564
+            }
+
+          ];
+          
+
+          setup(function (done) {
+            dataTable = fixture('inline-filter');
+            dataTable.set('columns', columns);
+            dataTable.set('items', data);
+            dataTable.set('enableInlineFilter', true);
+            // some logic in async of data table, hence wait for 1 milli second
+            setTimeout(done, 1);
+          });
+
+          test('Checking if normal filter is disabled', function () {
+            expect(dataTable.$$('#table-header').querySelector(".filter-icon")).to.be.null;
+            expect(dataTable.$$('#table-header').querySelector(".search-div")).to.not.be.null;
+          });
+
+          test('Hide Search', function(){
+            expect(dataTable.$$('#table-header').querySelectorAll("oe-data-table-header-cell")[1].querySelector(".search-div")).to.be.null;
+          });
+
+          test('Testing Filters', function () {
+            expect(dataTable.$$('#table-header').querySelector(".filter-icon")).to.be.null;
+            expect(dataTable.$$('#table-header').querySelector(".search-div")).to.not.be.null;
+            dataTable.$$('#table-header').querySelector(".oe-data-table-header-cell-0").querySelector(".search-div").children[0].value="86";
+            flush(function(){
+              expect(dataTable._items.length).to.be.equal(1);
+              var expectedResult = [
+                {
+                  account: 861363459,
+                  checknumber: 223457
+                }
+              ];
+              expect(dataTable._items).to.deep.have.same.members(expectedResult);
+              done();
+            });
+          });      
+      });
+
+
+
+       suite('Conditional OeCombo', function () {
+        var dataTable;
+        var showCell = function (column, row) {
+           if (row.status === "Pending Decision")
+             return true;
+           else
+             return false;
+         };
+
+        var columns = [ 
+          
+          {
+           key: 'status',
+           label: 'Status',
+           type: 'string'
+          },
+          {
+           key: 'action',
+           label: 'Action',
+           externalEl: true,
+           uiType: 'oe-combo',
+           type: 'combo',
+           showCell: function (column, row) {
+           if (row.status === "Pending Decision")
+             return true;
+           else
+             return false;
+         },
+           editorAttributes: {
+             listdata: ['Accept', 'Reject'],
+             label: 'Select'
+           }
+
+         }];
+
+          var data = [{
+           status: 'Approved',
+           action: 'Select'
+         },
+         {
+           status: 'Pending Decision',
+           action: 'Select'
+         },
+         {
+           status: 'Pending Decision',
+           action: 'Select'
+         }];
+          
+
+          setup(function (done) {
+            dataTable = fixture('conditional-oecombo');
+            dataTable.set('columns', columns);
+            dataTable.set('items', data);
+            // some logic in async of data table, hence wait for 1 milli second
+            setTimeout(done, 1);
+          });
+
+          test('Checking conditional oe-combos', function () {
+            expect(dataTable.querySelectorAll('.table-row')[0].querySelector("oe-combo")).to.be.null;
+            expect(dataTable.querySelectorAll('.table-row')[1].querySelector("oe-combo")).to.not.be.null;
+            expect(dataTable.querySelectorAll('.table-row')[2].querySelector("oe-combo")).to.not.be.null;
+          });
+   
+      });
+
+
+
+
+
+
+       suite('MultiLevel Keys', function () {
+        var dataTable;
+        var showCell = function (column, row) {
+           if (row.status === "Pending Decision")
+             return true;
+           else
+             return false;
+         };
+
+        var columns = [ 
+          {
+           key: 'name',
+           label: 'Name',
+           type: 'string'
+          },
+          {
+           key: 'address.home.city',
+           label: 'City',
+           type: 'string'
+         }];
+
+          var data = [
+            {
+              name: 'Arya',
+              address: {
+                home: {
+                  city: "Bangalore"
+                }
+              }
+            },
+            {
+              name: 'Sansa',
+              address: {
+                home: {
+                  city: "Chennai"
+                }
+              }
+            },
+            {
+              name: 'Daenerys',
+              address: {
+                home: {
+                  city: "New Delhi"
+                }
+              }
+            }
+         ];
+          
+
+          setup(function (done) {
+            dataTable = fixture('multilevel-keys');
+            dataTable.set('columns', columns);
+            dataTable.set('items', data);
+            // some logic in async of data table, hence wait for 1 milli second
+            setTimeout(done, 1);
+          });
+
+          test('Checking data', function () {
+            expect(dataTable.querySelectorAll('.table-row')[0].querySelectorAll("oe-data-table-cell")[1].querySelector(".cell-content").innerText).to.be.equal("Bangalore");
+            expect(dataTable.querySelectorAll('.table-row')[1].querySelectorAll("oe-data-table-cell")[1].querySelector(".cell-content").innerText).to.be.equal("Chennai");
+            expect(dataTable.querySelectorAll('.table-row')[2].querySelectorAll("oe-data-table-cell")[1].querySelector(".cell-content").innerText).to.be.equal("New Delhi");
+          });
+   
       });
 
     });
