@@ -172,16 +172,16 @@
        
         this._items = this._filterItems(this._items, this.searchText);
     
-        if(this._items && this._items.length === 0){
+        // if(this._items && this._items.length === 0){
           
-          this.itemsCopy = JSON.parse(JSON.stringify(this.items));
-          this.items = [];
-        }
-        else{
+        //   this.itemsCopy = JSON.parse(JSON.stringify(this.items));
+        //   this.items = [];
+        // }
+        // else{
           
           this.set('column.selectedItems', this._items);
           this.fire('apply-criteria');
-        }
+        // }
     },
 
     _computeCellData: function (row, column) {

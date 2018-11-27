@@ -83,7 +83,7 @@
         cursor: col-resize;
       }
 
-      .cell-align-center{
+      .cell-align-center .header-content{
         @apply(--layout-center-center);
       }
       .cell-align-left .header-content{
@@ -113,10 +113,10 @@
       }
 
       .clear-search {
-        bottom: 9px;
+        /* bottom: 9px;
         position: absolute;
         width: 50%;
-        height: 20px;
+        height: 20px; */
       }
 
       oe-input {
@@ -151,10 +151,6 @@
         display: block !important;
       }
       
-      .absoluteCell{
-        position: absolute;
-        top: 4px;
-      }
 
     </style>
 
@@ -175,7 +171,7 @@
 
         </template>
         <template is="dom-if" if="[[showClearSearch(column)]]">
-          <div class="clear-search">
+          <div class$="clear-search [[_computeCellAlignment(column)]]">
             <paper-button on-tap="clearAllSearches">Clear</paper-button>
           </div>
 
@@ -226,8 +222,8 @@
     },
     
     _computeCellStyle: function(column){
-      if(column.hideSearch){
-        return "position: absolute; top: 4px;";
+      if(column.hideSearch && !column.clearSearch){
+        return "position: relative; top: -15px;";
       }
     },
     clearAllSearches: function () {

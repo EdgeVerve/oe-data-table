@@ -547,7 +547,7 @@ Custom property | Description | Default
               <iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key" selection-enabled multi-selection>
                 <template>
                   <div tabindex$="[[tabIndex]]"  id="row-{{rowIndex}}">
-                    <div role="row" class$="table-row [[_computeClassforRow(row,_computeSelection)]]" tabindex="-1" on-tap="_rowClicked" data-row-index$="[[rowIndex]]">
+                    <div role="row" class$="table-row [[_computeClassforRow(row,_computeSelection)]]"  on-tap="_rowClicked" data-row-index$="[[rowIndex]]">
                       <template is="dom-if" if="[[!disableSelection]]">
                         <div class="selection-cell">
                           <paper-checkbox 
@@ -584,12 +584,12 @@ Custom property | Description | Default
                       </template>
                       <template is="dom-if" if=[[showAccordian]]>
 												<div class="row-actions" style="flex: 0 0 48px">
-													<iron-icon id="paper-expand-[[rowIndex]]" icon="icons:expand-more" row$="[[row]]" selected$="[[selected]]" rowIndex$="[[rowIndex]]"
+													<iron-icon id$="paper-expand-[[rowIndex]]" icon="icons:expand-more" row$="[[row]]" selected$="[[selected]]" rowIndex$="[[rowIndex]]"
 													 on-tap="_rowAccordianClicked"></iron-icon>
 												</div>
 											</template>
                     </div>
-                    <div id="expandedView-[[rowIndex]]" class="hookClass">
+                    <div id$="expandedView-[[rowIndex]]" class="hookClass">
                     </div>
                   </div>
                 </template>
@@ -920,7 +920,6 @@ Custom property | Description | Default
         var elem = document.createElement(self.accordianElement);
         elem.id = 'expanded-hook-' + self.expandedRow;
         elem.data = self.items[self.expandedRow];
-        elem.style["height", "100%"];
         this.$$('#expandedView-' + self.expandedRow).appendChild(elem);
       }
     },
@@ -932,9 +931,7 @@ Custom property | Description | Default
 
       if (e.currentTarget.icon === "icons:expand-more") {
 
-        var element =
-
-          this.$$('#expandedView-' + this.expandedRow).classList.remove("expanded");
+        this.$$('#expandedView-' + this.expandedRow).classList.remove("expanded");
         this.$$('#expandedView-' + this.expandedRow).classList.add("expanded");
         this.$$("#paper-expand-" + rowIndex).setAttribute('icon', 'icons:expand-less');
 
