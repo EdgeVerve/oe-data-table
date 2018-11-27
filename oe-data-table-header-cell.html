@@ -94,22 +94,8 @@
       }
       .search-div {
         bottom: 3px;
-        /* position: absolute; */
         width: 100%;
-        opacity: 0.56;
         height: 20px;
-        border-left: none; 
-        border-top: none; 
-        border-right: none; 
-        margin-top: 10px;
-        background: #c1c0c047;
-        /* border-bottom: 2px solid black; */
-      }
-
-      .date-search-div {
-        width: 50%;
-        position: absolute;
-        bottom: -4px;
       }
 
       .clear-search {
@@ -119,30 +105,19 @@
         height: 20px; */
       }
 
-      oe-input {
+      paper-input {
+        width: 100%;
+
         --paper-input-container: {
-            padding-top: 0;
-            padding-right: 0;
-            padding-bottom: 0;
-            text-align: right;
-            background: var(--background-primary);
-            width: 100% !important;
-        };
-
-
-        --paper-input-container-underline: {
-          display: none;
-          border-bottom-color: transparent;
-        };
-        --paper-input-container-underline-focus: {
-          display: none;
-        }
-        --paper-input-container-label: {
-          font-size: 14px;
-          color: var(--primary-dark-color);
-          text-align: left;
+          padding: 0;
         }
         --paper-input-container-input: {
+          font-size: 13px;
+        }
+        --paper-input-container-label: {
+          font-size: 12px;
+          line-height: 28px;
+          color: var(--primary-dark-color);
           text-align: left;
         }
       }
@@ -165,15 +140,8 @@
       <template is="dom-if" if="[[enableInlineFilter]]">
         <template is="dom-if" if="[[showColumnSearch(column)]]">				
             <div class="search-div">
-              <oe-input id="searchStringInput" class="" value="{{filterValue}}" label="[[getSerchLabel(column)]]" no-label-float></oe-input>
-              
+              <paper-input id="searchStringInput"  label="Search [[column.label]]" no-label-float value={{filterValue}} ></paper-input>    
             </div>
-
-        </template>
-        <template is="dom-if" if="[[showClearSearch(column)]]">
-          <div class$="clear-search [[_computeCellAlignment(column)]]">
-            <paper-button on-tap="clearAllSearches">Clear</paper-button>
-          </div>
 
         </template>
       </template>
@@ -222,16 +190,11 @@
     },
     
     _computeCellStyle: function(column){
-      if(column.hideSearch && !column.clearSearch){
-        return "position: relative; top: -15px;";
+      if(column.hideSearch){
+        return "position: relative; top: -10px;";
       }
     },
-    clearAllSearches: function () {
-			var headerColumns = this.$.cell.parentElement.parentElement.querySelectorAll("oe-data-table-filter");
-			for (var i = 0; i < headerColumns.length; i++) {
-				headerColumns[i].filterValue = "";
-			}
-		},
+   
 		getSerchLabel(column) {
 			return column.searchLabel ? column.searchLabel : "Search";
 		},
@@ -240,12 +203,7 @@
 				return true;
 			return false;
 		},
-		showClearSearch(column) {
-			if (column && column.clearSearch === true)
-				return true;
-			return false;
-		},
-    
+
     attached: function () {
       this.cell = this.$.cell;
     },

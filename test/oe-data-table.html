@@ -1323,29 +1323,35 @@
             hideSearch: true
           }];
 
-           var data = [{
-            account: 861363459,
-            checknumber: 223457
-            
-            },
-            {
-              account: 794659139,
-              checknumber: 23456
-            },
-            {
-              account: 479677228,
-              checknumber: 223431
-            },
-            {
-              account: 334547856,
-              checknumber: 2234567
-            },
-            {
-              account: 452135542,
-              checknumber: 123564
-            }
+           var data = 
+           [{
+               account: 861363459,
+               checknumber: 223457,
+               name: "Mark"
 
-          ];
+             },
+               {
+                 account: 794659139,
+                 checknumber: 23456,
+                 name: "Rob"
+               },
+               {
+                 account: 479677228,
+                 checknumber: 223431,
+                 name: "Sansa"
+               },
+               {
+                 account: 334547856,
+                 checknumber: 2234567,
+                 name: "Arya"
+               },
+               {
+                 account: 452135542,
+                 checknumber: 123564,
+                 name: "Cersie"
+               }
+
+             ];
           
 
           setup(function (done) {
@@ -1375,11 +1381,12 @@
               var expectedResult = [
                 {
                   account: 861363459,
-                  checknumber: 223457
+                  checknumber: 223457,
+                  name: "Mark"
                 }
               ];
               expect(dataTable._items).to.deep.have.same.members(expectedResult);
-              done();
+              
             });
           });      
       });

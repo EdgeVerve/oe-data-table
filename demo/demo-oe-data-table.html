@@ -1840,7 +1840,7 @@
                   }, {
                     key: 'checknumber',
                     label: 'Check Number',
-                    type: 'string',
+                    type: 'number',
                     cellClass: 'blue-color'
                   }, {
                     key: 'amount',
@@ -1981,8 +1981,7 @@
                     }, {
                       key: 'checknumber',
                       label: 'Check Number',
-                      type: 'string',
-                      cellClass: 'blue-color'
+                      type: 'number'
                     }, {
                       key: 'amount',
                       label: 'Amount',
@@ -2168,31 +2167,44 @@
                     key: 'checknumber',
                     label: 'Check Number',
                     type: 'number',
-                    width: 20,
+                    width: 180,
                     hideSearch: true
+                  },
+                  {
+                    key: 'name',
+                    label: 'Name',
+                    type: 'string',
+                    width: 20,
+                    alignment: 'center'
+                    
                   }
                   ]);
 
                   var data = [{
                     account: 861363459,
-                    checknumber: 223457
+                    checknumber: 223457,
+                    name: "Mark"
                     
                     },
                     {
                       account: 794659139,
-                      checknumber: 23456
+                      checknumber: 23456,
+                      name: "Rob"
                     },
                     {
                       account: 479677228,
-                      checknumber: 223431
+                      checknumber: 223431,
+                      name: "Sansa"
                     },
                     {
                       account: 334547856,
-                      checknumber: 2234567
+                      checknumber: 2234567,
+                      name: "Arya"
                     },
                     {
                       account: 452135542,
-                      checknumber: 123564
+                      checknumber: 123564,
+                      name: "Cersie"
                     }
 
                   ];
