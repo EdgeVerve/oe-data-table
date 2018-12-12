@@ -1300,7 +1300,7 @@
             expect(dataTable.$$('#expanded-hook-0')).to.not.be.null;
             dataTable.querySelectorAll('.table-row')[0].querySelector(".row-actions").querySelector("iron-icon").click();
             expect(dataTable.querySelectorAll('.table-row')[0].querySelector(".row-actions").querySelector("iron-icon").icon).to.be.equal("icons:expand-more");
-            expect(dataTable.$$('#expanded-hook-0')).to.be.null;
+            expect(dataTable.$$('#expanded-hook-0').style.visibility).to.be.equal("hidden");
           });
 
       });

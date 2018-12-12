@@ -2,7 +2,6 @@
   ©2016-2017 EdgeVerve Systems Limited (a fully owned Infosys subsidiary),
   Bangalore, India. All Rights Reserved.
 -->
-<link rel="import" href="./styles/mdl-grid-css.html">
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-list/iron-list.html">
 <link rel="import" href="../iron-icons/iron-icons.html">
@@ -420,8 +419,8 @@ Custom property | Description | Default
 
 			.expanded {
 				display: block;
-				height: 300px;
-				overflow-y: auto;
+				/* height: 300px; */
+				/* overflow-y: auto; */
 
 			}
 
@@ -517,7 +516,7 @@ Custom property | Description | Default
             </div>
           </div>
         </template>
-        <div role="row" id="table-header" class="table-header-style" style$="margin-right: [[_scrollBarWidth]]px;max-height: [[maxHeaderHeight]]px;overflow: hidden;">
+        <div role="row" id="table-header"  style$="margin-right: [[_scrollBarWidth]]px;max-height: [[maxHeaderHeight]]px;overflow: hidden;">
           <template is="dom-if" if="[[!disableSelection]]">
             <div class="selection-cell">
               <paper-checkbox 
@@ -542,11 +541,11 @@ Custom property | Description | Default
           <template is="dom-if" if={{_loadingData}}>
             <paper-progress indeterminate></paper-progress>
           </template>
-          <div style$="height: [[_computeGridHeight(pageSize,_items.length)]]px">
+          <div style$="height: [[__tableRowHeight]]px">
             <template is="dom-if" if=[[_items.length]] restamp=true>
               <iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key" selection-enabled multi-selection>
                 <template>
-                  <div tabindex$="[[tabIndex]]"  id="row-{{rowIndex}}">
+                  <div tabindex="-1"  id="row-{{rowIndex}}">
                     <div role="row" class$="table-row [[_computeClassforRow(row,_computeSelection)]]"  on-tap="_rowClicked" data-row-index$="[[rowIndex]]">
                       <template is="dom-if" if="[[!disableSelection]]">
                         <div class="selection-cell">
@@ -850,7 +849,8 @@ Custom property | Description | Default
        enableInlineFilter: {
         type: Boolean,
         value: false,
-        notify: true
+        notify: true,
+        observer: 'onUpdateInlineFilter'
       }
 
     },
@@ -911,16 +911,26 @@ Custom property | Description | Default
       }
      
     },
-
+    onUpdateInlineFilter: function(){
+      if(this.enableInlineFilter){
+        this.$["table-header"].classList.add("table-header-style");
+      }
+    },
     createExpandedView: function () {
 
       var self = this;
 
-      if (this.$$('#expandedView-' + self.expandedRow)) {
+      if (this.$$('#expandedView-' + self.expandedRow) && !this.$$('#expanded-hook-' + self.expandedRow)) {
         var elem = document.createElement(self.accordianElement);
         elem.id = 'expanded-hook-' + self.expandedRow;
-        elem.data = self.items[self.expandedRow];
+        elem.set('data',self.items[self.expandedRow]);
         this.$$('#expandedView-' + self.expandedRow).appendChild(elem);
+      }
+      else if(this.$$('#expandedView-' + self.expandedRow) && this.$$('#expanded-hook-' + self.expandedRow)){
+        var elem = this.$$('#expanded-hook-' + self.expandedRow);
+        elem.style.visibility = "visible";
+        elem.set('data', {});
+        elem.set('data',self.items[self.expandedRow]);
       }
     },
 
@@ -943,7 +953,10 @@ Custom property | Description | Default
         this.$$('#expandedView-' + this.expandedRow).classList.add("hookClass");
         this.$$("#paper-expand-" + rowIndex).setAttribute('icon', 'icons:expand-more');
         var expandedHook = this.$$("#expanded-hook-" + rowIndex);
-        expandedHook.parentNode.removeChild(expandedHook);
+        if(expandedHook){
+          expandedHook.style.visibility = "hidden";
+        }
+        // expandedHook.parentNode.removeChild(expandedHook);
 
       }
     },
@@ -1177,6 +1190,7 @@ Custom property | Description | Default
       return (disableEdit||disabled) ;
     },
     _computeGridHeight: function (pageSize, itemsToShow) {
+      this.async(function () {
         this.updateRowHeight();
         this.maxRowHeight = 48;
         var size = ((itemsToShow > 5 && itemsToShow < pageSize) ? itemsToShow : pageSize)
@@ -1188,7 +1202,7 @@ Custom property | Description | Default
         }
         var height = size * 48 + (hasScroll?16:0);
         this.set('__tableRowHeight',height);
-        return height;
+      }, 0);
     },
 
     _rowActionClicked: function (event) {
@@ -1408,6 +1422,9 @@ Custom property | Description | Default
     },
 
     _rowClicked: function (event) {
+      if( event.target.id.indexOf("paper-expand-") > -1) {
+        return;
+      }
       // event.model.row will contain the object
       this.fire('oe-data-table-row-clicked', event);
       this.toggleSelection(event.model.row);

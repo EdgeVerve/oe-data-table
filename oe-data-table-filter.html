@@ -139,13 +139,7 @@
       },
       isServerData:{
         type:Boolean
-      },
-      filterValue: {
-        type: String,
-        notify: true,
-        observer: 'searchCriteria'
       }
-
     },
 
     get _selectedItems() {
@@ -161,14 +155,6 @@
     ready: function () {
       this.set('_selectionState', {});
       this.set('_computeSelection',true);
-    },
-
-    searchCriteria: function(value){
-        this.searchText = value;
-        this._itemsChanged();
-        this._items = this._filterItems(this._items, this.searchText);
-        this.set('column.selectedItems', this._items);
-        this.fire('apply-criteria');
     },
 
     _computeCellData: function (row, column) {
@@ -187,7 +173,7 @@
       }
       this.set('column.selectedItems', this._selectedItems);
       this.fire('apply-criteria');
-      this.domHost.$.dialog.close();
+      this.domHost.$$("#dialog").close();
     },
 
     _resetFilter: function (evt) { // eslint-disable-line no-unused-vars
@@ -207,11 +193,11 @@
       this.set('_computeSelection', !this._computeSelection);
       this.set('column.selectedItems', this._selectedItems);
       this.fire('apply-criteria');
-      this.domHost.$.dialog.close();
+      this.domHost.$$("#dialog").close();
     },
 
     _closeFilter: function (event) { // eslint-disable-line no-unused-vars
-      this.domHost.$.dialog.close();
+      this.domHost.$$("#dialog").close();
     },
 
     _hasFilterSelected:function(change){

@@ -27,8 +27,6 @@
             <iron-icon icon="icons:zoom-in" item-icon on-tap="clickMe" style=" margin-left: 40px;"></iron-icon>
             <iron-icon icon="icons:refresh" item-icon on-tap="rotate" style=" margin-left: 10px;"></iron-icon>
 
-
-
         </div>
 
 
@@ -38,7 +36,7 @@
             is: 'demo-accordian',
             properties: {
                 data: {
-                    type: Number,
+                    type: Object,
                     notify: true,
                     observer: 'dataChanged'
 

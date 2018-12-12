@@ -2,7 +2,6 @@
   ©2016-2017 EdgeVerve Systems Limited (a fully owned Infosys subsidiary),
   Bangalore, India. All Rights Reserved.
 -->
-<link rel="import" href="./styles/mdl-grid-css.html">
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../paper-dialog/paper-dialog.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
@@ -18,7 +17,7 @@
 <dom-module id="oe-data-table-header-cell">
 
   <template>
-    <style include="iron-flex iron-flex-alignment mdl-grid-css">
+    <style include="iron-flex iron-flex-alignment">
       :host {
         position: relative;
         user-select: none;
@@ -141,10 +140,11 @@
     </div>
     <template is="dom-if" if="[[!enableInlineFilter]]">
       <iron-icon hidden$=[[_disableFilter(column)]]   class="filter-icon" icon="icons:filter-list" on-tap="openFilter"></iron-icon>
+      <paper-dialog id="dialog" on-iron-overlay-opened="_positionFilterDialog">
+        <oe-data-table-filter is-server-data=[[isServerData]] column=[[column]] items=[[items]] ></oe-data-table-filter>
+      </paper-dialog>
     </template>
-    <paper-dialog id="dialog" on-iron-overlay-opened="_positionFilterDialog">
-      <oe-data-table-filter is-server-data=[[isServerData]] column=[[column]] items=[[items]] filter-value="{{filterValue}}"></oe-data-table-filter>
-    </paper-dialog>
+    
     <div id="resize-handler" on-mousedown="_handleResize"></div>
   </template>
 </dom-module>
@@ -177,7 +177,8 @@
       filterValue: {
 				type: String,
         value: "",
-				notify: true
+				notify: true,
+        observer: 'inlineSearchCriteria'
 			}
 
     },
@@ -268,12 +269,12 @@
     },
 
     openFilter: function (evt) { // eslint-disable-line no-unused-vars
-      this.$.dialog.open();
+      this.$$("#dialog").open();
     },
 
     _positionFilterDialog: function (event) { // eslint-disable-line no-unused-vars
       this.async(function () {
-        var filterDialog = this.$.dialog;
+        var filterDialog = this.$$("#dialog");
         var offset = this.getBoundingClientRect();
         //filterDialog.style = {};
         //filterDialog.style.top = (offset.top - 1) + 'px';
@@ -298,6 +299,38 @@
         cssClass = ['number', 'decimal'].indexOf(column.type || column.uitype) > -1 ? 'cell-align-right' : 'cell-align-left';
       }
       return cssClass;
+    },
+
+    inlineSearchCriteria: function(value){
+      this.searchText = value;
+        this._itemsChanged();
+        this._items = this._filterItems(this._items, this.searchText);
+        this.set('column.selectedItems', this._items);
+        this.fire('apply-criteria');
+    },
+
+    _itemsChanged: function (change) { // eslint-disable-line no-unused-vars
+     
+      if (this.items && this.items.length) {
+        var uniqueData = [];
+        this.items.forEach(function (d) {
+          var val = d[this.column.key || this.column.field]
+          if(val === undefined && this.column.key){
+            val = OEUtils.deepValue(d,this.column.key);
+         }
+          if (uniqueData.indexOf(val) == -1) {
+            //if(searchText && val.toString().toLowerCase().indexOf(searchText) == -1) return;
+            uniqueData.push(val);
+          }
+        }.bind(this));
+        this.set('_items', uniqueData.length ? uniqueData : []);
+      }
+    },
+    _filterItems: function (items, searchText) {
+      var search = searchText.toLowerCase();
+      return search.length ? items.filter(function (item) {
+        return item.toString().toLowerCase().indexOf(search) > -1;
+      }) : items;
     }
 
   });
