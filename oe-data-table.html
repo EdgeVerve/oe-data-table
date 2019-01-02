@@ -429,12 +429,12 @@ Custom property | Description | Default
 			}
     </style>
 
-    <paper-material class="data-table"
-      role="grid"
-      aria-label$="[[label]]"
-      aria-rowcount$="[[_totalRowsCount(rowCount)]]"
-      data-per-page$="[[pageSize]]"
-      data-wrap-cols="true">
+    <paper-material class="data-table" 
+    role="grid"
+    aria-label$="[[label]]"
+    aria-rowcount$="[[_totalRowsCount(rowCount)]]"
+    data-per-page$="[[pageSize]]"
+    data-wrap-cols="true">
       <iron-collapse opened="{{showGrid(_hideGrid,_customizeView)}}">
         <template is="dom-if" if="[[!hideHeader]]">
           <div id="grid-header" class$="multi-select-[[_isMultiSelected(selectedItems.length)]] grid-header">
@@ -543,7 +543,7 @@ Custom property | Description | Default
           </template>
           <div style$="height: [[__tableRowHeight]]px">
             <template is="dom-if" if=[[_items.length]] restamp=true>
-              <iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key" selection-enabled multi-selection>
+              <iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" selection-enabled multi-selection>
                 <template>
                   <div tabindex="-1"  id="row-{{rowIndex}}">
                     <div role="row" class$="table-row [[_computeClassforRow(row,_computeSelection)]]"  on-tap="_rowClicked" data-row-index$="[[rowIndex]]">
@@ -869,48 +869,11 @@ Custom property | Description | Default
 
     observers: [
       '_updateRowWidth(_items.*)',
-      '_keyHandlers(disabled,_items.length)',
       '_showPagination(dataController)',
       '_showPagination(paginationType)',
       '_computeGridHeight(pageSize,_items.length)',
       'accordianUrlsChanged(accordianUrls.splices)',
     ],
-    _keyHandlers:function(){
-      if(this._items.length == 0){
-        return;
-      }
-      this.async(function(){
-        var ironList = this.querySelector('#row-list');
-        if(this.disabled){
-          this.listen(ironList, 'keydown', '_keyDownListener');
-        }else{
-          this.unlisten(ironList, 'keydown', '_keyDownListener');
-        }
-      })  
-    },
-    _keyDownListener:function(e){
-      if(this.selectedItems.length !== 1){
-        return;
-      }
-      if(e.keyCode === 40 || e.keyCode === 38){
-        var selectedIndex = this._items.indexOf(this.selectedItems[0]);
-        if(e.keyCode === 40){
-          //down arrow
-          if(selectedIndex+1 === this._items.length){
-            return;
-          }
-          selectedIndex++;
-        }else if(e.keyCode === 38){
-          //up arrow
-          if(selectedIndex === 0){
-            return;
-          }
-          selectedIndex--;
-        }
-        this.toggleSelection(this._items[selectedIndex]);
-      }
-     
-    },
     onUpdateInlineFilter: function(){
       if(this.enableInlineFilter){
         this.$["table-header"].classList.add("table-header-style");

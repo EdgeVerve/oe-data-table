@@ -143,7 +143,7 @@
        *  "scroll" - support infinite scrolling for pagination , 
        *  "page" - show distinct records per page.
        */
-       paginationType: {
+      paginationType: {
         type: String,
         value: "scroll"
       }
@@ -160,7 +160,7 @@
       '_itemsChanged(items.*)',
       '_organizeData(currentPage)'
     ],
-     __cellNavigationHandler: function (ev) {
+    __cellNavigationHandler: function (ev) {
 
       var maxColumns = this.columns.filter(function (c) {
         return !c.hidden;
@@ -651,7 +651,7 @@
         var columnWhere = {};
         if (filterSort.filter) {
           var columnFilter = filterSort.filter;
-          
+
           columnWhere.and = Object.keys(columnFilter).filter(function (key) {
             return columnFilter[key] && columnFilter[key].length;
           }).map(function (prop) {
@@ -702,7 +702,7 @@
       //if appended , remove the filter to avoid incorrect count
       var index = url.indexOf("?");
       if (index > -1) {
-          url = url.slice(url, index);
+        url = url.slice(url, index);
       }
       ajaxRequest.url = url + '/count';
 

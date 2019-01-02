@@ -125,6 +125,7 @@
         test('rendering of rows', function () {
           expect(dataTable.querySelectorAll('.table-row').length).to.be.equal(4);
         });
+        a11ySuite('basic'); 
       });
 
       suite('Disabled table',function(){
@@ -869,7 +870,7 @@
                   expect(firstCell._inEdit).to.be.equal(true);
                   flush(function () {
                     firstCell._element.set('value', 'test');
-                    firstCell._element.fire('change');
+                    MockInteractions.keyDownOn(firstCell._element,13);
                     flush(function () {
                       flush(function () {
                         expect(firstCell.row.name).to.be.equal('test');
@@ -899,6 +900,7 @@
                     var items = firstCell._element.$.menu.querySelectorAll('paper-item');
                     items = items[2];
                     items.click();
+                    MockInteractions.keyDownOn(firstCell._element,13);
                     flush(function () {
                       expect(firstCell.row.rating).to.be.equal(3);
                       done();

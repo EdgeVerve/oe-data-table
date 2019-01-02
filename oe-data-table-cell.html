@@ -378,7 +378,7 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
           this.$['createNewEl'].removeChild(this.$['createNewEl'].childNodes[0]);
         }
       }  
-      this._element.addEventListener('change', this._handleValueChange.bind(this));
+      //this._element.addEventListener('change', this._handleValueChange.bind(this));
       this._element.addEventListener('keydown', this._handleActionKeyPress.bind(this));
       this.async(function () {
         this._extractDropdownAndAddToBody(elem);
