@@ -490,18 +490,21 @@
       var filters = {},
         filterExists = false,
         filteredData;
+      var self = this;
       this.columns.forEach(function (col) {
         filters[col.key || col.field] = {
           selectedItems: col.selectedItems
         };
-        if (col.selectedItems && col.selectedItems.length) filterExists = true;
+        if (col.selectedItems && col.selectedItems.length && !self.enableInlineFilter) filterExists = true;
+        if (col.selectedItems && self.enableInlineFilter) filterExists = true;
       });
 
       filteredData = filterExists ? items.filter(function (d) {
         var isValid = true;
         filters && Object.keys(filters).forEach(function (key) {
           var filter = filters[key];
-          if (filter.selectedItems && filter.selectedItems.length) {
+          if (filter.selectedItems && ((!self.enableInlineFilter && filter.selectedItems.length) || (self.enableInlineFilter) )) {
+            val = OEUtils.deepValue(d,key);
             isValid = isValid && filter.selectedItems.indexOf(d[key]) != -1;
           }
         });

@@ -45,6 +45,8 @@
 
       .header-title {
         vertical-align: bottom;
+        text-align: left;
+				line-height: 1;
       }
 
       .header-title.sorted {
@@ -56,11 +58,11 @@
       }
 
       .filter-icon {
-        right: 10px;
+       
         padding: 2px;
         display: none;
         cursor: pointer;
-        position: absolute;
+       
         border-radius: 4px;
         background: rgba(238, 238, 238, 0.4);
       }
@@ -80,34 +82,69 @@
         cursor: col-resize;
       }
 
-      .cell-align-center{
+      .cell-align-center .header-content{
         @apply(--layout-center-center);
       }
       .cell-align-left .header-content{
+        /* @apply(--layout-horizontal-reverse); */
+      }
+      .cell-align-right .header-content{
         @apply(--layout-horizontal-reverse);
       }
-      .cell-align-right{
-        @apply(--layout-end-justified);
+      .search-div {
+        bottom: 3px;
+        width: 100%;
+        height: 20px;
       }
 
-      
+      paper-input {
+        width: 100%;
 
+        --paper-input-container: {
+          padding: 0;
+        }
+        --paper-input-container-input: {
+          font-size: 13px;
+        }
+        --paper-input-container-label: {
+          font-size: 12px;
+          line-height: 28px;
+          color: var(--primary-dark-color);
+          text-align: left;
+        }
+      }
+
+      .maincell {
+        display: block !important;
+      }
+      
 
     </style>
 
-    <div id="cell" class$="[[_computeCellAlignment(column)]] layout horizontal center" on-tap="_changeSortOrder">
-      <div class="header-content layout horizontal center">
+    <div id="cell" class$="[[_computeCellAlignment(column)]] layout horizontal center maincell" >
+      <div  class="header-content layout horizontal center" style$="[[_computeCellStyle(column)]]" on-tap="_changeSortOrder">
         <iron-icon class="sort-icon" icon="icons:[[_getSortIcon(column.sort)]]" hidden$=[[!column.sort]]></iron-icon>
         <span class$="header-title [[_getSortedClass(column.sort)]]">
           <oe-i18n-msg msgid=[[_computeColumnLabel(column)]]></oe-i18n-msg> 
 		   <paper-tooltip id="header-tooltip-[[_computeColumnLabel(column)]]"  offset="0" position="bottom">  <oe-i18n-msg msgid=[[column.tooltip]]>[[column.tooltip]]</oe-i18n-msg> </paper-tooltip>
         </span>
       </div>
+      <template is="dom-if" if="[[enableInlineFilter]]">
+        <template is="dom-if" if="[[showColumnSearch(column)]]">				
+            <div class="search-div">
+              <paper-input id="searchStringInput"  label="Search [[column.label]]" no-label-float value={{filterValue}} ></paper-input>    
+            </div>
+
+        </template>
+      </template>
     </div>
-    <iron-icon hidden$=[[_disableFilter(column)]] class="filter-icon" icon="icons:filter-list" on-tap="openFilter"></iron-icon>
-    <paper-dialog id="dialog" on-iron-overlay-opened="_positionFilterDialog">
-      <oe-data-table-filter is-server-data=[[isServerData]] column=[[column]] items=[[items]]></oe-data-table-filter>
-    </paper-dialog>
+    <template is="dom-if" if="[[!enableInlineFilter]]">
+      <iron-icon hidden$=[[_disableFilter(column)]]   class="filter-icon" icon="icons:filter-list" on-tap="openFilter"></iron-icon>
+      <paper-dialog id="dialog" on-iron-overlay-opened="_positionFilterDialog">
+        <oe-data-table-filter is-server-data=[[isServerData]] column=[[column]] items=[[items]] ></oe-data-table-filter>
+      </paper-dialog>
+    </template>
+    
     <div id="resize-handler" on-mousedown="_handleResize"></div>
   </template>
 </dom-module>
@@ -131,13 +168,35 @@
       },
 
       items: {
-        type: Array
+        type: Array,
+        notify: true
       },
       isServerData:{
         type:Boolean
-      }
+      },
+      filterValue: {
+				type: String,
+        value: "",
+				notify: true,
+        observer: 'inlineSearchCriteria'
+			}
 
     },
+    
+    _computeCellStyle: function(column){
+      if(column.hideSearch){
+        return "position: relative; top: -10px;";
+      }
+    },
+   
+		getSerchLabel(column) {
+			return column.searchLabel ? column.searchLabel : "Search";
+		},
+    showColumnSearch(column) {
+			if (column && !column.clearSearch && !column.hideSearch)
+				return true;
+			return false;
+		},
 
     attached: function () {
       this.cell = this.$.cell;
@@ -210,12 +269,12 @@
     },
 
     openFilter: function (evt) { // eslint-disable-line no-unused-vars
-      this.$.dialog.open();
+      this.$$("#dialog").open();
     },
 
     _positionFilterDialog: function (event) { // eslint-disable-line no-unused-vars
       this.async(function () {
-        var filterDialog = this.$.dialog;
+        var filterDialog = this.$$("#dialog");
         var offset = this.getBoundingClientRect();
         //filterDialog.style = {};
         //filterDialog.style.top = (offset.top - 1) + 'px';
@@ -240,6 +299,38 @@
         cssClass = ['number', 'decimal'].indexOf(column.type || column.uitype) > -1 ? 'cell-align-right' : 'cell-align-left';
       }
       return cssClass;
+    },
+
+    inlineSearchCriteria: function(value){
+      this.searchText = value;
+        this._itemsChanged();
+        this._items = this._filterItems(this._items, this.searchText);
+        this.set('column.selectedItems', this._items);
+        this.fire('apply-criteria');
+    },
+
+    _itemsChanged: function (change) { // eslint-disable-line no-unused-vars
+     
+      if (this.items && this.items.length) {
+        var uniqueData = [];
+        this.items.forEach(function (d) {
+          var val = d[this.column.key || this.column.field]
+          if(val === undefined && this.column.key){
+            val = OEUtils.deepValue(d,this.column.key);
+         }
+          if (uniqueData.indexOf(val) == -1) {
+            //if(searchText && val.toString().toLowerCase().indexOf(searchText) == -1) return;
+            uniqueData.push(val);
+          }
+        }.bind(this));
+        this.set('_items', uniqueData.length ? uniqueData : []);
+      }
+    },
+    _filterItems: function (items, searchText) {
+      var search = searchText.toLowerCase();
+      return search.length ? items.filter(function (item) {
+        return item.toString().toLowerCase().indexOf(search) > -1;
+      }) : items;
     }
 
   });
