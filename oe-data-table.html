@@ -572,7 +572,7 @@ Custom property | Description | Default
                             <div>
                               <template is="dom-if" if={{action.icon}}>
                                 <paper-icon-button class="row-action" row$=[[row]] icon="[[action.icon]]" on-tap="_rowActionClicked"></paper-icon-button>
-                                <paper-tooltip position="left"> [[action.title]] </paper-tooltip>
+                                <paper-tooltip position="left"><oe-i18n-msg msgid="[[action.title]]"></oe-i18n-msg></paper-tooltip>
                               </template>
                               <template is="dom-if" if={{!action.icon}}>
                                 <paper-button class="row-action" row$=[[row]] on-tap="_rowActionClicked">[[action.title]]</paper-button>
@@ -596,7 +596,7 @@ Custom property | Description | Default
             </template>
             <template is="dom-if" if=[[!_items.length]] restamp=true>
               <div class="empty-state layout horizontal center-center">
-                <label>[[emptyStateMessage]]</label>
+                <label><oe-i18n-msg msgid="[[emptyStateMessage]]"></oe-i18n-msg></label>
               </div>
             </template>
           </div>
