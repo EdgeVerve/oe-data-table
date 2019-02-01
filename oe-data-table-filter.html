@@ -134,12 +134,12 @@
        * data object array.
        */
       items: {
-        type: Array
+        type: Array,
+        notify: true
       },
       isServerData:{
         type:Boolean
       }
-
     },
 
     get _selectedItems() {
@@ -173,7 +173,7 @@
       }
       this.set('column.selectedItems', this._selectedItems);
       this.fire('apply-criteria');
-      this.domHost.$.dialog.close();
+      this.domHost.$$("#dialog").close();
     },
 
     _resetFilter: function (evt) { // eslint-disable-line no-unused-vars
@@ -193,11 +193,11 @@
       this.set('_computeSelection', !this._computeSelection);
       this.set('column.selectedItems', this._selectedItems);
       this.fire('apply-criteria');
-      this.domHost.$.dialog.close();
+      this.domHost.$$("#dialog").close();
     },
 
     _closeFilter: function (event) { // eslint-disable-line no-unused-vars
-      this.domHost.$.dialog.close();
+      this.domHost.$$("#dialog").close();
     },
 
     _hasFilterSelected:function(change){
@@ -225,6 +225,9 @@
 
         this.items.forEach(function (d) {
           var val = d[this.column.key || this.column.field]
+          if(val === undefined && this.column.key){
+            val = OEUtils.deepValue(d,this.column.key);
+         }
           if (uniqueData.indexOf(val) == -1) {
             //if(searchText && val.toString().toLowerCase().indexOf(searchText) == -1) return;
             uniqueData.push(val);
