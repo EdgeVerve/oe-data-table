@@ -808,7 +808,7 @@ Custom property | Description | Default
       this.set('_showPaginationPanel',!!(this.dataController || this.paginationType === "page"));
     },
     updateRowHeight:function(){
-      var rowList = this.$$('#row-list');
+      var rowList = this.querySelector('#row-list');
       if (rowList) {
         rowList.notifyResize();
       }
@@ -970,7 +970,7 @@ Custom property | Description | Default
     },
 
     _updateRowWidth: function () {
-      var rowList = this.$$('#row-list');
+      var rowList = this.querySelector('#row-list');
       this.async(function () {
         if (rowList) {
           this.set('_scrollBarWidth', rowList.offsetWidth - rowList.clientWidth);
@@ -982,7 +982,7 @@ Custom property | Description | Default
 
     _scrollHandler: function (event) {
       var rowList = event.target;
-      var summaryRow = this.$$('#summary-row-content');
+      var summaryRow = this.querySelector('#summary-row-content');
       this.$['table-header'].scrollLeft = rowList.scrollLeft;
       if (summaryRow) {
         summaryRow.scrollLeft = rowList.scrollLeft;
@@ -1005,10 +1005,10 @@ Custom property | Description | Default
         this.maxRowHeight = 48;
         var size = ((itemsToShow > 5 && itemsToShow < pageSize) ? itemsToShow : pageSize)
         this.set('_maxDomElement',size*2);
-        var rowList = this.$$("#row-list");
+        var rowList = this.querySelector("#row-list");
         var hasScroll = false;
         if(rowList){
-          hasScroll = this.$$("#row-list").scrollWidth > this.$$("#row-list").clientWidth;
+          hasScroll = this.querySelector("#row-list").scrollWidth > this.querySelector("#row-list").clientWidth;
         }
         var height = size * 48 + (hasScroll?16:0);
         this.set('__tableRowHeight',height);
@@ -1239,10 +1239,14 @@ Custom property | Description | Default
 
     //sets the active cell that is being edited
     _setActiveCell: function (event) {
-
-      this._resetActiveCell();
       var elementToSet = event.detail.element;
-      if (elementToSet && !this.disableEdit) {
+
+      if(elementToSet !== this._activeCell){
+         //Reset the cell only if its not currently active
+        this._resetActiveCell();
+        //return
+      } 
+      if (elementToSet && !this.disableEdit && !elementToSet._inEdit) {
         elementToSet.enterEditMode();
       }
       this.set('_activeCell', elementToSet);
