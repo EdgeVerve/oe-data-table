@@ -81,7 +81,7 @@
 
     <div class="input-container">
       <paper-checkbox checked={{_selectAllItems}} hidden$=[[isServerData]] on-change="_toggleSelectAll"> </paper-checkbox>
-      <paper-input label="Search [[column.label]]" no-label-float value={{searchText}} on-input="_computeCheckBox"></paper-input>
+      <oe-input label="Search [[column.label]]" no-label-float value={{searchText}} on-input="_computeCheckBox"></oe-input>
     </div>
     <template is="dom-if" if=[[!isServerData]]>
       <template is="dom-if" if=[[!searchText.length]] on-dom-change="_updateListSize">
@@ -107,9 +107,9 @@
       </template>
     </template>
     <div class="action-buttons">
-      <paper-button on-tap="_resetFilter" disabled=[[!_hasFilterSelected(_computeSelection)]]> Reset </paper-button>
-      <paper-button on-tap="_closeFilter"> Cancel </paper-button>
-      <paper-button on-tap="_applyFilter"> Apply </paper-button>
+      <paper-button on-tap="_resetFilter" disabled=[[!_hasFilterSelected(_computeSelection)]]> <oe-i18n-msg msgid="Reset">Reset</oe-i18n-msg> </paper-button>
+      <paper-button on-tap="_closeFilter"> <oe-i18n-msg msgid="Cancel">Cancel</oe-i18n-msg> </paper-button>
+      <paper-button on-tap="_applyFilter"> <oe-i18n-msg msgid="Apply">Apply</oe-i18n-msg> </paper-button>
     </div>
   </template>
 
