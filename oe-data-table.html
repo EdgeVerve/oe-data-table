@@ -247,23 +247,24 @@ Custom property | Description | Default
       }
 
       .table-row {
-        min-height: 48px;
-        border-bottom: 1px solid #ededed;
-        background: #FFF;
         @apply(--layout);
         @apply(--oe-data-table-row);
       }
 
       .table-row.selected {
         background: #f5f5f5;
-
         @apply(--oe-data-table-row-selected);
       }
 
       .table-row:hover {
         background: #eee;
-
         @apply(--oe-data-table-row-hover);
+      }
+
+      .list-row{
+        min-height: 48px;
+        border-bottom: 1px solid #ededed;
+        background: #FFF;
       }
 
       .list-row:first-of-type {
