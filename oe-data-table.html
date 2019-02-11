@@ -266,11 +266,11 @@ Custom property | Description | Default
         @apply(--oe-data-table-row-hover);
       }
 
-      .table-row:first-of-type {
+      .list-row:first-of-type {
         @apply(--oe-data-table-row-first);
       }
 
-      .table-row:last-of-type {
+      .list-row:last-of-type {
         @apply(--oe-data-table-row-last);
       }
 
@@ -325,7 +325,7 @@ Custom property | Description | Default
         @apply(--oe-data-table-row-action);
       }
 
-      .table-row:hover .row-action {
+      .list-row:hover .row-action {
         display: inline-block;
       }
 
@@ -545,7 +545,7 @@ Custom property | Description | Default
             <template is="dom-if" if=[[_items.length]] restamp=true>
               <iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" selection-enabled multi-selection>
                 <template>
-                  <div tabindex="-1"  id="row-{{rowIndex}}">
+                  <div tabindex="-1"  id="row-{{rowIndex}}" class="list-row">
                     <div role="row" class$="table-row [[_computeClassforRow(row,_computeSelection)]]"  on-tap="_rowClicked" data-row-index$="[[rowIndex]]">
                       <template is="dom-if" if="[[!disableSelection]]">
                         <div class="selection-cell">
