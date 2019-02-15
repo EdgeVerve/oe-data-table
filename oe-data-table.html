@@ -939,7 +939,9 @@ Custom property | Description | Default
     _updateIronList:function(e){
       if(e.detail > this.maxRowHeight){
         this.maxRowHeight = e.detail;
-        this.debounce('rowHeight',this.updateRowHeight,300)
+        this.debounce('rowHeight',function(){
+          this._computeGridHeight(this.pageSize,this._items.length);
+        },300)
       }
     },
     _showPagination:function(change){
@@ -1155,8 +1157,6 @@ Custom property | Description | Default
     },
     _computeGridHeight: function (pageSize, itemsToShow) {
       this.async(function () {
-        this.updateRowHeight();
-        this.maxRowHeight = 48;
         var size = ((itemsToShow > 5 && itemsToShow < pageSize) ? itemsToShow : pageSize)
         this.set('_maxDomElement',size*2);
         var rowList = this.querySelector("#row-list");
@@ -1164,8 +1164,9 @@ Custom property | Description | Default
         if(rowList){
           hasScroll = this.querySelector("#row-list").scrollWidth > this.querySelector("#row-list").clientWidth;
         }
-        var height = size * 48 + (hasScroll?16:0);
+        var height = (size * this.maxRowHeight) + (hasScroll?16:0);
         this.set('__tableRowHeight',height);
+        this.updateRowHeight();
       }, 0);
     },
 
