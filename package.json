@@ -1,0 +1,50 @@
+{
+  "name": "oe-data-table",
+  "description": "A template element , used to create oe-ui Polymer 3 elements",
+  "version": "2.0.0",
+  "main": "oe-data-table.js",
+  "scripts": {
+    "test": "polymer test --module-resolution node --skip-selenium-install",
+    "lint": "eslint .",
+    "doc": "polymer analyze *.js > analysis.json"
+  },
+  "dependencies": {
+    "@polymer/font-roboto": "3.0.2",
+    "@polymer/iron-collapse": "3.0.1",
+    "@polymer/iron-list": "3.0.1",
+    "@polymer/paper-checkbox": "3.1.0",
+    "@polymer/paper-dialog": "3.0.1",
+    "@polymer/paper-dialog-scrollable": "3.0.1",
+    "@polymer/paper-dropdown-menu": "3.0.1",
+    "@polymer/paper-listbox": "3.0.1",
+    "@polymer/paper-menu-button": "3.0.1",
+    "@polymer/paper-progress": "3.0.1",
+    "@polymer/paper-toast": "3.0.1",
+    "@polymer/paper-tooltip": "3.0.1",
+    "@polymer/polymer": "3.1.0",
+    "oe-ajax": "git+http://10.73.97.24/polymer-3/oe-ajax.git#master",
+    "oe-combo": "git+http://10.73.97.24/polymer-3/oe-combo.git#master",
+    "oe-i18n-msg": "git+http://10.73.97.24/polymer-3/oe-i18n-msg.git#master",
+    "oe-info": "git+http://10.73.97.24/polymer-3/oe-info.git#master",
+    "oe-input": "git+http://10.73.97.24/polymer-3/oe-input.git#master",
+    "oe-mixins": "git+http://10.73.97.24/polymer-3/oe-mixins.git#master",
+    "oe-ui-forms": "git+http://10.73.97.24/polymer-3/oe-ui-forms.git#master",
+    "oe-utils": "git+http://10.73.97.24/polymer-3/oe-utils.git#master",
+    "sortablejs": "1.8.3"
+  },
+  "devDependencies": {
+    "@polymer/gold-phone-input": "3.0.1",
+    "@polymer/iron-component-page": "4.0.1",
+    "@polymer/iron-demo-helpers": "3.0.2",
+    "@polymer/iron-pages": "3.0.1",
+    "@polymer/iron-test-helpers": "3.0.1",
+    "@webcomponents/webcomponentsjs": "2.2.7",
+    "oe-app-route": "git+http://10.73.97.24/polymer-3/oe-app-route.git#master",
+    "@polymer/test-fixture": "4.0.2",
+    "axe-core": "3.1.2",
+    "chai": "4.2.0",
+    "mocha": "5.2.0",
+    "sinon": "7.2.3",
+    "wct-mocha": "1.0.0"
+  }
+}
