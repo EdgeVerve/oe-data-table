@@ -1549,6 +1549,107 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
               }</script>
           </div>
 				</custom-demo-snippet>
+        <p>
+        Check out the below example, where we row-action icon will be displayed based on some condition for each record.
+      </p>
+      <custom-demo-snippet>
+      <div>
+          <dom-bind id="myappRowActionCompute">
+          <template>
+            <oe-data-table label="User" disable-selection id="table" items=[[items]] columns=[[columns]] row-actions=[[rowActions]] on-oe-data-table-row-action="handleRowActions">
+            </oe-data-table>
+            <template is="dom-if" if=[[eventString]]>
+              <h3>Event Data</h3>
+              <pre style="padding:8px;">
+                  [[eventString]]
+              </pre>                   
+            </template>
+            </template>
+          </dom-bind>
+          <script>
+          var myapp = this.shadowRoot.querySelector('#myappRowActionCompute');
+            
+            myapp.set('columns', [{
+              key: 'key',
+              label: 'Key',
+              type: 'string'
+            }, {
+              key: 'value',
+              label: 'Value',
+              type: 'string'
+            }]);
+
+            myapp.set('items', [{
+              id: 1,
+              key: 'Mike',
+              value: 'mike@ev.com',
+              isHiddenView: true
+            }, {
+              id: 2,
+              key: 'John',
+              value: 'john@ev.com',
+              isHiddenEdit: true
+            }, {
+              id: 3,
+              key: 'Stella',
+              value: 'stella@ev.com',
+              isHiddenBookMark: true,
+              isHiddenEdit: true
+
+            }, {
+              id: 4,
+              key: 'Francis',
+              value: 'francis@ev.com',
+              isHiddenView: true,
+              isHiddenEdit: true
+            }]);
+
+            var isHiddenEdit = function (row) {
+                return row.isHiddenEdit;
+            }
+
+            var isHiddenView = function (row) {
+                return row.isHiddenView;
+            }
+
+            var isHiddenBookMark = function (row) {
+                return row.isHiddenBookMark;
+            }
+
+            myapp.set('rowActions', [{
+              icon: 'info',
+              action: 'info',
+              title: 'details',
+              formUrl:'templates/literal-view.js',
+              isHiddenFunction: isHiddenView
+            }, {
+              icon: 'editor:mode-edit',
+              title: 'edit',
+              action: 'edit',
+              formUrl:'templates/literal-default.js',
+              isHiddenFunction: isHiddenEdit
+            },{
+              icon: 'star',
+              action: 'bookmark',
+              title: 'bookmark',
+              isHiddenFunction: isHiddenBookMark
+            }]);
+
+            myapp.handleRowActions = function (event) {
+              myapp.set('eventString',JSON.stringify(event.detail,null,2));
+            }
+
+            myapp.rowUpdated = function (event) {
+              event.stopPropagation();
+              if (myapp.userEdit) {
+                var index = myapp.items.indexOf(myapp.userEdit);
+                var newRecord = event.detail;
+                (index >= 0) && myapp.splice('items', index, 1, newRecord);
+                myapp.set('userEdit', null);
+              }
+            }</script>
+        </div>
+        </custom-demo-snippet>
 
       </div>      
         `;
@@ -1556,7 +1657,6 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
 
   _onPageVisible() {
     var myapp = this.shadowRoot.querySelector('#myapp');
-
     myapp.set('columns', [{
       key: 'key',
       label: 'Key',
@@ -1614,6 +1714,87 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
         myapp.set('userEdit', null);
       }
     };
+    var myapp = this.shadowRoot.querySelector('#myappRowActionCompute');
+            
+            myapp.set('columns', [{
+              key: 'key',
+              label: 'Key',
+              type: 'string'
+            }, {
+              key: 'value',
+              label: 'Value',
+              type: 'string'
+            }]);
+
+            myapp.set('items', [{
+              id: 1,
+              key: 'Mike',
+              value: 'mike@ev.com',
+              isHiddenView: true
+            }, {
+              id: 2,
+              key: 'John',
+              value: 'john@ev.com',
+              isHiddenEdit: true
+            }, {
+              id: 3,
+              key: 'Stella',
+              value: 'stella@ev.com',
+              isHiddenBookMark: true,
+              isHiddenEdit: true
+
+            }, {
+              id: 4,
+              key: 'Francis',
+              value: 'francis@ev.com',
+              isHiddenView: true,
+              isHiddenEdit: true
+            }]);
+
+            var isHiddenEdit = function (row) {
+                return row.isHiddenEdit;
+            }
+
+            var isHiddenView = function (row) {
+                return row.isHiddenView;
+            }
+
+            var isHiddenBookMark = function (row) {
+                return row.isHiddenBookMark;
+            }
+
+            myapp.set('rowActions', [{
+              icon: 'info',
+              action: 'info',
+              title: 'details',
+              formUrl:'../oe-data-table/demo/templates/literal-view.js',
+              isHiddenFunction: isHiddenView
+            }, {
+              icon: 'editor:mode-edit',
+              title: 'edit',
+              action: 'edit',
+              formUrl:'../oe-data-table/demo/templates/literal-default.js',
+              isHiddenFunction: isHiddenEdit
+            },{
+              icon: 'star',
+              action: 'bookmark',
+              title: 'bookmark',
+              isHiddenFunction: isHiddenBookMark
+            }]);
+
+            myapp.handleRowActions = function (event) {
+              myapp.set('eventString',JSON.stringify(event.detail,null,2));
+            }
+
+            myapp.rowUpdated = function (event) {
+              event.stopPropagation();
+              if (myapp.userEdit) {
+                var index = myapp.items.indexOf(myapp.userEdit);
+                var newRecord = event.detail;
+                (index >= 0) && myapp.splice('items', index, 1, newRecord);
+                myapp.set('userEdit', null);
+              }
+            }
   }
 
 });
