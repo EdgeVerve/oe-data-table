@@ -17,7 +17,6 @@ install-deps:
   script:
     - set GIT_CURL_VERBOSE=1
     - set GIT_TRACE_PACKET=2
-    - call npm config set registry http://10.188.25.62:9002/
     - call npm install
     - echo "Node Modules Installed"
     - call npm audit --json > vulnerabilities.json | echo "Audit logged"
