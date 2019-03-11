@@ -96,8 +96,8 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             <template is="dom-if" if=[[rowActions.length]]>
                 <div class="row-actions" style$="flex: [[rowActionWidth]]">
                     <template is="dom-repeat" items=[[rowActions]] as="action">
-                        <div>
-                            <paper-icon-button class="row-action" row$=[[row]] rowIndex$=[[rowIndex]]  icon="[[action.icon]]" on-tap="_rowActionClicked"></paper-icon-button>
+                    <div hidden$="[[_computeDivHidden(action,row)]]">
+                    <paper-icon-button class="row-action" row$=[[row]] rowIndex$=[[rowIndex]] icon="[[action.icon]]" on-tap="_rowActionClicked"></paper-icon-button>
                             <paper-tooltip position="left"> [[action.title]] </paper-tooltip>
                         </div>
                     </template>
@@ -309,7 +309,10 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
         style += "min-width : " + (minWidth ? (minWidth + "px") : "initial") + ";";
         return style;
     }
-
+    _computeDivHidden(action,row) {
+        return (typeof action.isHiddenFunction)=="function" ? action.isHiddenFunction(row): false;
+      }
+  
     /**
      * Handles row action clicked event.
      * @param {Event} event click event
@@ -340,7 +343,7 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             });
         }
     }
-
+   
     _getVisibleColumns(column) {
         return !(column.hidden === true || column.hidden === 'true');
     }
