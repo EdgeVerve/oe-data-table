@@ -7,6 +7,7 @@ variables:
     - if exist wct.conf.js del wct.conf.js
     - if exist wct.conf.json del wct.conf.json
     - copy /Y \multi-runner\builds\wct.conf.js .
+    - call npm config set registry http://10.188.25.62:9002/
     - call npm install
     - call polymer test --module-resolution node --skip-selenium-install
   tags:
