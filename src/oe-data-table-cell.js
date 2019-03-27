@@ -366,10 +366,12 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
       document.body.appendChild(dropdown);
       } 
   }
-  // disconnectedCallback(){
-  //   super.disconnectedCallback();
-  //   document.body.removeChild(this._dropDown);
-  //   } 
+  disconnectedCallback(){
+    super.disconnectedCallback();
+    if(this._dropDown){
+    document.body.removeChild(this._dropDown);
+  }
+}
 
   /**
    * Dynamically creates a element based on column.uitype.
