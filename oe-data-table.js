@@ -639,6 +639,10 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
        */
       label: {
         type: String
+      },
+      showAccordian:{
+        type:Boolean,
+        value:false
       }
     };
   }
@@ -863,7 +867,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
    * @return {boolean} selected value.
    */
   _getSelectionState(item) {
-    return this._selectionState.get(item) ? true : false;
+    return this._selectionState.get(item) ? !this.showAccordian : false;
   }
 
 

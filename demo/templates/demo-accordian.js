@@ -6,9 +6,10 @@
 import { html, PolymerElement } from '@polymer/polymer/polymer-element.js';
 import '@polymer/polymer/lib/elements/dom-bind';
 import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
+import { OECommonMixin } from "oe-mixins/oe-common-mixin.js";
+import '../../oe-data-table.js';
 
-  
-class DemoAccordian extends PolymerElement {
+class DemoAccordian extends OECommonMixin(PolymerElement){
     static get template() {
         return html`
         <style is="custom-style">
@@ -26,7 +27,7 @@ class DemoAccordian extends PolymerElement {
 
             <div>
 
-                <img id="cheque_image" src="https://www.oecloud.io/images/logo.png" style="display: inline-block; width: 30%; margin: 20px;"
+                <img id="cheque_image" on-load="imgFun" src="https://www.oecloud.io/images/logo.png" style="display: inline-block; width: 30%; margin: 20px;"
                 />
 
             </div>
@@ -59,19 +60,18 @@ class DemoAccordian extends PolymerElement {
         return "demo-accordian";
     }
 
-    connectedCallback() {
+    connectedCallback() {      
         super.connectedCallback();
-
-    }
+                 
+    }   
     dataChanged(e) {
 
         console.log("pulkit");
         console.log(this.data);
     }
-
-
-
-
+    imgFun(){
+        this.fire('expanded-view');
+    }
     rotate(e) {
 
         var degrees = this.degrees;

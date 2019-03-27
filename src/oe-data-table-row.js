@@ -85,6 +85,9 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             .hookClass {
                 display: none;
               }
+            .row {
+                cursor:pointer;
+            }
         
         
               .expanded {
@@ -108,8 +111,8 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
                 <oe-data-table-cell is-first-row=[[_isFirstRow(rowIndex)]] read-only=[[readOnly]] key=[[key]] row={{row}} column=[[column]] class$="table-data [[_computeCellClass(row.*,column)]]" column-template=[[_getValidTemplate(row.*,row,column)]] style$="[[_computeCellWidth(column.*,column)]]"></oe-data-table-cell> 
             </template>
             <template is="dom-if" if=[[showAccordian]]>
-            <div class="row-actions" style="flex: 0 0 48px">
-              <iron-icon id$="paper-expand-[[rowIndex]]" icon="icons:expand-more" row$="[[row]]" selected$="[[selected]]" rowIndex$="[[rowIndex]]"
+            <div class="row-actions row" style="flex: 0 0 48px">
+              <iron-icon id$="paper-expand-[[rowIndex]]" icon="icons:expand-more" row$="[[row]]" rowIndex$="[[rowIndex]]"
                 on-tap="_rowAccordianClicked"></iron-icon>
             </div>
           </template>
@@ -210,11 +213,6 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
 
             tableHost:{
                 type:Object
-            },
-            accordianUrls: {
-              type: Array,
-              notify: true
-             
             },
             expandedRow: {
               type: Number,
@@ -378,26 +376,6 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
     _getVisibleColumns(column) {
         return !(column.hidden === true || column.hidden === 'true');
     }
-    _accordianUrlsChanged() {
-        debugger
-        if (typeof (this.accordianUrls) === "string") {
-          try {
-            var urls = JSON.parse(this.accordianUrls);
-            this.accordianUrls = urls;
-          } catch (err) {
-            return;
-          }
-        }
-        if (this.accordianUrls && this.accordianUrls.length > 0) {
-          for (var i = 0; i < this.accordianUrls.length; i++)
-            import(this.accordianUrls[i]);
-        }
-      }
-      onUpdateInlineFilter() {
-        if (this.enableInlineFilter) {
-          this.$["table-header"].classList.add("table-header-style");
-        }
-      }
       _createExpandedView(e) {
     
         var self = this;
@@ -440,8 +418,8 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
           }
           // expandedHook.parentNode.removeChild(expandedHook);
     
-        }
-        this.fire('expanded-view',e);
+        }  
+        this.fire('expanded-view');
       }
       
 }

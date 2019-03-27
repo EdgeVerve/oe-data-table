@@ -361,11 +361,15 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
     // Hence taking out the iron-dropdown, if available and append it to body for positioning its content properly.
     // For making oe-combo and oe-typeahead to work.
     var dropdown = elem.shadowRoot && elem.shadowRoot.querySelector('iron-dropdown');
-    if (dropdown) {
-      var domHost = this.getRootNode().host;
-      domHost.appendChild(dropdown);
-    }
+    if (dropdown) { 
+      this._dropDown = dropdown;
+      document.body.appendChild(dropdown);
+      } 
   }
+  // disconnectedCallback(){
+  //   super.disconnectedCallback();
+  //   document.body.removeChild(this._dropDown);
+  //   } 
 
   /**
    * Dynamically creates a element based on column.uitype.

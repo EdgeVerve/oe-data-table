@@ -14,6 +14,7 @@ import '@polymer/paper-toast/paper-toast.js';
 import '@polymer/gold-phone-input/gold-phone-input.js';
 import 'oe-app-route/oe-app-route.js';
 import './custom-demo-snippet';
+import 'oe-combo/oe-typeahead.js';
 import '../oe-data-table';
 import './templates/demo-accordian.js';
 var OEUtils = window.OEUtils || {};
@@ -3332,7 +3333,6 @@ window.customElements.define('accordian-view',class extends DemoMixin(PolymerEle
     <p> Accordion View is supported by the oe-data-table. Any external component can be imported into the accordion.
     </p>
     <p> Three data level properties need to be defined. </p>
-    <p> 1. <strong>accordianUrls:</strong> List of html pages which need to be imported by the oe-data-table </p>
     <p> 2. <strong>accordianElement:</strong> Name of the element to be shown inside accodion view. </p>
     <p> 3. <strong>showAccordian:</strong> true/false to show/hide the accordion </p>
     
@@ -3472,7 +3472,7 @@ window.customElements.define('accordian-view',class extends DemoMixin(PolymerEle
           dataTable.set('items', data);
           
 
-          dataTable.set('accordianUrls', ["/demo/templates/demo-accordian.js"]);
+          
           dataTable.set('accordianElement', "demo-accordian");
           dataTable.set('showAccordian', true);
 
@@ -3615,7 +3615,7 @@ window.customElements.define('accordian-view',class extends DemoMixin(PolymerEle
           dataTable.set('items', data);
           
 
-         // dataTable.set('accordianUrls', ["/demo/templates/demo-accordian.js"]);
+         
           dataTable.set('accordianElement', "demo-accordian");
           dataTable.set('showAccordian', true);
         }
