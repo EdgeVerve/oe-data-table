@@ -82,20 +82,9 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             .table-row:hover .row-action {
                 display: inline-block;
             }
-            .hookClass {
-                display: none;
-              }
             .row {
                 cursor:pointer;
             }
-        
-        
-              .expanded {
-                display: block;
-                /* height: 300px; */
-                /* overflow-y: auto; */
-              }
-        
               .margin-right-45 {
                 margin-right: 20px;
               }
@@ -112,8 +101,7 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             </template>
             <template is="dom-if" if=[[showAccordian]]>
             <div class="row-actions row" style="flex: 0 0 48px">
-              <iron-icon id$="paper-expand-[[rowIndex]]" icon="icons:expand-more" row$="[[row]]" rowIndex$="[[rowIndex]]"
-                on-tap="_rowAccordianClicked"></iron-icon>
+              <iron-icon id="paperExpand" icon$="{{getIcon(isAccordianOpen)}}" row$="[[row]]" rowIndex$="[[rowIndex]]" on-tap="_toggleAccordian"></iron-icon>
             </div>
           </template>
             <template is="dom-if" if=[[rowActions.length]]>
@@ -127,7 +115,7 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
                 </div>
             </template>           
         </div>       
-      <div id$="expandedView-[[rowIndex]]" class="hookClass">
+      <div id="accordianContainer" hidden$="[[!isAccordianOpen]]">
       </div>       
     `;
     }
@@ -203,6 +191,10 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             minColWidth: {
                 type: Number
             },
+            isAccordianOpen: {
+                type:Boolean,
+                value:false
+            },
             /**
              * List of templates passed from oe-data-table
              */
@@ -217,6 +209,10 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             expandedRow: {
               type: Number,
               notify: true
+            },
+            accordianEle:{
+                type: Object
+                
             }
         };
         /**
@@ -376,52 +372,25 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
     _getVisibleColumns(column) {
         return !(column.hidden === true || column.hidden === 'true');
     }
-      _createExpandedView(e) {
+    _toggleAccordian(e) {
     
         var self = this;
-       
-        if (self.root.querySelector('#expandedView-' + self.expandedRow) && !self.root.querySelector('#expanded-hook-' + self.expandedRow)) {
-          var elem = document.createElement(self.accordianElement);
-          elem.id = 'expanded-hook-' + self.expandedRow;
-          //elem.set('data', self.items[self.expandedRow]);
-          elem.set('data', self.row);
-          self.root.querySelector('#expandedView-' + self.expandedRow).appendChild(elem);
+
+        if (!this.accordianEle) {
+          this.accordianEle = document.createElement(self.accordianElement);
+          self.$.accordianContainer.appendChild(this.accordianEle);
+         
         }
-        else if (self.root.querySelector('#expandedView-' + self.expandedRow) && self.root.querySelector('#expanded-hook-' + self.expandedRow)) {
-          var elem = self.root.querySelector('#expanded-hook-' + self.expandedRow);
-          elem.style.visibility = "visible";
-          elem.set('data', {});
-         //elem.set('data', self.items[self.expandedRow]);
-          elem.set('data', self.row);
-        }
-      }
-      _rowAccordianClicked(e) {
-        var rowIndex = Number(e.currentTarget.getAttribute('rowIndex'));
-        this.expandedRow = rowIndex;
-    
-        if (e.currentTarget.icon === "icons:expand-more") {
-    
-          this.root.querySelector('#expandedView-' + this.expandedRow).classList.remove("expanded");
-          this.root.querySelector('#expandedView-' + this.expandedRow).classList.add("expanded");
-          this.root.querySelector("#paper-expand-" + rowIndex).setAttribute('icon', 'icons:expand-less');
-    
-          this._createExpandedView(e);
-        }
-        else {
-    
-          this.root.querySelector('#expandedView-' + this.expandedRow).classList.remove("expanded");
-          this.root.querySelector('#expandedView-' + this.expandedRow).classList.add("hookClass");
-          this.root.querySelector("#paper-expand-" + rowIndex).setAttribute('icon', 'icons:expand-more');
-          var expandedHook = this.root.querySelector("#expanded-hook-" + rowIndex);
-          if (expandedHook) {
-            expandedHook.style.visibility = "hidden";
-          }
-          // expandedHook.parentNode.removeChild(expandedHook);
-    
-        }  
+        this.isAccordianOpen = !this.isAccordianOpen;
+            if(this.isAccordianOpen && typeof this.accordianEle.set === 'function'){
+                    this.accordianEle.set('data', self.row);
+                }
+        
         this.fire('expanded-view');
       }
-      
+      getIcon(){
+          return !this.isAccordianOpen ? "expand-more": "expand-less";
+      }
 }
 
 window.customElements.define(OeDataTableRow.is, OeDataTableRow);

@@ -1106,13 +1106,13 @@
           
           test('Checking for accordion element added', function(){
             var dataRow = dataTable.shadowRoot.querySelector('#row-list');
-            expect(document.getElementById("expanded-hook-0")).to.be.null;
+            var row = dataRow.querySelectorAll('oe-data-table-row');
+            expect(row[0].shadowRoot.querySelector('#accordianContainer').querySelector('demo-accordian')).to.be.null;
+            row[0].shadowRoot.querySelector(".row-actions").querySelector("iron-icon").click();
+            expect(row[0].shadowRoot.querySelector(".row-actions").querySelector("iron-icon").icon).to.be.equal("expand-less");
+            expect(row[0].shadowRoot.querySelector('#accordianContainer').querySelector('demo-accordian')).not.to.be.null;
             dataRow.querySelectorAll('oe-data-table-row')[0].shadowRoot.querySelector(".row-actions").querySelector("iron-icon").click();
-            expect(dataRow.querySelectorAll('oe-data-table-row')[0].shadowRoot.querySelector(".row-actions").querySelector("iron-icon").icon).to.be.equal("icons:expand-less");
-            expect(dataRow.querySelectorAll('oe-data-table-row')[0].shadowRoot.querySelector('#expanded-hook-0')).to.not.be.null;
-            dataRow.querySelectorAll('oe-data-table-row')[0].shadowRoot.querySelector(".row-actions").querySelector("iron-icon").click();
-            expect(dataRow.querySelectorAll('oe-data-table-row')[0].shadowRoot.querySelector(".row-actions").querySelector("iron-icon").icon).to.be.equal("icons:expand-more");
-            expect(dataRow.querySelectorAll('oe-data-table-row')[0].shadowRoot.querySelector('#expanded-hook-0').style.visibility).to.be.equal("hidden");
+            expect(row[0].shadowRoot.querySelector(".row-actions").querySelector("iron-icon").icon).to.be.equal("expand-more");
           });
 
       });
