@@ -251,7 +251,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
                 <template is="dom-if" if=[[_showInfinteScroll(paginationType)]] restamp=true>
                   <iron-list style$="height:[[__tableRowHeight]]px;" index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key">
                     <template>
-                      <oe-data-table-row columns=[[columns]] selection-cell-content=[[selectionCellContent]] row=[[row]] row-index=[[rowIndex]] table-host=[[tableHost]]
+                      <oe-data-table-row accordian-element=[[accordianElement]] show-accordian=[[showAccordian]] columns=[[columns]] selection-cell-content=[[selectionCellContent]] row=[[row]] row-index=[[rowIndex]] table-host=[[tableHost]]
                       tab-index=[[tabIndex]] selected=[[_getSelectionState(row,_computeSelection)]] disable-selection=[[disableSelection]] row-actions=[[rowActions]]
                       row-action-width=[[__rowActionWidth]] read-only=[[__isCellReadOnly]] min-col-width=[[minColWidth]] column-templates=[[columnTemplates]]></oe-data-table-row>
                     </template>
@@ -267,7 +267,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
                   </div>
                 </template>
               </template>
-
+             
               <template is="dom-if" if=[[!_items.length]] restamp=true>
                 <div class="empty-state layout horizontal center-center">
                   <label>[[emptyStateMessage]]</label>
@@ -639,6 +639,10 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
        */
       label: {
         type: String
+      },
+      showAccordian:{
+        type:Boolean,
+        value:false
       }
     };
   }
@@ -772,6 +776,10 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       });
     }
     this._keyHandlers();
+    this.addEventListener('expanded-view',function(){
+      var iron = this.shadowRoot.querySelector('#row-list');
+      iron._render();
+    }.bind(this));
   }
 
   disconnectedCallback() {
@@ -802,7 +810,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       }
     });
   }
-
+ 
   /**
    * Deselects a record
    * @param {Object} item record to deselect
@@ -859,7 +867,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
    * @return {boolean} selected value.
    */
   _getSelectionState(item) {
-    return this._selectionState.get(item) ? true : false;
+    return this._selectionState.get(item) ? !this.showAccordian : false;
   }
 
 

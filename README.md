@@ -6,6 +6,14 @@
 
   The data to be shown is set to `items` and columns to show is set to `columns`.
 
+Property | Description
+----------------|-------------
+`showAccordian` | To display accordian view in each row
+`accordianElement` | Component name to be displayed in accordian expanded view
+`disableConfigEditor` | If set to true, config editor would be disabled
+`maxHeaderHeight` | Set height of the header (in px)
+`showEditOptions` | To display edit options in header toolbar
+
 ### Defining Columns
 
 The column(s) to show in the table can be configured using the `columns` property.
@@ -31,6 +39,7 @@ Column property | Description
 `cellClassRules` | Object having class name to be applied as key and an expression to evaluate as value
 `valueGetter` | A custom getter function which returns a value for the property specified in the `key`.
 `hidden` | Column will be hidden if it is set to true.
+
 
 ### Styling
 

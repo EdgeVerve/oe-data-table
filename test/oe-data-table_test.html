@@ -14,8 +14,7 @@
   <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
 
   <script src="../node_modules/sinon/pkg/sinon.js"></script>
-
-
+  <script type="module" src="../demo/templates/demo-accordian.js"></script>
   <script type="module" src="../oe-data-table.js"></script>
 </head>
 
@@ -69,12 +68,17 @@
   </test-fixture>
   <test-fixture id="row-edit">
     <template>
-      <oe-data-table label="Row Edit" record-handling="local" editor-form-url="../demo/templates/literal-default.js"></oe-data-table>
+      <oe-data-table label="Row Edit" record-handling="local" editor-form-url="../oe-data-table/demo/templates/literal-default.js"></oe-data-table>
     </template>
   </test-fixture>
   <test-fixture id="row-edit-remote">
     <template>
-      <oe-data-table label="Row Edit" record-handling="remote" editor-form-url="../demo/templates/literal-default.js"></oe-data-table>
+      <oe-data-table label="Row Edit" record-handling="remote" editor-form-url="../oe-data-table/demo/templates/literal-default.js"></oe-data-table>
+    </template>
+  </test-fixture>
+  <test-fixture id="accordion-view">
+    <template>
+      <oe-data-table label="Accordion View"></oe-data-table>
     </template>
   </test-fixture>
   <test-fixture id="inline-edit">
@@ -156,8 +160,9 @@
       });
      
      
-      test('rendering of rows', function () {
+      test('rendering of rows', function (done) {
         expect(dataTable.deepQueryAll('oe-data-table-row').length).to.be.equal(4);
+        done();
       });
     });
     
@@ -708,13 +713,13 @@
           key: 'TES',
           value: 'Tester'
         }],
-        editorFormUrl = '../demo/templates/literal-default.js'; // eslint-disable-line no-unused-vars
+        editorFormUrl = '../oe-data-table/demo/templates/literal-default.js'; // eslint-disable-line no-unused-vars
 
       var rowActions = [{
         icon: 'info',
         action: 'info',
         title: 'details',
-        formUrl: '../demo/templates/literal-view.js'
+        formUrl: '../oe-data-table/demo/templates/literal-view.js'
       }]
 
       function saveDataInForm(form, data, cb) {
@@ -904,7 +909,7 @@
           value: 'Tester',
           id:4
         }],
-        editorFormUrl = '../demo/templates/literal-default.js'; // eslint-disable-line no-unused-vars
+        editorFormUrl = '../oe-data-table/demo/templates/literal-default.js'; // eslint-disable-line no-unused-vars
 
       function saveDataInForm(form, data, cb) {
         form.set(form.modelAlias, data);
@@ -978,7 +983,6 @@
         flush(function () {
           expect(dataTable.items.length).to.be.equal(3);
           var lazyComponent = dataTable.deepQuery('lazy-component');
-
           lazyComponent.addEventListener('lazy-component-loaded', function () {
             flush(function () {
               saveDataInForm(lazyComponent.element, { 'key': 'test1', 'value': 'Test 1' }, function () {
@@ -1049,6 +1053,70 @@
       });
 
     });
+    suite('Accordion View', function () {
+        var dataTable;
+
+        var columns = [
+          {
+            key: 'account',
+            label: 'Account',
+            type: 'number'
+          }, {
+            key: 'checknumber',
+            label: 'Check Number',
+            type: 'string'
+          }];
+
+          var data = [{
+            account: 861363459,
+            checknumber: 223457
+          },
+          {
+            account: 794659139,
+            checknumber: 23456
+          },
+          {
+            account: 479677228,
+            checknumber: 223431
+          },
+          {
+            account: 334547856,
+            checknumber: 2234567
+          }];
+          
+
+          setup(function (done) {
+            dataTable = fixture('accordion-view');
+            dataTable.set('columns', columns);
+            dataTable.set('items', data);
+            dataTable.set('accordianElement', "demo-accordian");
+            dataTable.set('showAccordian', true);
+
+            // some logic in async of data table, hence wait for 1 milli second
+            setTimeout(done, 1);
+          });
+
+          test('Checking for accordion button', function () {
+            var dataRow = dataTable.shadowRoot.querySelector('#row-list');
+            expect(dataRow.querySelectorAll('oe-data-table-row').length).to.be.equal(data.length);
+            for(var i = 0; i < data.length; i ++ ){
+              expect(dataRow.querySelectorAll('oe-data-table-row')[1].shadowRoot.querySelectorAll('.row-actions').length).to.be.equal(1);
+            }
+          });
+          
+          test('Checking for accordion element added', function(){
+            var dataRow = dataTable.shadowRoot.querySelector('#row-list');
+            var row = dataRow.querySelectorAll('oe-data-table-row');
+            expect(row[0].shadowRoot.querySelector('#accordianContainer').querySelector('demo-accordian')).to.be.null;
+            row[0].shadowRoot.querySelector(".row-actions").querySelector("iron-icon").click();
+            expect(row[0].shadowRoot.querySelector(".row-actions").querySelector("iron-icon").icon).to.be.equal("expand-less");
+            expect(row[0].shadowRoot.querySelector('#accordianContainer').querySelector('demo-accordian')).not.to.be.null;
+            dataRow.querySelectorAll('oe-data-table-row')[0].shadowRoot.querySelector(".row-actions").querySelector("iron-icon").click();
+            expect(row[0].shadowRoot.querySelector(".row-actions").querySelector("iron-icon").icon).to.be.equal("expand-more");
+          });
+
+      });
+
 
     suite('Inline edit', function () {
       var dataTable, columns, items;
