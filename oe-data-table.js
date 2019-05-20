@@ -113,7 +113,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
         }
 
         .data-table {
-          overflow-y: auto;
+          height:100%;
         }
 
         #table-header {
@@ -139,7 +139,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
           color: rgba(0, 0, 0, 0.87);
           font-weight: 400;
           font-style: normal;
-
+          height:100%;
           @apply --layout-vertical;
         }
 
@@ -149,7 +149,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
 
         iron-list {
           height: 100%;
-
+          overflow: auto;
           --iron-list-items-container: {
             width: var(--row-width);
           }
@@ -211,13 +211,14 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
 
         .empty-state{
           height: 100%;
+          min-height:48px;
         }
       </style>
       <paper-material class="data-table">
-        <iron-selector selected="[[_mainView]]" attr-for-selected="view">
+        <iron-selector selected="[[_mainView]]" class="data-table" attr-for-selected="view">
 
-          <iron-collapse view="grid" opened=[[_showPanel(_mainView,'grid')]]>
-
+          <iron-collapse view="grid" class="data-table" opened=[[_showPanel(_mainView,'grid')]]>
+            <div class="data-table layout vertical">
             <template is="dom-if" if="[[!hideHeader]]">
               <oe-data-table-header selected-length="[[selectedItems.length]]" 
                     label="[[label]]" disabled=[[disabled]] disable-add=[[disableAdd]] 
@@ -241,7 +242,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
               </template>
             </div>
 
-            <div class$="table-body [[_computeTableBodyClass(aggregatorAlignTop)]]">
+            <div style$="min-height:[[__tableHeight]];" class$="table-body flex [[_computeTableBodyClass(aggregatorAlignTop)]]">
 
               <template is="dom-if" if=[[_loadingData]]>
                 <paper-progress indeterminate></paper-progress>
@@ -249,7 +250,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
 
               <template is="dom-if" if=[[_items.length]] restamp=true>
                 <template is="dom-if" if=[[_showInfinteScroll(paginationType)]] restamp=true>
-                  <iron-list style$="height:[[__tableRowHeight]]px;" index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key">
+                  <iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key">
                     <template>
                       <oe-data-table-row accordian-element=[[accordianElement]] show-accordian=[[showAccordian]] columns=[[columns]] selection-cell-content=[[selectionCellContent]] row=[[row]] row-index=[[rowIndex]] table-host=[[tableHost]]
                       tab-index=[[tabIndex]] selected=[[_getSelectionState(row,_computeSelection)]] disable-selection=[[disableSelection]] row-actions=[[rowActions]]
@@ -293,6 +294,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
             <template is="dom-if" if="[[_showPaginationPanel]]">
               <oe-data-table-pagination-panel page-size="{{pageSize}}" rows-per-page-items="[[rowsPerPageItems]]" current-page={{currentPage}} items-length=[[_items.length]] row-count=[[rowCount]]></oe-data-table-pagination-panel>
             </template>
+          </div>
           </iron-collapse>
 
           <iron-collapse view="customize" opened=[[_showPanel(_mainView,'customize')]]>
@@ -723,7 +725,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
     this.set('_selectionState', new WeakMap()); // eslint-disable-line no-undef
     this.refCodeMap = {};
     this.listDataMap = {};
-    this.maxRowHeight = 48; //iron-list height for row
+    this.maxRowHeight = 49; //iron-list height for row 48px + 1px for border bottom
     this.set('tableHost',this.getRootNode().host);
     if(!this.paginationType){
       this.set('paginationType',(this.restUrl || this.dataController)?"page":"scroll");
@@ -1580,6 +1582,11 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
    * @param {number} itemsToShow length of items to display
    */
   _computeGridHeight(pageSize, itemsToShow) {
+    if(this.pageSize < 0){
+      this.set('__tableHeight', "auto");
+      this.updateRowHeight();
+      return;
+    }
     this.async(function () {
       
       //this.maxRowHeight = 48;
@@ -1591,7 +1598,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
         hasScroll = this.shadowRoot.querySelector("#row-list").scrollWidth > this.shadowRoot.querySelector("#row-list").clientWidth;
       }
       var height = size * this.maxRowHeight + (hasScroll ? 16 : 0);
-      this.set('__tableRowHeight', height);
+      this.set('__tableHeight', height+"px");
       this.updateRowHeight();
     }, 0);
   }
