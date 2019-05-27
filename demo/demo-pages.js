@@ -3851,7 +3851,7 @@ window.customElements.define('table-demo-pages', class extends PolymerElement {
   connectedCallback() {
     super.connectedCallback();
     var demoSelector = this.$['demo-selector'];
-    demoSelector.set('value', 'Pagination');
+    demoSelector.set('value', 'Overview');
   }
 
   _updateRoute(event) {
