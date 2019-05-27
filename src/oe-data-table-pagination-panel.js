@@ -42,7 +42,6 @@ class OeDataTablePaginationPanel extends OECommonMixin(PolymerElement) {
           width: 100%;
           height: 56px;
           font-size: 12px;
-          font-family: Roboto;
           font-weight: 600;
           padding: 0 14px;
           box-sizing: border-box;

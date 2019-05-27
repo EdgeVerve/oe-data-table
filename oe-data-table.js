@@ -15,11 +15,9 @@ import "@polymer/paper-material/paper-material.js";
 import "@polymer/paper-checkbox/paper-checkbox.js";
 import "@polymer/paper-progress/paper-progress.js";
 import "@polymer/paper-icon-button/paper-icon-button.js";
-import "@polymer/font-roboto/roboto.js";
 import "@polymer/iron-flex-layout/iron-flex-layout.js";
 import "@polymer/iron-flex-layout/iron-flex-layout-classes.js";
 import "@polymer/iron-collapse/iron-collapse.js";
-import "@polymer/font-roboto/roboto.js";
 
 import "oe-utils/oe-utils.js";
 import "oe-i18n-msg/oe-i18n-msg.js";
@@ -102,7 +100,6 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
         :host {
           width: 100%;
           display: block;
-          font-family: Roboto;
 
           --row-width: initial;
         }
@@ -195,7 +192,6 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
 
         .summary-cell {
           height: 56px;
-          font-family: Roboto;
           font-size: 13px;
           font-weight: 500;
           color: rgba(0, 0, 0, 0.87);
@@ -297,9 +293,11 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
           </div>
           </iron-collapse>
 
-          <iron-collapse view="customize" opened=[[_showPanel(_mainView,'customize')]]>
-            <oe-data-table-column-customizer columns="{{columns}}" title="{{label}}" on-close-column-customizer="_showGridView"></oe-data-table-column-customizer>
-          </iron-collapse>
+          <template is="dom-if" if="[[_showPanel(_mainView,'customize')]]">
+            <iron-collapse view="customize" opened=[[_showPanel(_mainView,'customize')]]>
+              <oe-data-table-column-customizer columns="{{columns}}" title="{{label}}" on-close-column-customizer="_showGridView"></oe-data-table-column-customizer>
+            </iron-collapse>
+          </template>
 
           <iron-collapse view="form" opened=[[_showPanel(_mainView,'form')]]>
             <div class="form-content">
