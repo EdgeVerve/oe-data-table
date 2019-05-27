@@ -6,6 +6,8 @@
 import { html, PolymerElement } from '@polymer/polymer/polymer-element.js';
 import '@polymer/polymer/lib/elements/dom-bind';
 import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
+import "@polymer/iron-flex-layout/iron-flex-layout.js";
+import "@polymer/iron-flex-layout/iron-flex-layout-classes.js";
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
@@ -1804,7 +1806,7 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
 window.customElements.define("pagination-setting", class extends DemoMixin(PolymerElement) {
   static get template() {
     return html`
-        <style include="demo-pages-shared-styles">
+        <style include="demo-pages-shared-styles iron-flex iron-flex-alignment">
         
         </style>
         <div>
@@ -1923,13 +1925,61 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
               paginationTable.set('defaultItems2', defaultItems.slice());
             </script>
           </div>
-				</custom-demo-snippet>
+        </custom-demo-snippet>
+        <p>
+            When page-size property is set to "-1" the oe-data-table fills the entire height of the container and displays available number of records.
+            When the height of the container varies the data-table adjests itself to display within the container.
+        </p>
+        <custom-demo-snippet>
+          <div>
+            <dom-bind id="dynamic-table">
+              <template>
+               <style include="iron-flex iron-flex-alignment">
+                  .parent-block{
+                    height:500px;  
+                    overflow:auto;
+                  }
+                  .container{
+                    padding:8px;
+                  }
+                  oe-data-table{
+                    height:100%;
+                  }
+                  .table-container{
+                    height: -webkit-fill-available;
+                  }
+                </style>
+                <div class="layout vertical parent-block">
+                  <div class="container layout horizontal center">
+                    <label class="flex"> Demo </label>
+                    <button on-tap="_toggle">Toggle collapse</button>
+                    <button on-tap="_toggleHeadingPage">Toggle Heading Pane</button>
+                  </div>
+                  <iron-collapse opened=[[opened]]>
+                    <div class="container heading-content">
+                      <h3 class="title">
+                      As the parent container is set with CSS to "height: -webkit-fill-available", it adjusts its height automatically, allowing the oe-data-table to fill 100% of its height.</h3>
+                    </div>
+                  </iron-collapse>
+                  <div class="table-container container">
+                    <oe-data-table id="simple-table" 
+                    hide-header=[[_hideHeading]] 
+                    columns=[[columns]] 
+                    items=[[defaultItems]] 
+                    page-size="-1" label="Dynamic Table"></oe-data-table>
+                  </div>
+                </div> 
+              </template>
+            </dom-bind>
+          </div>
+        </custom-demo-snippet>
       </div>      
         `;
   }
 
   _onPageVisible() {
     var paginationTable = this.shadowRoot.querySelector('#pagination-table');
+    var dynamicTable = this.shadowRoot.querySelector('#dynamic-table');
 
     var defaultItems = [{
       user: 'Mike',
@@ -1987,7 +2037,7 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
       phone: 9076767666
     }];
 
-    paginationTable.set('columns', [{
+    var columns = [{
       key: 'user',
       label: 'User',
       type: 'string'
@@ -1995,7 +2045,8 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
       key: 'phone',
       label: 'Phone Number',
       type: 'phone'
-    }]);
+    }]
+    paginationTable.set('columns',columns );
 
     paginationTable.set('literalColumns', [{
       key: 'key',
@@ -2011,7 +2062,21 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
     paginationTable.set('defaultItems', defaultItems);
     paginationTable.set('defaultItems2', defaultItems.slice());
 
+    dynamicTable.set('columns',columns );
+    dynamicTable.set('defaultItems', defaultItems);
+    dynamicTable._toggle = this._toggle;
+    dynamicTable._toggleHeadingPage = this._toggleHeadingPage;
   }
+
+  _toggle(){
+    this.set("opened",!this.opened);
+  }
+
+  _toggleHeadingPage(){
+    this.set('_hideHeading',!this._hideHeading);
+  }
+
+
 
 });
 
