@@ -26,7 +26,6 @@ import "oe-ui-forms/meta-polymer.js";
 
 import { OEDataTableMixin } from "./src/oe-data-table-mixin.js";
 import "./src/oe-data-table-header-cell.js";
-import "./src/oe-data-table-column-chooser.js";
 import "./src/oe-data-table-column-customizer.js";
 import "./src/oe-data-table-pagination-panel.js";
 import "./src/oe-data-table-header.js";
@@ -308,7 +307,6 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
         </iron-selector> 
       </paper-material>
       <slot></slot>
-      <oe-data-table-column-chooser id="column-chooser" columns={{columns}}></oe-data-table-column-chooser>
       `;
   }
 
