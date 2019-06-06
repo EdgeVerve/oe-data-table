@@ -229,11 +229,11 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
                 </div>
               </template>
               <template is="dom-repeat" items="{{columns}}" as="column" filter="_getVisibleColumns" observe="hidden">
-                <oe-data-table-header-cell col-index=[[index]] class="table-data" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]]
+                <oe-data-table-header-cell col-index=[[index]] class$="table-data [[_computeDense(dense)]]" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]]
                 style$="[[_computeCellWidth(column.*,column)]]"></oe-data-table-header-cell>
               </template>
               <template is="dom-if" if=[[rowActions.length]]>
-                <div class="table-data" style$="flex: [[__rowActionWidth]]"></div>
+                <div class$="table-data [[_computeDense(dense)]]" style$="flex: [[__rowActionWidth]]"></div>
               </template>
             </div>
 
@@ -247,7 +247,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
                 <template is="dom-if" if=[[_showInfinteScroll(paginationType)]] restamp=true>
                   <iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key">
                     <template>
-                      <oe-data-table-row on-dblclick="_handleDblClick" accordian-element=[[accordianElement]] show-accordian=[[showAccordian]] columns=[[columns]] selection-cell-content=[[selectionCellContent]] row=[[row]] row-index=[[rowIndex]] table-host=[[tableHost]]
+                      <oe-data-table-row on-dblclick="_handleDblClick" accordian-element=[[accordianElement]] dense=[[dense]] show-accordian=[[showAccordian]] columns=[[columns]] selection-cell-content=[[selectionCellContent]] row=[[row]] row-index=[[rowIndex]] table-host=[[tableHost]]
                       tab-index=[[tabIndex]] selected=[[_getSelectionState(row,_computeSelection)]] disable-selection=[[disableSelection]] row-actions=[[rowActions]]
                       row-action-width=[[__rowActionWidth]] read-only=[[__isCellReadOnly]] min-col-width=[[minColWidth]] column-templates=[[columnTemplates]]></oe-data-table-row>
                     </template>
@@ -277,7 +277,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
                       <div class="selection-cell summary-cell"> </div>
                     </template>
                     <template is="dom-repeat" items="{{columns}}" as="column">
-                      <oe-data-table-summary-cell class="summary-cell table-data" style$="[[_computeCellWidth(column.*,column)]]">
+                      <oe-data-table-summary-cell class$="summary-cell table-data [[_computeDense(dense)]]" style$="[[_computeCellWidth(column.*,column)]]">
                         <div class="summary-cell-content" style$="[[_computeCellAlignment(column)]]"> [[_computeSummary(column,_items.*)]] </div>
                       </oe-data-table-summary-cell>
                     </template>
@@ -641,7 +641,12 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       showAccordian:{
         type:Boolean,
         value:false
+      },
+      dense :{
+        type: Boolean,
+        value:false
       }
+
     };
   }
 
@@ -721,7 +726,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
     this.set('_selectionState', new WeakMap()); // eslint-disable-line no-undef
     this.refCodeMap = {};
     this.listDataMap = {};
-    this.maxRowHeight = 49; //iron-list height for row 48px + 1px for border bottom
+    this.maxRowHeight = this.dense ? 37 : 49;  //iron-list height for row 48px + 1px for border bottom
     this.set('tableHost',this.getRootNode().host);
     if(!this.paginationType){
       this.set('paginationType',(this.restUrl || this.dataController)?"page":"scroll");
@@ -1295,8 +1300,13 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
    * @param {number} rowActions length of row actions
    */
   _computeRowActionWidth(rowActions) {
-    this.set('__rowActionWidth', '0 0 ' + (rowActions * 48) + 'px');
+    var height = this.dense ? 36 : 48;
+    this.set('__rowActionWidth', '0 0 ' + (rowActions * height) + 'px');
+
   }
+  _computeDense(dense){
+    return dense ? "dense-data" : "";
+}
 
   /**
    * Computes `__isCellReadOnly` property to send to each cell

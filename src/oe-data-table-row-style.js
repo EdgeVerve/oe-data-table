@@ -23,6 +23,9 @@ styleElement.innerHTML =
         padding: 0;
         padding-right: 24px;
     }
+    .table-data.dense-data {
+        min-height: 35px;
+    }
 
     :host([disable-selection]) .table-data:first-of-type {
         padding-left: 24px;

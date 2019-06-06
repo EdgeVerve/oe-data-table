@@ -59,7 +59,7 @@ window.customElements.define("overview-detail", class extends DemoMixin(PolymerE
           definitions to show. </p>
         <custom-demo-snippet>
 					<div>
-              <oe-data-table id="simple-table" label="Simple Table"></oe-data-table>
+              <oe-data-table dense id="simple-table" label="Simple Table"></oe-data-table>
               <script>
               var dataTable = this.shadowRoot.querySelector('#simple-table');
               dataTable.set('columns', [{
@@ -1481,7 +1481,7 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
           <div>
             <dom-bind id="myapp">
               <template>
-                <oe-data-table label="User" disable-selection id="table" items=[[items]] columns=[[columns]] row-actions=[[rowActions]] on-oe-data-table-row-action="handleRowActions">
+                <oe-data-table dense label="User" disable-selection id="table" items=[[items]] columns=[[columns]] row-actions=[[rowActions]] on-oe-data-table-row-action="handleRowActions">
                 </oe-data-table>
                 <template is="dom-if" if=[[eventString]]>
                   <h3>Event Data</h3>
