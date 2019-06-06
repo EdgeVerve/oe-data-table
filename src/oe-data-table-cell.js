@@ -366,6 +366,17 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
       document.body.appendChild(dropdown);
       } 
   }
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener('combo-dropdown-attached', function (event) {
+    var  dropdown  =  event.detail;
+    if  (dropdown) {
+      this._dropDown  =  dropdown;
+      document.body.appendChild(dropdown);
+    }
+    });
+  }
+
   disconnectedCallback(){
     super.disconnectedCallback();
     if(this._dropDown){
