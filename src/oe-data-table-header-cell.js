@@ -101,10 +101,14 @@ class OeDataTableHeaderCell extends OECommonMixin(PolymerElement) {
         .cell-align-right{
           @apply --layout-end-justified;
         }
+        .pointer {
+          cursor: pointer;
+        }
+
 
     </style>
-    <div id="cell" class$="[[_computeCellAlignment(column)]] layout horizontal center" on-tap="_updateSortOrder">
-      <div class="header-content layout horizontal center">
+    <div id="cell" class$="[[_computeCellAlignment(column)]] layout [[_computelayout()]] center">
+      <div class="header-content layout horizontal center pointer" on-tap="_updateSortOrder">
         <iron-icon class="sort-icon" icon="[[_sortIcon]]" hidden$=[[!_hasSort]]></iron-icon>
         <span class$="header-title [[_sortClass]]">
           <oe-i18n-msg msgid=[[_computeColumnLabel(column)]]></oe-i18n-msg> 
@@ -167,6 +171,13 @@ class OeDataTableHeaderCell extends OECommonMixin(PolymerElement) {
     this.cell = this.$.cell;
     this.__setSortDetails();
     this.addEventListener('close-filter-dialog',this.closeFilter.bind(this));
+  }
+  _computelayout(){
+    var result='horizontal';
+    if(this.enableInlineFilter){
+      result = 'vertical';
+    }
+   return result;
   }
 
 

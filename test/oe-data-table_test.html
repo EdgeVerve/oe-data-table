@@ -116,7 +116,17 @@
         <oe-data-table model="Customer"></oe-data-table>
       </template>
     </test-fixture>
-
+    <test-fixture id="conditional-oecombo">
+      <template>
+        <oe-data-table label="Conditional oe-combo"></oe-data-table>
+      </template>
+    </test-fixture>
+    <test-fixture id="multilevel-keys">
+      <template>
+        <oe-data-table label="Multilevel Keys"></oe-data-table>
+      </template>
+    </test-fixture>
+  
 
     <script type="module">
 
@@ -396,8 +406,8 @@
         test('Values of custom columns should be sortable', function (done) {
           var headerCells = dataTable.deepQuery('#table-header').deepQueryAll('.table-data');
           var lastCell = headerCells[headerCells.length - 1];
-          MockInteractions.tap(lastCell.$.cell);
-          MockInteractions.tap(lastCell.$.cell);
+          MockInteractions.tap(lastCell.$.cell.firstElementChild);
+          MockInteractions.tap(lastCell.$.cell.firstElementChild);
           dataTable.async(function () {
             expect(dataTable._items[0].averageB).to.be.equal(88);
             done();
@@ -1247,13 +1257,16 @@
               expect(firstCell._inEdit).to.be.equal(true);
               firstCell._element.$.dropdownicon.click();
               flush(function () {
-                var items = firstCell._element.$.menu.deepQueryAll('paper-item');
+                var items = firstCell._element.$.dropdown.querySelector('paper-material').querySelector('#menu').deepQueryAll('paper-item');
                 items = items[2];
                 items.click();
                 flush(function () {
+                  MockInteractions.tap(document.body);
+                  flush(function () {
                   expect(firstCell.row.rating).to.be.equal(3);
                   done();
                 });
+              });
               });
             }, 2000);
           });
@@ -1656,6 +1669,137 @@
         });
 
       });
+      suite('Conditional OeCombo', function () {
+        var dataTable;
+        var showCell = function (column, row) {
+           if (row.status === "Pending Decision")
+             return true;
+           else
+             return false;
+         };
+
+        var columns = [ 
+          
+          {
+           key: 'status',
+           label: 'Status',
+           type: 'string'
+          },
+          {
+           key: 'action',
+           label: 'Action',
+           externalEl: true,
+           uiType: 'oe-combo',
+           type: 'combo',
+           showCell: showCell,
+           editorAttributes: {
+             listdata: ['Accept', 'Reject'],
+             label: 'Select'
+           }
+
+         }];
+
+          var data = [{
+           status: 'Approved',
+           action: 'Select'
+         },
+         {
+           status: 'Pending Decision',
+           action: 'Select'
+         },
+         {
+           status: 'Pending Decision',
+           action: 'Select'
+         }];
+          
+
+          setup(function (done) {
+            dataTable = fixture('conditional-oecombo');
+            dataTable.set('columns', columns);
+            dataTable.set('items', data);
+            // some logic in async of data table, hence wait for 1 milli second
+            setTimeout(done, 1);
+          });
+
+          test('Checking conditional oe-combos', function () {
+            var tableRow = dataTable.shadowRoot.querySelector('paper-material').querySelector('iron-collapse').querySelector('#row-list');
+            setTimeout(function(){
+              expect(tableRow.querySelectorAll('oe-data-table-row')[0].shadowRoot.querySelectorAll('oe-data-table-cell')[1].shadowRoot.querySelector('oe-combo')).to.be.null;
+              expect(tableRow.querySelectorAll('oe-data-table-row')[1].shadowRoot.querySelectorAll('oe-data-table-cell')[1].shadowRoot.querySelector('oe-combo')).to.not.be.null;
+              expect(tableRow.querySelectorAll('oe-data-table-row')[2].shadowRoot.querySelectorAll('oe-data-table-cell')[1].shadowRoot.querySelector('oe-combo')).to.not.be.null;
+            })
+           
+          });
+   
+      });
+
+       suite('MultiLevel Keys', function () {
+        var dataTable;
+        var showCell = function (column, row) {
+           if (row.status === "Pending Decision")
+             return true;
+           else
+             return false;
+         };
+
+        var columns = [ 
+          {
+           key: 'name',
+           label: 'Name',
+           type: 'string'
+          },
+          {
+           key: 'address.home.city',
+           label: 'City',
+           type: 'string'
+         }];
+
+          var data = [
+            {
+              name: 'Arya',
+              address: {
+                home: {
+                  city: "Bangalore"
+                }
+              }
+            },
+            {
+              name: 'Sansa',
+              address: {
+                home: {
+                  city: "Chennai"
+                }
+              }
+            },
+            {
+              name: 'Daenerys',
+              address: {
+                home: {
+                  city: "New Delhi"
+                }
+              }
+            }
+         ];
+          
+
+          setup(function (done) {
+            dataTable = fixture('multilevel-keys');
+            dataTable.set('columns', columns);
+            dataTable.set('items', data);
+            // some logic in async of data table, hence wait for 1 milli second
+            setTimeout(done, 1);
+          });
+
+          test('Checking data', function () {
+            var tableR = dataTable.shadowRoot.querySelector('paper-material').querySelector('iron-collapse').querySelector('#row-list').querySelectorAll('oe-data-table-row')
+            setTimeout(function(){
+            expect(tableR[0].shadowRoot.querySelectorAll("oe-data-table-cell")[1].shadowRoot.querySelector(".cell-content").innerText).to.be.equal("Bangalore");
+            expect(tableR[1].shadowRoot.querySelectorAll("oe-data-table-cell")[1].shadowRoot.querySelector(".cell-content").innerText).to.be.equal("Chennai");
+            expect(tableR[2].shadowRoot.querySelectorAll("oe-data-table-cell")[1].shadowRoot.querySelector(".cell-content").innerText).to.be.equal("New Delhi");
+          });
+        });
+      });
+
 
     </script>
   </body>

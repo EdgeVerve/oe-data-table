@@ -13,6 +13,7 @@ import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/paper-toast/paper-toast.js';
+import 'oe-info/oe-info.js';
 import '@polymer/gold-phone-input/gold-phone-input.js';
 import 'oe-app-route/oe-app-route.js';
 import './custom-demo-snippet';
@@ -3685,6 +3686,277 @@ window.customElements.define('accordian-view',class extends DemoMixin(PolymerEle
           dataTable.set('showAccordian', true);
         }
 });
+window.customElements.define('oecombo-showcell', class extends DemoMixin(PolymerElement) {
+  static get template() {
+    return html` 
+    <style include="demo-pages-shared-styles">
+        
+    </style>
+    <div>
+    <h1> Conditional oe-combo using showCell</h1>
+             
+              <p>To use oe-combo, following attributes need to be defined.</p>
+              <p>externalEl: true,</p>
+              <p>uiType: 'oe-combo'</p>
+              <p>type: 'combo'</p>
+              <p>editorAttributes</p>
+              <p>showCell:if the cell needs to be shown</p>
+              <custom-demo-snippet>
+                <div>
+                  
+                  <oe-data-table  disable-selection=true disabled disable-config-editor disable-edit disable-delete disable-add id="oecombo-table" label="Simple Table"></oe-data-table>
+                  <script>
+                    var dataTable = this.shadowRoot.querySelector('#oecombo-table');
+  
+  
+                    var  showCell = function(column, row){
+                      if(row.status === "Pending Decision")
+                          return true;
+                      else
+                          return false;
+                    };
+  
+             
+                    dataTable.set('columns', [{
+                      key: 'account',
+                      label: 'Account',
+                      type: 'number'
+                    }, {
+                      key: 'checknumber',
+                      label: 'Check Number',
+                      type: 'number'
+                    }, {
+                      key: 'amount',
+                      label: 'Amount',
+                      type: 'number',
+                      renderer: amountRenderer
+                    }, {
+                      key: 'exception_reason',
+                      label: 'Exception Reason',
+                      type: 'string'
+                    },
+                    {
+                      key: 'status',
+                      label: 'Status',
+                      type: 'string'
+                    },
+                    {
+                      key: 'action',
+                      label: 'Action',
+                      externalEl: true,
+                    
+                      uiType: 'oe-combo',
+                      type: 'combo',
+                      showCell: this.showCell,
+                      editorAttributes: {
+                          listdata: ['Accept', 'Reject'],
+                          label: 'Select'
+                      }
+  
+                    }]);
+  
+                    var data = [{
+                      account: 861363459,
+                      checknumber: 223457,
+                      amount: 470631.71,
+                      status: 'Approved',
+                      exception_reason: 'Paid No Issue',
+                      action: 'Select'
+                    },
+                    {
+                      account: 794659139,
+                      checknumber: 23456,
+                      amount: 4763.28,
+                      status: 'Pending Decision',
+                      exception_reason: 'Paid Fraud',
+                      action: 'Select'
+                    },
+                    {
+                      account: 479677228,
+                      checknumber: 223431,
+                      amount: 41170631.11,
+                      status: 'Pending Decision',
+                      exception_reason: 'Payee Missmatch',
+                      action: 'Select'
+                    },
+                    {
+                      account: 334547856,
+                      checknumber: 2234567,
+                      amount: 731.71,
+                      status: 'Rejected',
+                      exception_reason: 'Paid Fraud',
+                      action: 'Select'
+                    },
+                    {
+                      account: 452135542,
+                      checknumber: 123564,
+                      amount: 520631.51,
+                      status: 'Pending Decision',
+                      exception_reason: 'Paid Fraud',
+                      action: 'Select'
+                    },
+                    {
+                      account: 542412943,
+                      checknumber: 342352,
+                      amount: 41170631.71,
+                      status: 'Pending Decision',
+                      exception_reason: 'Paid No Issue',
+                      action: 'Select'
+                    },
+                    {
+                      account: 135322523,
+                      checknumber: 3341234,
+                      amount: 420631.16,
+                      status: 'Pending Decision',
+                      exception_reason: 'Payee Missmatch',
+                      action: 'Select'
+                    },
+                    {
+                      account: 432356742,
+                      checknumber: 223456,
+                      amount: 631.71,
+                      status: 'Pending Decision',
+                      exception_reason: 'Paid Fraud',
+                      action: 'Select'
+                    }
+  
+                    ];
+                    dataTable.set('items', data);
+                    
+  
+                  </script>
+    </div>
+    </custom-demo-snippet>
+  </div>
+  `
+  }
+  _onPageVisible() {
+    var dataTable = this.shadowRoot.querySelector('#oecombo-table');
+  
+  
+    var  showCell = function(column, row){
+      if(row.status === "Pending Decision")
+          return true;
+      else
+          return false;
+    };
+
+    var amountRenderer = function (column, row) { // eslint-disable-line no-unused-vars
+      var elementToReturn =
+        '<div style="text-align: right;display: flex;justify-content: flex-end;"> <div style="margin-top: 8px;">$&nbsp;</div> <oe-info class="amount-info" precision=[[row.precision]] type="decimal" value=[[row.amount]]></oe-info> </span> </div>';
+
+
+      return elementToReturn;
+    };
+    dataTable.set('columns', [{
+      key: 'account',
+      label: 'Account',
+      type: 'number'
+    }, {
+      key: 'checknumber',
+      label: 'Check Number',
+      type: 'number'
+    }, {
+      key: 'amount',
+      label: 'Amount',
+      type: 'number',
+      renderer: amountRenderer
+    }, {
+      key: 'exception_reason',
+      label: 'Exception Reason',
+      type: 'string'
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      type: 'string'
+    },
+    {
+      key: 'action',
+      label: 'Action',
+      externalEl: true,
+    
+      uiType: 'oe-combo',
+      type: 'combo',
+      showCell: showCell,
+      editorAttributes: {
+          listdata: ['Accept', 'Reject'],
+          label: 'Select'
+      }
+
+    }]);
+
+    var data = [{
+      account: 861363459,
+      checknumber: 223457,
+      amount: 470631.71,
+      status: 'Approved',
+      exception_reason: 'Paid No Issue',
+      action: 'Select'
+    },
+    {
+      account: 794659139,
+      checknumber: 23456,
+      amount: 4763.28,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    },
+    {
+      account: 479677228,
+      checknumber: 223431,
+      amount: 41170631.11,
+      status: 'Pending Decision',
+      exception_reason: 'Payee Missmatch',
+      action: 'Select'
+    },
+    {
+      account: 334547856,
+      checknumber: 2234567,
+      amount: 731.71,
+      status: 'Rejected',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    },
+    {
+      account: 452135542,
+      checknumber: 123564,
+      amount: 520631.51,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    },
+    {
+      account: 542412943,
+      checknumber: 342352,
+      amount: 41170631.71,
+      status: 'Pending Decision',
+      exception_reason: 'Paid No Issue',
+      action: 'Select'
+    },
+    {
+      account: 135322523,
+      checknumber: 3341234,
+      amount: 420631.16,
+      status: 'Pending Decision',
+      exception_reason: 'Payee Missmatch',
+      action: 'Select'
+    },
+    {
+      account: 432356742,
+      checknumber: 223456,
+      amount: 631.71,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    }
+
+    ];
+    dataTable.set('items', data);
+    
+
+  }
+});
 
 window.customElements.define('table-demo-pages', class extends PolymerElement {
   static get template() {
@@ -3841,6 +4113,12 @@ window.customElements.define('table-demo-pages', class extends PolymerElement {
       "type": "elem",
       "path": "accordian-view",
       "name": "accordian-view"
+    },
+    {
+      "title": "OeCombo-Showcell",
+      "type": "elem",
+      "path": "oecombo-showcell",
+      "name": "oecombo-showcell"
     }];
     this.set('RouteList', demoList);
     this.set('dropDownList', demoList.map(function (d) {

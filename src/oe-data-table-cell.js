@@ -41,12 +41,13 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
         <a href="[[_buildHref(column.href, row.*)]]" style$="[[_computeCellAlignment(column)]]"> [[_displayValue]] </a>
       </template>
       <template is="dom-if" if="[[!column.href]]" restamp="true">
-        <span class="cell-content" style$="[[_computeCellAlignment(column)]]">  [[_displayValue]] </span>
+        <span class="cell-content" hidden$="[[column.externalEl]]" style$="[[_computeCellAlignment(column)]]">  [[_displayValue]] </span>
       </template>
     </template>
     <template is="dom-if" if="[[_hasCustomRenderer]]" restamp="true">
       <span class="cell-content" id="custom-container">  </span>
     </template>
+    <div hidden$="{{!column.externalEl}}" id="createNewEl"></div>
     <div hidden$="{{!_inEdit}}" id="injectionPoint"></div>
     <template is="dom-if" if="[[column.valueAsTooltip]]" restamp="true">
       <paper-tooltip  offset$="[[_getOffset(isFirstRow)]]" position="top" id="[[column.label]]">  [[_displayValue]]  </paper-tooltip>  
@@ -155,7 +156,8 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
   static get observers() {
     return ['_buildCustomRenderer(row.*, column)',
       '_buildCustomRenderer(columnTemplate)',
-      '_computeCellData(row.*, column)'
+      '_computeCellData(row.*, column)',
+      '_buildNewElement(row, column)',
     ];
   }
 
@@ -317,7 +319,7 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
     }
 
     if (!this._element) {
-      this._createElement();
+      this._createElement(true);
     }
     if (this._element && this._element.set) {
       this.set('_inEdit', true);
@@ -353,7 +355,11 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
     }
     this.set('_inEdit', false);
   }
-
+  _buildNewElement() {
+    if (this.column.externalEl) {
+      this._createElement(false);
+    }
+  }
 
   _extractDropdownAndAddToBody(elem) {
     // Due to stacking context, the iron-list content always keeps its position at top, results in incorrect positioning of iron-dropdown content
@@ -389,7 +395,7 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
    * Sets the editorAttributes on the element and appends it inside the cell.
    * Attaches event listener for change and keydown
    */
-  _createElement() {
+  _createElement(isInEditMode) {
     var column = this.column;
     var typeMapping = OEUtils.TypeMappings[column.type || column.uitype];
     var uitype = column.uiType || (typeMapping && typeMapping.uiType);
@@ -416,8 +422,30 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
       }
     }
     this.set('_element', elem);
+    if(isInEditMode)
     this.$.injectionPoint.appendChild(this._element);
-    this._element.addEventListener('change', this._handleValueChange.bind(this));
+    else {
+      var show = true;
+      if (this.column.showCell != undefined) {
+
+        if (typeof this.column.showCell === 'function') {
+          show = this.column.showCell.call(this, this.column, this.row);
+        }
+
+        if (typeof this.column.showCell === 'boolean') {
+          show = this.column.showCell;
+        }
+      }
+
+      if (show && this.$['createNewEl'].childElementCount === 0) {
+        this.$['createNewEl'].appendChild(this._element);
+      }
+      else if (show === false && this.$['createNewEl'].childElementCount === 1) {
+        this.$['createNewEl'].removeChild(this.$['createNewEl'].childNodes[0]);
+      }
+    }
+    //this._element.addEventListener('change', this._handleValueChange.bind(this));
+
     this._element.addEventListener('keydown', this._handleActionKeyPress.bind(this));
     this.async(function () {
       this._extractDropdownAndAddToBody(elem);

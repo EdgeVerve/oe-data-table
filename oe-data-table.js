@@ -256,7 +256,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
                 <template is="dom-if" if=[[!_showInfinteScroll(paginationType)]] restamp=true>
                   <div id="pagination-table-body">
                     <template is="dom-repeat" id="pagination-repeater" index-as="rowIndex" items="{{_items}}" as="row" max="[[_maxDomElement]]" index-as="key">
-                      <oe-data-table-row columns=[[columns]] selection-cell-content=[[selectionCellContent]] row=[[row]] row-index=[[rowIndex]] table-host=[[tableHost]]
+                      <oe-data-table-row dense=[[dense]] columns=[[columns]] selection-cell-content=[[selectionCellContent]] row=[[row]] row-index=[[rowIndex]] table-host=[[tableHost]]
                       tab-index=[[tabIndex]] selected=[[_getSelectionState(row,_computeSelection)]] disable-selection=[[disableSelection]] row-actions=[[rowActions]]
                       row-action-width=[[__rowActionWidth]] read-only=[[__isCellReadOnly]] min-col-width=[[minColWidth]] column-templates=[[columnTemplates]]></oe-data-table-row>
                     </template>
