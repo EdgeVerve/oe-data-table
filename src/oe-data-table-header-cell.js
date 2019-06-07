@@ -38,9 +38,34 @@ class OeDataTableHeaderCell extends OECommonMixin(PolymerElement) {
 
         #dialog {
           margin: 0;
+          min-block-size: fit-content;
           min-width: 250px;
           border-radius: 2px;
           box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.12), 0 2px 2px 0 rgba(0, 0, 0, 0.24);
+        }
+        .search-div {
+          bottom: 3px;
+          width: 100%;
+          height: 20px;
+        }
+        paper-input {
+          width: 100%;
+  
+          --paper-input-container: {
+            padding: 0;
+          }
+          --paper-input-container-input: {
+            font-size: 13px;
+          }
+          --paper-input-container-label: {
+            font-size: 12px;
+            line-height: 28px;
+            color: var(--primary-dark-color);
+            text-align: left;
+          }
+        }
+        .pointer {
+          cursor: pointer;
         }
 
         #cell {
@@ -104,22 +129,36 @@ class OeDataTableHeaderCell extends OECommonMixin(PolymerElement) {
         .pointer {
           cursor: pointer;
         }
-
+        
 
     </style>
     <div id="cell" class$="[[_computeCellAlignment(column)]] layout [[_computelayout()]] center">
-      <div class="header-content layout horizontal center pointer" on-tap="_updateSortOrder">
+      <div class="header-content layout horizontal center pointer" style$="[[_computeCellStyle(column)]]" on-tap="_updateSortOrder">
         <iron-icon class="sort-icon" icon="[[_sortIcon]]" hidden$=[[!_hasSort]]></iron-icon>
         <span class$="header-title [[_sortClass]]">
           <oe-i18n-msg msgid=[[_computeColumnLabel(column)]]></oe-i18n-msg> 
           <paper-tooltip id="header-tooltip-[[_computeColumnLabel(column)]]"  offset="0" position="bottom">  <oe-i18n-msg msgid=[[column.tooltip]]>[[column.tooltip]]</oe-i18n-msg> </paper-tooltip>
         </span>
       </div>
+      <template is="dom-if" if="[[enableInlineFilter]]">
+      <template is="dom-if" if="[[showColumnSearch(column)]]">				
+          <div class="search-div">
+            <paper-input id="searchStringInput"  label="Search [[column.label]]" no-label-float value={{filterValue}} ></paper-input>    
+          </div>
+
+      </template>
+    </template>
+
     </div>
+   
+    <template is="dom-if" if="[[!enableInlineFilter]]">
     <iron-icon hidden$=[[_disableFilter(column)]] class="filter-icon" icon="icons:filter-list" on-tap="openFilter"></iron-icon>
     <paper-dialog id="dialog" on-iron-overlay-opened="_positionFilterDialog">
       <oe-data-table-filter id="filterEl" is-server-data=[[isServerData]] column=[[column]] items=[[items]]></oe-data-table-filter>
     </paper-dialog>
+    </template>
+   
+
     <div id="resize-handler" on-mousedown="_handleResize"></div>
     `;
   }
@@ -145,7 +184,13 @@ class OeDataTableHeaderCell extends OECommonMixin(PolymerElement) {
       },
       isServerData: {
         type: Boolean
-      }
+      },
+      filterValue: {
+				type: String,
+				notify: true,
+        observer: 'inlineSearchCriteria'
+			}
+
     };
 
     /**
@@ -178,6 +223,41 @@ class OeDataTableHeaderCell extends OECommonMixin(PolymerElement) {
       result = 'vertical';
     }
    return result;
+  }
+  inlineSearchCriteria(value){
+    this.searchText = value;
+      this._itemsChanged();
+      this._items = this._filterItems(this._items, this.searchText);
+      this.set('column.selectedItems', this._items);
+      this.fire('apply-criteria');
+  }
+  _itemsChanged(change) { // eslint-disable-line no-unused-vars
+    if (this.items && this.items.length) {
+      var uniqueData = [];
+      this.items.forEach(function (d) {
+        var val = d[this.column.key || this.column.field]
+        if(val === undefined && this.column.key){
+          val = OEUtils.deepValue(d,this.column.key);
+       }
+        if (uniqueData.indexOf(val) == -1) {
+          //if(searchText && val.toString().toLowerCase().indexOf(searchText) == -1) return;
+          uniqueData.push(val);
+        }
+      }.bind(this));
+      this.set('_items', uniqueData.length ? uniqueData : []);
+    }
+  }
+
+  _filterItems(items, searchText) {
+    var search = searchText.toLowerCase();
+    return search.length ? items.filter(function (item) {
+      return item.toString().toLowerCase().indexOf(search) > -1;
+    }) : items;
+  }
+  showColumnSearch(column) {
+    if (column && !column.clearSearch && !column.hideSearch)
+      return true;
+    return false;
   }
 
 
@@ -273,8 +353,8 @@ class OeDataTableHeaderCell extends OECommonMixin(PolymerElement) {
    * @param {Event} evt tap event
    */
   openFilter(evt) { // eslint-disable-line no-unused-vars
-    this.$.filterEl._updateListSize();
-    this.$.dialog.open();
+    this.root.querySelector('#filterEl')._updateListSize();
+    this.root.querySelector('#dialog').open();
   }
 
   /**
@@ -282,7 +362,7 @@ class OeDataTableHeaderCell extends OECommonMixin(PolymerElement) {
    * @param {Event} evt tap event
    */
   closeFilter(evt) { // eslint-disable-line no-unused-vars
-    this.$.dialog.close();
+    this.root.querySelector('#dialog').close();
   }
   /**
    * Positions the filter to appear below the header cell
@@ -290,7 +370,7 @@ class OeDataTableHeaderCell extends OECommonMixin(PolymerElement) {
    */
   _positionFilterDialog(event) { // eslint-disable-line no-unused-vars
     this.async(function () {
-      var filterDialog = this.$.dialog;
+      var filterDialog = this.root.querySelector('#dialog');
       var offset = this.getBoundingClientRect();
       filterDialog.set('horizontalAlign', ((offset.left + filterDialog.offsetWidth) < window.innerWidth) ?
         'left' : 'right');
@@ -320,6 +400,11 @@ class OeDataTableHeaderCell extends OECommonMixin(PolymerElement) {
       cssClass = ['number', 'decimal'].indexOf(column.type || column.uitype) > -1 ? 'cell-align-right' : 'cell-align-left';
     }
     return cssClass;
+  }
+  _computeCellStyle(column){
+    if(column.hideSearch){
+      return "position: relative; top: -10px;";
+    }
   }
 
 }

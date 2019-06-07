@@ -3957,6 +3957,260 @@ window.customElements.define('oecombo-showcell', class extends DemoMixin(Polymer
 
   }
 });
+window.customElements.define('inline-filtering', class extends DemoMixin(PolymerElement) {
+  static get template() {
+    return html` 
+    <style include="demo-pages-shared-styles">
+        
+    </style>
+    <div>
+    <h1> Inline Filtering </h1>
+           
+            <p>Inline filter and oe-data-table-filter can be toggled. Only one will work at a time.</p>
+            <p>Inline filter is enabled by default.</p>
+            <p>uiType: 'oe-combo'</p>
+            <p>type: 'combo'</p>
+            <p>editorAttributes</p>
+    
+    <custom-demo-snippet>
+    <div>
+    <oe-data-table  disabled disable-config-editor disable-edit disable-delete disable-add id="inlinefilter-table" label="Inline Filter"></oe-data-table>
+    <script>
+    var dataTable = this.shadowRoot.querySelector('#inlinefilter-table');
+    
+
+   
+    dataTable.set('columns', [{
+      key: 'account',
+      label: 'Account',
+      type: 'number',
+      width: 20
+    }, {
+      key: 'checknumber',
+      label: 'Check Number',
+      type: 'number',
+      width: 20
+    }
+    ]);
+
+    var data = [{
+      account: 861363459,
+      checknumber: 223457
+      
+      },
+      {
+        account: 794659139,
+        checknumber: 23456
+      },
+      {
+        account: 479677228,
+        checknumber: 223431
+      },
+      {
+        account: 334547856,
+        checknumber: 2234567
+      },
+      {
+        account: 452135542,
+        checknumber: 123564
+      }
+
+    ];
+    dataTable.set('items', data);
+    
+    
+
+  </script>
+     </div>
+      </custom-demo-snippet>
+      
+      <h3>oe-data-table Filter</h3>
+      <custom-demo-snippet>
+      <div>
+                
+      <oe-data-table  disable-selection=true disabled disable-config-editor disable-edit disable-delete disable-add id="oefilter-table" label="Inline Filter"></oe-data-table>
+      <script>
+        var dataTable = this.shadowRoot.querySelector('#oefilter-table');
+        
+        
+       
+        dataTable.set('columns', [{
+          key: 'account',
+          label: 'Account',
+          type: 'number',
+          width: 20,
+          alignment: 'right'
+        }, {
+          key: 'checknumber',
+          label: 'Check Number',
+          type: 'number',
+          width: 180,
+          hideSearch: true
+        },
+        {
+          key: 'name',
+          label: 'Name',
+          type: 'string',
+          width: 20,
+          alignment: 'center'
+          
+        }
+        ]);
+
+        var data = [{
+          account: 861363459,
+          checknumber: 223457,
+          name: "Mark"
+          
+          },
+          {
+            account: 794659139,
+            checknumber: 23456,
+            name: "Rob"
+          },
+          {
+            account: 479677228,
+            checknumber: 223431,
+            name: "Sansa"
+          },
+          {
+            account: 334547856,
+            checknumber: 2234567,
+            name: "Arya"
+          },
+          {
+            account: 452135542,
+            checknumber: 123564,
+            action: 'Select'
+          },
+          {
+            account: 542412943,
+            checknumber: 342352,
+            action: 'Select'
+          },
+          {
+            account: 135322523,
+            checknumber: 3341234,
+            action: 'Select'
+          },
+          {
+            account: 432356742,
+            checknumber: 223456,
+            name: "Cersie"
+          }
+
+          ];
+          dataTable.set('items', data);
+          
+        ];
+        dataTable.set('items', data);
+        dataTable.set('enableInlineFilter', true);
+        }
+      </script>
+    </div>
+    </custom-demo-snippet>
+  </div>
+  `
+  }
+  _onPageVisible() {
+    var dataTable = this.shadowRoot.querySelector('#inlinefilter-table');
+    dataTable.set('columns', [{
+      key: 'account',
+      label: 'Account',
+      type: 'number',
+      width: 20
+    }, {
+      key: 'checknumber',
+      label: 'Check Number',
+      type: 'number',
+      width: 20
+    }
+    ]);
+
+    var data = [{
+      account: 861363459,
+      checknumber: 223457
+
+    },
+    {
+      account: 794659139,
+      checknumber: 23456
+    },
+    {
+      account: 479677228,
+      checknumber: 223431
+    },
+    {
+      account: 334547856,
+      checknumber: 2234567
+    },
+    {
+      account: 452135542,
+      checknumber: 123564
+    }
+
+    ];
+    dataTable.set('items', data);
+    var dataTable2 = this.shadowRoot.querySelector('#oefilter-table');
+
+
+
+    dataTable2.set('columns', [{
+      key: 'account',
+      label: 'Account',
+      type: 'number',
+      width: 20,
+      alignment: 'right'
+    }, {
+      key: 'checknumber',
+      label: 'Check Number',
+      type: 'number',
+      width: 180,
+      hideSearch: true
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      type: 'string',
+      width: 20,
+      alignment: 'center'
+
+    }
+    ]);
+
+    var data2 = [{
+      account: 861363459,
+      checknumber: 223457,
+      name: "Mark"
+
+    },
+    {
+      account: 794659139,
+      checknumber: 23456,
+      name: "Rob"
+    },
+    {
+      account: 479677228,
+      checknumber: 223431,
+      name: "Sansa"
+    },
+    {
+      account: 334547856,
+      checknumber: 2234567,
+      name: "Arya"
+    },
+    {
+      account: 452135542,
+      checknumber: 123564,
+      name: "Cersie"
+    }
+
+    ];
+    dataTable2.set('items', data2);
+    dataTable2.set('enableInlineFilter', true);
+
+  }
+});
 
 window.customElements.define('table-demo-pages', class extends PolymerElement {
   static get template() {
@@ -4119,6 +4373,12 @@ window.customElements.define('table-demo-pages', class extends PolymerElement {
       "type": "elem",
       "path": "oecombo-showcell",
       "name": "oecombo-showcell"
+    },
+    {
+      "title": "Inline-filtering",
+      "type": "elem",
+      "path": "inline-filtering",
+      "name": "inline-filtering"
     }];
     this.set('RouteList', demoList);
     this.set('dropDownList', demoList.map(function (d) {

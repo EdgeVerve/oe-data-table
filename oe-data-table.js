@@ -208,6 +208,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
           height: 100%;
           min-height:48px;
         }
+        
       </style>
       <paper-material class="data-table">
         <iron-selector selected="[[_mainView]]" class="data-table" attr-for-selected="view">
@@ -229,7 +230,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
                 </div>
               </template>
               <template is="dom-repeat" items="{{columns}}" as="column" filter="_getVisibleColumns" observe="hidden">
-                <oe-data-table-header-cell col-index=[[index]] class$="table-data [[_computeDense(dense)]]" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]]
+                <oe-data-table-header-cell enable-inline-filter="[[enableInlineFilter]]" col-index=[[index]] class$="table-data [[_computeDense(dense)]]" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]]
                 style$="[[_computeCellWidth(column.*,column)]]"></oe-data-table-header-cell>
               </template>
               <template is="dom-if" if=[[rowActions.length]]>
@@ -645,8 +646,16 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       dense :{
         type: Boolean,
         value:false
-      }
-
+      },
+      /**
+     *  Setting to `true` shows the inline filter, otherwise oe-data-table-filter is used
+     */
+    enableInlineFilter: {
+      type: Boolean,
+      value: false,
+      notify: true,
+      observer: 'onUpdateInlineFilter'
+    }
     };
   }
 
@@ -788,6 +797,11 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
   disconnectedCallback() {
     super.disconnectedCallback();
     document.removeEventListener('tap', this._resetActiveCell.bind(this));
+  }
+  onUpdateInlineFilter() {
+    if (this.enableInlineFilter) {
+      this.$["table-header"].classList.add("table-header-style");
+    }
   }
 
   /* LIFE-CYCLE METHODS END */
@@ -1011,6 +1025,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
    * @param {function} done callback function
    */
   _filter(items, done) {
+    var self = this;
     var filters = {},
       filterExists = false,
       filteredData;
@@ -1018,14 +1033,15 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       filters[col.key || col.field] = {
         selectedItems: col.selectedItems
       };
-      if (col.selectedItems && col.selectedItems.length) filterExists = true;
+      if (col.selectedItems && col.selectedItems.length && !self.enableInlineFilter) filterExists = true;
+      if (col.selectedItems && self.enableInlineFilter) filterExists = true;
     });
 
     filteredData = filterExists ? items.filter(function (d) {
       var isValid = true;
       filters && Object.keys(filters).forEach(function (key) {
         var filter = filters[key];
-        if (filter.selectedItems && filter.selectedItems.length) {
+        if (filter.selectedItems && ((!self.enableInlineFilter && filter.selectedItems.length) || (self.enableInlineFilter) )) {
           isValid = isValid && filter.selectedItems.indexOf(d[key]) != -1;
         }
       });
