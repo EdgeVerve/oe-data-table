@@ -96,18 +96,18 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
                 </div>
             </template>
             <template is="dom-repeat" items="[[columns]]" as="column" filter="_getVisibleColumns" observe="hidden">
-                <oe-data-table-cell is-first-row=[[_isFirstRow(rowIndex)]] read-only=[[readOnly]] key=[[key]] row={{row}} column=[[column]] class$="table-data [[_computeDense(dense)]] [[_computeCellClass(row.*,column)]]" column-template=[[_getValidTemplate(row.*,row,column)]] style$="[[_computeCellWidth(column.*,column)]]"></oe-data-table-cell> 
+                <oe-data-table-cell is-first-row=[[_isFirstRow(rowIndex)]] read-only=[[readOnly]] key=[[key]] row={{row}} column=[[column]] class$="table-data [[_computeDense(disableDense)]] [[_computeCellClass(row.*,column)]]" column-template=[[_getValidTemplate(row.*,row,column)]] style$="[[_computeCellWidth(column.*,column)]]"></oe-data-table-cell> 
             </template>
             <template is="dom-if" if=[[showAccordian]]>
-            <div class="row-actions row" style="flex: 0 0 48px">
+            <div class$="row-actions [[_computeDense(disableDense)]] row" style="flex: 0 0 48px">
               <iron-icon id="paperExpand" icon$="{{getIcon(isAccordianOpen)}}" row$="[[row]]" rowIndex$="[[rowIndex]]" on-tap="_toggleAccordian"></iron-icon>
             </div>
           </template>
             <template is="dom-if" if=[[rowActions.length]]>
-                <div class="row-actions" style$="flex: [[rowActionWidth]]">
+                <div class$="row-actions [[_computeDense(disableDense)]]" style$="flex: [[rowActionWidth]]">
                     <template is="dom-repeat" items=[[rowActions]] as="action">
                     <div hidden$="[[_computeDivHidden(action,row)]]">
-                    <paper-icon-button class="row-action" style$="[[_computeHeight(dense)]]" row$=[[row]] rowIndex$=[[rowIndex]] icon="[[action.icon]]" on-tap="_rowActionClicked"></paper-icon-button>
+                    <paper-icon-button class$="row-action [[_computeDense(disableDense)]]" row$=[[row]] rowIndex$=[[rowIndex]] icon="[[action.icon]]" on-tap="_rowActionClicked"></paper-icon-button>
                             <paper-tooltip position="left"> [[action.title]] </paper-tooltip>
                         </div>
                     </template>
@@ -213,7 +213,7 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
                 type: Object
                 
             },
-            dense: {
+            disableDense: {
                 type:Boolean
             }
 
@@ -392,12 +392,10 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
         this.fire('expanded-view');
       }
       _computeDense(dense){
-        return dense ? "dense-data" : "table-data";
+          
+        return !dense ? "dense-data" : "";
     }
-    _computeHeight(dense){
-      return dense ? "height: 36px; width: 36px;" : "";
-    }
-
+  
       getIcon(){
           return !this.isAccordianOpen ? "expand-more": "expand-less";
       }

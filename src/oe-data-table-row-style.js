@@ -18,15 +18,21 @@ styleElement.innerHTML =
         @apply --layout-flex;
         @apply --oe-data-table-data;
     }
-
+    .row-action.dense-data {
+        @apply --oe-data-table-data-rowaction-height;
+    }
+    #table-header.dense-data {
+        @apply --oe-data-table-data-header-height;
+    }
     .table-data:first-of-type {
         padding: 0;
         padding-right: 24px;
     }
     .table-data.dense-data {
-        min-height: 35px;
+        min-height: 47px;
+        @apply --oe-data-table-data-row-height;
     }
-
+    
     :host([disable-selection]) .table-data:first-of-type {
         padding-left: 24px;
     }

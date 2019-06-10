@@ -50,7 +50,14 @@ window.customElements.define("overview-detail", class extends DemoMixin(PolymerE
   static get template() {
     return html`
         <style include="demo-pages-shared-styles">
-        
+        oe-data-table {
+            --oe-data-table-data-row-height:{
+              min-height: 33px;
+            }
+            --oe-data-table-data-header-height:{
+              height: 36px;
+            }
+          }
         </style>
         <div>
         <h1> Overview </h1>
@@ -60,7 +67,7 @@ window.customElements.define("overview-detail", class extends DemoMixin(PolymerE
           definitions to show. </p>
         <custom-demo-snippet>
 					<div>
-              <oe-data-table dense id="simple-table" label="Simple Table"></oe-data-table>
+              <oe-data-table id="simple-table" label="Simple Table"></oe-data-table>
               <script>
               var dataTable = this.shadowRoot.querySelector('#simple-table');
               dataTable.set('columns', [{
@@ -1457,7 +1464,18 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
   static get template() {
     return html`
         <style include="demo-pages-shared-styles">
-        
+        oe-data-table {
+          --oe-data-table-data-row-height:{
+            min-height: 33px;
+          }
+          --oe-data-table-data-header-height:{
+            height: 36px;
+          }
+          --oe-data-table-data-rowaction-height: {
+            height: 33px;
+            width: 33px;
+         }
+        }
         </style>
         <div>
         <h1> Row Action </h1>
@@ -1482,7 +1500,7 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
           <div>
             <dom-bind id="myapp">
               <template>
-                <oe-data-table dense label="User" disable-selection id="table" items=[[items]] columns=[[columns]] row-actions=[[rowActions]] on-oe-data-table-row-action="handleRowActions">
+                <oe-data-table disable-dense label="User" disable-selection id="table" items=[[items]] columns=[[columns]] row-actions=[[rowActions]] on-oe-data-table-row-action="handleRowActions">
                 </oe-data-table>
                 <template is="dom-if" if=[[eventString]]>
                   <h3>Event Data</h3>
@@ -1808,7 +1826,14 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
   static get template() {
     return html`
         <style include="demo-pages-shared-styles iron-flex iron-flex-alignment">
-        
+        oe-data-table {
+          --oe-data-table-data-row-height:{
+            min-height: 36px;
+          }
+          --oe-data-table-data-header-height:{
+            height: 40px;
+          }
+        }
         </style>
         <div>
         <h1> Pagination </h1>
@@ -1840,7 +1865,7 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
                 <h3> Client Pagination </h3>
                 <oe-data-table id="table" label="Phone Pagination" columns=[[columns]] items=[[defaultItems2]] pagination-type="page"></oe-data-table>
                 <h3> Server side pagination </h3>
-                <oe-data-table label="Literal" columns=[[literalColumns]] rest-url='/api/Literals'></oe-data-table>
+                <oe-data-table disable-dense label="Literal" columns=[[literalColumns]] rest-url='/api/Literals'></oe-data-table>
               </template>
             </dom-bind>
             <script>
@@ -3392,7 +3417,15 @@ window.customElements.define('accordian-view',class extends DemoMixin(PolymerEle
   static get template(){
     return html` 
     <style include="demo-pages-shared-styles">
-        
+    oe-data-table {
+      --oe-data-table-data-row-height:{
+        min-height: 33px;
+      }
+      --oe-data-table-data-header-height:{
+        height: 36px;
+      }
+      
+    }  
     </style>
     <div>
     <h1> Accordion View </h1>
