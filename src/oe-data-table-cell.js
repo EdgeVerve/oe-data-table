@@ -266,6 +266,7 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
     }
     var cellValue = this._deepValue(this.row, key);
     var options = column.editorAttributes;
+   
     var formatterFn;
     if (column.formatter) {
       formatterFn = column.formatter;
@@ -522,6 +523,10 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
    */
   _computeCellAlignment(column) {
     var style = null;
+    var rowHeight = this.computedStyleMap().get('min-height').value;
+    if(rowHeight != 48){
+      this.fire('row-height-changed',rowHeight+1);
+    }
     if (column.alignment) {
       style = 'text-align:' + column.alignment;
     } else {

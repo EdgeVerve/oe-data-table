@@ -392,7 +392,6 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
         this.fire('expanded-view');
       }
       _computeDense(dense){
-          
         return !dense ? "dense-data" : "";
     }
   

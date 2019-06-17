@@ -82,7 +82,9 @@ var OEUtils = window.OEUtils || {};
  * `--oe-data-table-row-first` | Mixin to be applied to the first row of the table | {}
  * `--oe-data-table-row-last` | Mixin to be applied to the last row of the table | {}
  * `--oe-data-table-selection-cell-content` | Mixiin to be applied to the selection cell content if provided | {}
- * 
+ * `--oe-data-table-data-rowaction-dense` | Mixin to be applied to rowaction when dense property is provided | {}
+ * `--oe-data-table-data-header-dense` | Mixin to be applied to header when dense property is provided | {}
+ * `--oe-data-table-data-row-dense` | Mixin to be applied to row when dense property is provided | {}
  * 
  * @customElement
  * @polymer
@@ -736,6 +738,11 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
     this.refCodeMap = {};
     this.listDataMap = {};
     this.maxRowHeight = 49;  //iron-list height for row 48px + 1px for border bottom
+    this.addEventListener('row-height-changed',function(event){
+      this.maxRowHeight = event.detail;
+      this._computeGridHeight(this.pageSize,this._items.length);
+
+    })
     this.set('tableHost',this.getRootNode().host);
     if(!this.paginationType){
       this.set('paginationType',(this.restUrl || this.dataController)?"page":"scroll");

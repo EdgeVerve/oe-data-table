@@ -19,10 +19,10 @@ styleElement.innerHTML =
         @apply --oe-data-table-data;
     }
     .row-action.dense-data {
-        @apply --oe-data-table-data-rowaction-height;
+        @apply --oe-data-table-data-rowaction-dense;
     }
     #table-header.dense-data {
-        @apply --oe-data-table-data-header-height;
+        @apply --oe-data-table-data-header-dense;
     }
     .table-data:first-of-type {
         padding: 0;
@@ -30,7 +30,7 @@ styleElement.innerHTML =
     }
     .table-data.dense-data {
         min-height: 47px;
-        @apply --oe-data-table-data-row-height;
+        @apply --oe-data-table-data-row-dense;
     }
     
     :host([disable-selection]) .table-data:first-of-type {

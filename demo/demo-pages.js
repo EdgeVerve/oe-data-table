@@ -14,7 +14,7 @@ import '@polymer/paper-item/paper-item.js';
 import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/paper-toast/paper-toast.js';
 import 'oe-info/oe-info.js';
-import '@polymer/gold-phone-input/gold-phone-input.js';
+import 'oe-input/oe-decimal.js';
 import 'oe-app-route/oe-app-route.js';
 import './custom-demo-snippet';
 import 'oe-combo/oe-typeahead.js';
@@ -51,10 +51,10 @@ window.customElements.define("overview-detail", class extends DemoMixin(PolymerE
     return html`
         <style include="demo-pages-shared-styles">
         oe-data-table {
-            --oe-data-table-data-row-height:{
+            --oe-data-table-data-row-dense:{
               min-height: 33px;
             }
-            --oe-data-table-data-header-height:{
+            --oe-data-table-data-header-dense:{
               height: 36px;
             }
           }
@@ -66,7 +66,17 @@ window.customElements.define("overview-detail", class extends DemoMixin(PolymerE
         <p> The items property specifies an array of list item data and the columns property specifies an array of column
           definitions to show. </p>
         <custom-demo-snippet>
-					<div>
+          <div>
+          <style include="demo-pages-shared-styles">
+          oe-data-table {
+              --oe-data-table-data-row-dense:{
+                min-height: 33px;
+              }
+              --oe-data-table-data-header-dense:{
+                height: 36px;
+              }
+            }
+          </style>
               <oe-data-table id="simple-table" label="Simple Table"></oe-data-table>
               <script>
               var dataTable = this.shadowRoot.querySelector('#simple-table');
@@ -1080,7 +1090,7 @@ window.customElements.define("cell-rendering", class extends DemoMixin(PolymerEl
     });
 
     var flagsTable2 = this.shadowRoot.querySelector('#flags-table2');
-    
+
     flagsTable2.set('currencyColumns', [{
       key: 'code',
       label: 'Country',
@@ -1137,7 +1147,14 @@ window.customElements.define("inline-editing", class extends DemoMixin(PolymerEl
   static get template() {
     return html`
         <style include="demo-pages-shared-styles">
-        
+        oe-data-table {
+          --oe-data-table-data-row-dense:{
+            min-height: 36px;
+          }
+          --oe-data-table-data-header-dense:{
+            height: 40px;
+          }
+        }
         </style>
         <div>
         <h1>Inline Editing</h1>
@@ -1145,7 +1162,17 @@ window.customElements.define("inline-editing", class extends DemoMixin(PolymerEl
           be changed by giving ui<b>T</b>ype property of the column. Also for columns that should not be editable, readOnly
           property can be set at column level.</p>
         <custom-demo-snippet>
-					<div>
+          <div>
+          <style include="demo-pages-shared-styles">
+          oe-data-table {
+            --oe-data-table-data-row-dense:{
+              min-height: 36px;
+            }
+            --oe-data-table-data-header-dense:{
+              height: 40px;
+            }
+          }
+          </style>
             <oe-data-table id="inlineedit" label="Inline Table"></oe-data-table>
             <script>
               var inlineedit = this.shadowRoot.querySelector('#inlineedit');
@@ -1189,7 +1216,7 @@ window.customElements.define("inline-editing", class extends DemoMixin(PolymerEl
         <strong>Inline editing with oe-combo</strong>
         <custom-demo-snippet>
 					<div>
-            <oe-data-table label="Inline Edit" id="inlineEditCombo"></oe-data-table>
+            <oe-data-table disable-dense label="Inline Edit" id="inlineEditCombo"></oe-data-table>
             <script>
               var dataTable = this.shadowRoot.querySelector('#inlineEditCombo'); // eslint-disable-line no-redeclare
               dataTable.set('columns', [{
@@ -1391,9 +1418,15 @@ window.customElements.define("cell-types", class extends DemoMixin(PolymerElemen
             var phoneTable = this.shadowRoot.querySelector('#phone-table');
 
             OEUtils.TypeMappings.phone = {
-              uiType: 'gold-phone-input'
+              uiType: 'oe-decimal'
             }
-
+            var decimalRenderer= function (column, row) { // eslint-disable-line no-unused-vars
+              var elementToReturn =
+                  '<div style="text-align: right;display: flex;justify-content: flex-end;"> <div style="margin-top: 8px;">$&nbsp;</div> <oe-info class="amount-info" precision=[[row.precision]] type="decimal" value=[[row.amount]]></oe-info> </span> </div>';
+      
+      
+              return elementToReturn;
+          };
             phoneTable.set('columns', [{
               key: 'user',
               label: 'User',
@@ -1401,7 +1434,8 @@ window.customElements.define("cell-types", class extends DemoMixin(PolymerElemen
             }, {
               key: 'phone',
               label: 'Phone Number',
-              type: 'phone'
+              type: 'phone',
+              renderer: decimalRenderer
             }]);
 
             phoneTable.set('items', [{
@@ -1409,7 +1443,7 @@ window.customElements.define("cell-types", class extends DemoMixin(PolymerElemen
               phone: 1242109098
             }, {
               user: 'John',
-              phone: 7812901028
+              phone:7812901028
             }, {
               user: 'Stella',
               phone: 1234522221
@@ -1428,9 +1462,16 @@ window.customElements.define("cell-types", class extends DemoMixin(PolymerElemen
 
   _onPageVisible() {
     var phoneTable = this.shadowRoot.querySelector('#phone-table');
+    var decimalRenderer = function (column, row) { // eslint-disable-line no-unused-vars
+      var elementToReturn =
+        '<div> <span><oe-info class="phone-info" precision=0 value=[[row.phone]]></oe-info> </span> </div>';
+
+
+      return elementToReturn;
+    };
 
     OEUtils.TypeMappings.phone = {
-      uiType: 'gold-phone-input'
+      uiType: 'oe-decimal'
     };
 
     phoneTable.set('columns', [{
@@ -1440,7 +1481,8 @@ window.customElements.define("cell-types", class extends DemoMixin(PolymerElemen
     }, {
       key: 'phone',
       label: 'Phone Number',
-      type: 'phone'
+      type: 'phone',
+      renderer: decimalRenderer
     }]);
 
     phoneTable.set('items', [{
@@ -1465,13 +1507,13 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
     return html`
         <style include="demo-pages-shared-styles">
         oe-data-table {
-          --oe-data-table-data-row-height:{
+          --oe-data-table-data-row-dense:{
             min-height: 33px;
           }
-          --oe-data-table-data-header-height:{
+          --oe-data-table-data-header-dense:{
             height: 36px;
           }
-          --oe-data-table-data-rowaction-height: {
+          --oe-data-table-data-rowaction-dense: {
             height: 33px;
             width: 33px;
          }
@@ -1500,6 +1542,20 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
           <div>
             <dom-bind id="myapp">
               <template>
+              <style include="demo-pages-shared-styles">
+        oe-data-table {
+          --oe-data-table-data-row-dense:{
+            min-height: 33px;
+          }
+          --oe-data-table-data-header-dense:{
+            height: 36px;
+          }
+          --oe-data-table-data-rowaction-dense: {
+            height: 33px;
+            width: 33px;
+         }
+        }
+        </style>
                 <oe-data-table disable-dense label="User" disable-selection id="table" items=[[items]] columns=[[columns]] row-actions=[[rowActions]] on-oe-data-table-row-action="handleRowActions">
                 </oe-data-table>
                 <template is="dom-if" if=[[eventString]]>
@@ -1738,86 +1794,86 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
       }
     };
     var myapp = this.shadowRoot.querySelector('#myappRowActionCompute');
-            
-            myapp.set('columns', [{
-              key: 'key',
-              label: 'Key',
-              type: 'string'
-            }, {
-              key: 'value',
-              label: 'Value',
-              type: 'string'
-            }]);
 
-            myapp.set('items', [{
-              id: 1,
-              key: 'Mike',
-              value: 'mike@ev.com',
-              isHiddenView: true
-            }, {
-              id: 2,
-              key: 'John',
-              value: 'john@ev.com',
-              isHiddenEdit: true
-            }, {
-              id: 3,
-              key: 'Stella',
-              value: 'stella@ev.com',
-              isHiddenBookMark: true,
-              isHiddenEdit: true
+    myapp.set('columns', [{
+      key: 'key',
+      label: 'Key',
+      type: 'string'
+    }, {
+      key: 'value',
+      label: 'Value',
+      type: 'string'
+    }]);
 
-            }, {
-              id: 4,
-              key: 'Francis',
-              value: 'francis@ev.com',
-              isHiddenView: true,
-              isHiddenEdit: true
-            }]);
+    myapp.set('items', [{
+      id: 1,
+      key: 'Mike',
+      value: 'mike@ev.com',
+      isHiddenView: true
+    }, {
+      id: 2,
+      key: 'John',
+      value: 'john@ev.com',
+      isHiddenEdit: true
+    }, {
+      id: 3,
+      key: 'Stella',
+      value: 'stella@ev.com',
+      isHiddenBookMark: true,
+      isHiddenEdit: true
 
-            var isHiddenEdit = function (row) {
-                return row.isHiddenEdit;
-            }
+    }, {
+      id: 4,
+      key: 'Francis',
+      value: 'francis@ev.com',
+      isHiddenView: true,
+      isHiddenEdit: true
+    }]);
 
-            var isHiddenView = function (row) {
-                return row.isHiddenView;
-            }
+    var isHiddenEdit = function (row) {
+      return row.isHiddenEdit;
+    }
 
-            var isHiddenBookMark = function (row) {
-                return row.isHiddenBookMark;
-            }
+    var isHiddenView = function (row) {
+      return row.isHiddenView;
+    }
 
-            myapp.set('rowActions', [{
-              icon: 'info',
-              action: 'info',
-              title: 'details',
-              formUrl:'../oe-data-table/demo/templates/literal-view.js',
-              isHiddenFunction: isHiddenView
-            }, {
-              icon: 'editor:mode-edit',
-              title: 'edit',
-              action: 'edit',
-              formUrl:'../oe-data-table/demo/templates/literal-default.js',
-              isHiddenFunction: isHiddenEdit
-            },{
-              icon: 'star',
-              action: 'bookmark',
-              title: 'bookmark',
-              isHiddenFunction: isHiddenBookMark
-            }]);
+    var isHiddenBookMark = function (row) {
+      return row.isHiddenBookMark;
+    }
 
-            myapp.handleRowActions = function (event) {
-              myapp.set('eventString',JSON.stringify(event.detail,null,2));
-            }
+    myapp.set('rowActions', [{
+      icon: 'info',
+      action: 'info',
+      title: 'details',
+      formUrl: '../oe-data-table/demo/templates/literal-view.js',
+      isHiddenFunction: isHiddenView
+    }, {
+      icon: 'editor:mode-edit',
+      title: 'edit',
+      action: 'edit',
+      formUrl: '../oe-data-table/demo/templates/literal-default.js',
+      isHiddenFunction: isHiddenEdit
+    }, {
+      icon: 'star',
+      action: 'bookmark',
+      title: 'bookmark',
+      isHiddenFunction: isHiddenBookMark
+    }]);
 
-            myapp.rowUpdated = function (event) {
-              event.stopPropagation();
-              if (myapp.userEdit) {
-                var index = myapp.items.indexOf(myapp.userEdit);
-                var newRecord = event.detail;
-                (index >= 0) && myapp.splice('items', index, 1, newRecord);
-                myapp.set('userEdit', null);
-              }
-            }
+    myapp.handleRowActions = function (event) {
+      myapp.set('eventString', JSON.stringify(event.detail, null, 2));
+    }
+
+    myapp.rowUpdated = function (event) {
+      event.stopPropagation();
+      if (myapp.userEdit) {
+        var index = myapp.items.indexOf(myapp.userEdit);
+        var newRecord = event.detail;
+        (index >= 0) && myapp.splice('items', index, 1, newRecord);
+        myapp.set('userEdit', null);
+      }
+    }
   }
 
 });
@@ -1827,10 +1883,10 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
     return html`
         <style include="demo-pages-shared-styles iron-flex iron-flex-alignment">
         oe-data-table {
-          --oe-data-table-data-row-height:{
+          --oe-data-table-data-row-dense:{
             min-height: 36px;
           }
-          --oe-data-table-data-header-height:{
+          --oe-data-table-data-header-dense:{
             height: 40px;
           }
         }
@@ -1860,6 +1916,16 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
           <div>
             <dom-bind id="pagination-table">
               <template>
+              <style include="demo-pages-shared-styles iron-flex iron-flex-alignment">
+              oe-data-table {
+                --oe-data-table-data-row-dense:{
+                  min-height: 36px;
+                }
+                --oe-data-table-data-header-dense:{
+                  height: 40px;
+                }
+              }
+              </style>
                 <h3> Default Virtual Pagination </h3>
                 <oe-data-table id="table" label="Phone" columns=[[columns]] items=[[defaultItems]]></oe-data-table>
                 <h3> Client Pagination </h3>
@@ -2072,7 +2138,7 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
       label: 'Phone Number',
       type: 'phone'
     }]
-    paginationTable.set('columns',columns );
+    paginationTable.set('columns', columns);
 
     paginationTable.set('literalColumns', [{
       key: 'key',
@@ -2088,18 +2154,18 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
     paginationTable.set('defaultItems', defaultItems);
     paginationTable.set('defaultItems2', defaultItems.slice());
 
-    dynamicTable.set('columns',columns );
+    dynamicTable.set('columns', columns);
     dynamicTable.set('defaultItems', defaultItems);
     dynamicTable._toggle = this._toggle;
     dynamicTable._toggleHeadingPage = this._toggleHeadingPage;
   }
 
-  _toggle(){
-    this.set("opened",!this.opened);
+  _toggle() {
+    this.set("opened", !this.opened);
   }
 
-  _toggleHeadingPage(){
-    this.set('_hideHeading',!this._hideHeading);
+  _toggleHeadingPage() {
+    this.set('_hideHeading', !this._hideHeading);
   }
 
 
@@ -3413,15 +3479,15 @@ window.customElements.define("other-options", class extends DemoMixin(PolymerEle
   }
 
 });
-window.customElements.define('accordian-view',class extends DemoMixin(PolymerElement) {
-  static get template(){
+window.customElements.define('accordian-view', class extends DemoMixin(PolymerElement) {
+  static get template() {
     return html` 
     <style include="demo-pages-shared-styles">
     oe-data-table {
-      --oe-data-table-data-row-height:{
+      --oe-data-table-data-row-dense:{
         min-height: 33px;
       }
-      --oe-data-table-data-header-height:{
+      --oe-data-table-data-header-dense:{
         height: 36px;
       }
       
@@ -3585,139 +3651,139 @@ window.customElements.define('accordian-view',class extends DemoMixin(PolymerEle
     var dataTable = this.shadowRoot.querySelector('#accordian-table');
 
 
-        var dropDownRenderer= function (column, row) { // eslint-disable-line no-unused-vars
-        
+    var dropDownRenderer = function (column, row) { // eslint-disable-line no-unused-vars
 
-        // var elementToReturn =
-        // '<paper-dropdown-menu label="Dinosaurs"><paper-listbox slot="dropdown-content" selected="1"><paper-item>allosaurus</paper-item><paper-item>brontosaurus</paper-item><paper-item>carcharodontosaurus</paper-item><paper-item>diplodocus</paper-item></paper-listbox></paper-dropdown-menu>';
-        
-        var elementToReturn = "";
-        if(row.status === 'Pending Decision'){
-             elementToReturn = 
-        '<select style=" background-color: transparent; border: 1px solid #d1d2d3;"><option value="" disabled selected>Select</option><option value="accept">Accept</option><option value="reject">Reject</option></select>';
-        }
-        else{
-            elementToReturn = 
-        '<select style="display: none; background-color: transparent; border: 1px solid #d1d2d3;"><option value="volvo">Volvo</option><option value="saab">Saab</option><option value="mercedes">Mercedes</option><option value="audi">Audi</option></select>';
-        }
-       
-        return elementToReturn;
+
+      // var elementToReturn =
+      // '<paper-dropdown-menu label="Dinosaurs"><paper-listbox slot="dropdown-content" selected="1"><paper-item>allosaurus</paper-item><paper-item>brontosaurus</paper-item><paper-item>carcharodontosaurus</paper-item><paper-item>diplodocus</paper-item></paper-listbox></paper-dropdown-menu>';
+
+      var elementToReturn = "";
+      if (row.status === 'Pending Decision') {
+        elementToReturn =
+          '<select style=" background-color: transparent; border: 1px solid #d1d2d3;"><option value="" disabled selected>Select</option><option value="accept">Accept</option><option value="reject">Reject</option></select>';
+      }
+      else {
+        elementToReturn =
+          '<select style="display: none; background-color: transparent; border: 1px solid #d1d2d3;"><option value="volvo">Volvo</option><option value="saab">Saab</option><option value="mercedes">Mercedes</option><option value="audi">Audi</option></select>';
+      }
+
+      return elementToReturn;
     };
 
-    var amountRenderer= function (column, row) { // eslint-disable-line no-unused-vars
-        var elementToReturn =
-            '<div style="text-align: right;display: flex;justify-content: flex-end;"> <div style="margin-top: 8px;">$&nbsp;</div> <oe-info class="amount-info" precision=[[row.precision]] type="decimal" value=[[row.amount]]></oe-info> </span> </div>';
+    var amountRenderer = function (column, row) { // eslint-disable-line no-unused-vars
+      var elementToReturn =
+        '<div style="text-align: right;display: flex;justify-content: flex-end;"> <div style="margin-top: 8px;">$&nbsp;</div> <oe-info class="amount-info" precision=[[row.precision]] type="decimal" value=[[row.amount]]></oe-info> </span> </div>';
 
 
-        return elementToReturn;
+      return elementToReturn;
     };
-          dataTable.set('columns', [{
-            key: 'account',
-            label: 'Account',
-            type: 'number'
-          }, {
-            key: 'checknumber',
-            label: 'Check Number',
-            type: 'number',
-            cellClass: 'blue-color'
-          }, {
-            key: 'amount',
-            label: 'Amount',
-            type: 'number',
-            renderer: amountRenderer
-          }, {
-            key: 'exception_reason',
-            label: 'Exception Reason',
-            type: 'string'
-          },
-          {
-            key: 'status',
-            label: 'Status',
-            type: 'string'
-          },
-          {
-            key: 'action',
-            label: 'Action',
+    dataTable.set('columns', [{
+      key: 'account',
+      label: 'Account',
+      type: 'number'
+    }, {
+      key: 'checknumber',
+      label: 'Check Number',
+      type: 'number',
+      cellClass: 'blue-color'
+    }, {
+      key: 'amount',
+      label: 'Amount',
+      type: 'number',
+      renderer: amountRenderer
+    }, {
+      key: 'exception_reason',
+      label: 'Exception Reason',
+      type: 'string'
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      type: 'string'
+    },
+    {
+      key: 'action',
+      label: 'Action',
 
 
-            type: 'string',
-            renderer: dropDownRenderer
+      type: 'string',
+      renderer: dropDownRenderer
 
-          }]);
+    }]);
 
-          var data = [{
-            account: 861363459,
-            checknumber: 223457,
-            amount: 470631.71,
-            status: 'Approved',
-            exception_reason: 'Paid No Issue',
-            action: 'Select'
-          },
-          {
-            account: 794659139,
-            checknumber: 23456,
-            amount: 4763.28,
-            status: 'Pending Decision',
-            exception_reason: 'Paid Fraud',
-            action: 'Select'
-          },
-          {
-            account: 479677228,
-            checknumber: 223431,
-            amount: 41170631.11,
-            status: 'Pending Decision',
-            exception_reason: 'Payee Missmatch',
-            action: 'Select'
-          },
-          {
-            account: 334547856,
-            checknumber: 2234567,
-            amount: 731.71,
-            status: 'Rejected',
-            exception_reason: 'Paid Fraud',
-            action: 'Select'
-          },
-          {
-            account: 452135542,
-            checknumber: 123564,
-            amount: 520631.51,
-            status: 'Pending Decision',
-            exception_reason: 'Paid Fraud',
-            action: 'Select'
-          },
-          {
-            account: 542412943,
-            checknumber: 342352,
-            amount: 41170631.71,
-            status: 'Pending Decision',
-            exception_reason: 'Paid No Issue',
-            action: 'Select'
-          },
-          {
-            account: 135322523,
-            checknumber: 3341234,
-            amount: 420631.16,
-            status: 'Pending Decision',
-            exception_reason: 'Payee Missmatch',
-            action: 'Select'
-          },
-          {
-            account: 432356742,
-            checknumber: 223456,
-            amount: 631.71,
-            status: 'Pending Decision',
-            exception_reason: 'Paid Fraud',
-            action: 'Select'
-          }
+    var data = [{
+      account: 861363459,
+      checknumber: 223457,
+      amount: 470631.71,
+      status: 'Approved',
+      exception_reason: 'Paid No Issue',
+      action: 'Select'
+    },
+    {
+      account: 794659139,
+      checknumber: 23456,
+      amount: 4763.28,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    },
+    {
+      account: 479677228,
+      checknumber: 223431,
+      amount: 41170631.11,
+      status: 'Pending Decision',
+      exception_reason: 'Payee Missmatch',
+      action: 'Select'
+    },
+    {
+      account: 334547856,
+      checknumber: 2234567,
+      amount: 731.71,
+      status: 'Rejected',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    },
+    {
+      account: 452135542,
+      checknumber: 123564,
+      amount: 520631.51,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    },
+    {
+      account: 542412943,
+      checknumber: 342352,
+      amount: 41170631.71,
+      status: 'Pending Decision',
+      exception_reason: 'Paid No Issue',
+      action: 'Select'
+    },
+    {
+      account: 135322523,
+      checknumber: 3341234,
+      amount: 420631.16,
+      status: 'Pending Decision',
+      exception_reason: 'Payee Missmatch',
+      action: 'Select'
+    },
+    {
+      account: 432356742,
+      checknumber: 223456,
+      amount: 631.71,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    }
 
-          ];
-          dataTable.set('items', data);
-          
+    ];
+    dataTable.set('items', data);
 
-         
-          dataTable.set('accordianElement', "demo-accordian");
-          dataTable.set('showAccordian', true);
-        }
+
+
+    dataTable.set('accordianElement', "demo-accordian");
+    dataTable.set('showAccordian', true);
+  }
 });
 window.customElements.define('oecombo-showcell', class extends DemoMixin(PolymerElement) {
   static get template() {
@@ -3865,13 +3931,13 @@ window.customElements.define('oecombo-showcell', class extends DemoMixin(Polymer
   }
   _onPageVisible() {
     var dataTable = this.shadowRoot.querySelector('#oecombo-table');
-  
-  
-    var  showCell = function(column, row){
-      if(row.status === "Pending Decision")
-          return true;
+
+
+    var showCell = function (column, row) {
+      if (row.status === "Pending Decision")
+        return true;
       else
-          return false;
+        return false;
     };
 
     var amountRenderer = function (column, row) { // eslint-disable-line no-unused-vars
@@ -3908,13 +3974,13 @@ window.customElements.define('oecombo-showcell', class extends DemoMixin(Polymer
       key: 'action',
       label: 'Action',
       externalEl: true,
-    
+
       uiType: 'oe-combo',
       type: 'combo',
       showCell: showCell,
       editorAttributes: {
-          listdata: ['Accept', 'Reject'],
-          label: 'Select'
+        listdata: ['Accept', 'Reject'],
+        label: 'Select'
       }
 
     }]);
@@ -3986,7 +4052,7 @@ window.customElements.define('oecombo-showcell', class extends DemoMixin(Polymer
 
     ];
     dataTable.set('items', data);
-    
+
 
   }
 });
