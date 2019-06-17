@@ -60,3 +60,6 @@ Custom property | Description | Default
 `--oe-data-table-column-last` | Mixin to be applied to the last column | {}
 `--oe-data-table-selection-cell-content` | Mixiin to be applied to the selection cell content if provided | {}
 `--oe-data-table-row-action` | Mixin applied to the row action icon buttons | {}
+`--oe-data-table-data-rowaction-dense` | Mixin to be applied to rowaction when dense property is provided | {}
+`--oe-data-table-data-header-dense` | Mixin to be applied to header when dense property is provided | {}
+`--oe-data-table-data-row-dense` | Mixin to be applied to row when dense property is provided | {}
