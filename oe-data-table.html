@@ -346,6 +346,10 @@ Custom property | Description | Default
         @apply(--layout-end-justified);
       }
 
+      .table-header-style {
+				padding: 8px 0;
+			}
+
       .row-details {
         padding: 0 32px;
       }
@@ -403,14 +407,39 @@ Custom property | Description | Default
       .empty-state{
         height: 100%;
       }
+
+			.expandedView {
+				visibility: hidden;
+			}
+
+			.hookClass {
+				display: none;
+			}
+
+
+			.expanded {
+				display: block;
+				/* height: 300px; */
+				/* overflow-y: auto; */
+
+			}
+
+			.margin-right-45 {
+				margin-right: 20px;
+			}
     </style>
 
-    <paper-material class="data-table">
+    <paper-material class="data-table" 
+    role="grid"
+    aria-label$="[[label]]"
+    aria-rowcount$="[[_totalRowsCount(rowCount)]]"
+    data-per-page$="[[pageSize]]"
+    data-wrap-cols="true">
       <iron-collapse opened="{{showGrid(_hideGrid,_customizeView)}}">
         <template is="dom-if" if="[[!hideHeader]]">
           <div id="grid-header" class$="multi-select-[[_isMultiSelected(selectedItems.length)]] grid-header">
             <div class="grid-info">
-              <iron-icon icon="arrow-back" on-tap="_toggleSelectAll" hidden=[[!_isMultiSelected(selectedItems.length)]]></iron-icon>
+              <iron-icon icon="arrow-back" role="button" aria-label="deselect all" on-tap="_toggleSelectAll" hidden=[[!_isMultiSelected(selectedItems.length)]]></iron-icon>
               <div class="header-title">
                 <oe-i18n-msg msgid="[[label]]">[[label]]</oe-i18n-msg>
                 <content select="[header-title]"></content>
@@ -422,42 +451,42 @@ Custom property | Description | Default
             <div class="icon-group">
               <template is="dom-if" if="[[!disabled]]">
                 <template is="dom-if" if="[[dataController]]">
-                  <paper-icon-button id="refresh-icon" icon="icons:refresh" on-tap="render"></paper-icon-button>
+                  <paper-icon-button id="refresh-icon" aria-label="refresh" icon="icons:refresh" on-tap="render"></paper-icon-button>
                   <paper-tooltip for="refresh-icon"> 
                     <oe-i18n-msg msgid="Refresh">Refresh</oe-i18n-msg> 
                   </paper-tooltip>
                 </template>
-                <template is="dom-if" if="[[!selectedItems.length]]">
-                  <template is="dom-if" if="[[!disableAdd]]">
-                    <div class="header-icon">
-                      <paper-icon-button icon="icons:add-circle-outline" on-tap="_showAddForm"></paper-icon-button>
-                      <paper-tooltip><oe-i18n-msg msgid="New">New</oe-i18n-msg></paper-tooltip>
+                  <template is="dom-if" if="[[!selectedItems.length]]">
+                    <template is="dom-if" if="[[!disableAdd]]">
+                      <div class="header-icon">
+                        <paper-icon-button icon="icons:add-circle-outline" aria-label="add Item" on-tap="_showAddForm"></paper-icon-button>
+                        <paper-tooltip><oe-i18n-msg msgid="New">New</oe-i18n-msg></paper-tooltip>
+                      </div>
+                    </template>   
+                    <template is="dom-if" if="[[!disableConfigEditor]]">
+                      <div class="header-icon">
+                        <paper-icon-button icon="image:tune" aria-label="customize view" on-tap="_openColumnCustomizer"></paper-icon-button>
+                        <paper-tooltip><oe-i18n-msg msgid="Customize View">Customize View</oe-i18n-msg> </paper-tooltip>
+                      </div>
+                    </template>
+                  </template>
+                  <template is="dom-if" if="[[selectedItems.length]]">
+                    <template is="dom-if" if="[[!disableEdit]]">
+                    <div class="header-icon" hidden$=[[_hideEditIcon(selectedItems.length)]]>
+                      <paper-icon-button icon="editor:mode-edit" aria-label="edit item" on-tap="_showEditForm"></paper-icon-button>
+                      <paper-tooltip><oe-i18n-msg msgid="Edit">Edit</oe-i18n-msg> </paper-tooltip>
                     </div>
-                  </template>
-                  <template is="dom-if" if="[[!disableConfigEditor]]">
+                    </template>
+                    <template is="dom-if" if="[[!disableDelete]]">
                     <div class="header-icon">
-                      <paper-icon-button icon="image:tune" on-tap="_openColumnCustomizer"></paper-icon-button>
-                      <paper-tooltip><oe-i18n-msg msgid="Customize View">Customize View</oe-i18n-msg> </paper-tooltip>
+                      <paper-icon-button id="delete-icon" icon="delete" aria-label="delete selected Items" on-tap="_deleteSelectedRows"></paper-icon-button>
+                      <paper-tooltip> <oe-i18n-msg msgid="Delete">Delete</oe-i18n-msg> </paper-tooltip>
                     </div>
+                    </template>
                   </template>
-                </template>
-                <template is="dom-if" if="[[selectedItems.length]]">
-                  <template is="dom-if" if="[[!disableEdit]]">
-                  <div class="header-icon" hidden$=[[_hideEditIcon(selectedItems.length)]]>
-                    <paper-icon-button icon="editor:mode-edit" on-tap="_showEditForm"></paper-icon-button>
-                    <paper-tooltip><oe-i18n-msg msgid="Edit">Edit</oe-i18n-msg> </paper-tooltip>
-                  </div>
-                  </template>
-                  <template is="dom-if" if="[[!disableDelete]]">
-                  <div class="header-icon">
-                    <paper-icon-button id="delete-icon" icon="delete" on-tap="_deleteSelectedRows"></paper-icon-button>
-                    <paper-tooltip> <oe-i18n-msg msgid="Delete">Delete</oe-i18n-msg> </paper-tooltip>
-                  </div>
-                  </template>
-                </template>
                 <template is="dom-repeat" items=[[toolbarActions]] as="action">
                   <div class="header-icon">
-                    <paper-icon-button icon="[[action.icon]]" on-tap="_tableActionTapped"></paper-icon-button>
+                    <paper-icon-button icon="[[action.icon]]" aria-label$="[[action.title]]" on-tap="_tableActionTapped"></paper-icon-button>
                     <paper-tooltip>
                       <oe-i18n-msg msgid=[[action.title]]>[[action.title]]</oe-i18n-msg>
                     </paper-tooltip>
@@ -465,17 +494,17 @@ Custom property | Description | Default
                 </template>
                 <template is="dom-if" if="{{_showMenuIcon(configCode,menuActions)}}">
                   <paper-menu-button horizontal-align="right">
-                    <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
-                    <paper-menu class="dropdown-content">
+                    <paper-icon-button role="button" aria-haspopup="true" aria-controls="table-menu-actions" icon="more-vert" class="dropdown-trigger"></paper-icon-button>
+                    <paper-menu class="dropdown-content" aria-label="menu actions" role="menu" id="table-menu-actions">
                       <!--<paper-item on-tap="_openColumnChooser"> Choose Columns</paper-item>-->
                       <template is="dom-repeat" items=[[menuActions]] as="action">
-                        <paper-icon-item on-tap="_tableActionTapped">
+                        <paper-icon-item on-tap="_tableActionTapped" role="menuitem">
                           <iron-icon icon="[[action.icon]]" item-icon></iron-icon>
                           <oe-i18n-msg msgid=[[action.title]]>[[action.title]]</oe-i18n-msg>
                         </paper-icon-item>
                       </template>
                       <template is="dom-if" if=[[configCode]]>
-                        <paper-icon-item on-tap="_saveGridConfig">
+                        <paper-icon-item on-tap="_saveGridConfig" role="menuitem">
                           <iron-icon icon="save" item-icon></iron-icon>
                           <oe-i18n-msg msgid="Save Grid Config">Save Grid Config</oe-i18n-msg>
                         </paper-icon-item>
@@ -487,19 +516,26 @@ Custom property | Description | Default
             </div>
           </div>
         </template>
-        <div id="table-header" style$="margin-right: [[_scrollBarWidth]]px;">
+        <div role="row" id="table-header"  style$="margin-right: [[_scrollBarWidth]]px;max-height: [[maxHeaderHeight]]px;overflow: hidden;">
           <template is="dom-if" if="[[!disableSelection]]">
             <div class="selection-cell">
-              <paper-checkbox class="selection-checkbox" checked=[[_selectedAll]] disabled$=[[!multiSelection]] on-change="_toggleSelectAll"></paper-checkbox>
+              <paper-checkbox 
+                role="gridcell" data-cell-type="selection" data-col-index="-1" data-row-index="-1" tabindex="0"
+                class="selection-checkbox" checked=[[_selectedAll]] disabled$=[[!multiSelection]] on-change="_toggleSelectAll"></paper-checkbox>
             </div>
           </template>
           <template is="dom-repeat" items="{{columns}}" as="column" filter="_getVisibleColumns" observe="hidden">
-            <oe-data-table-header-cell col-index=[[index]] class="table-data" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]]
+            <oe-data-table-header-cell 
+              role="gridcell" data-cell-type="header" data-col-index$=[[index]] data-row-index="-1" tabindex="0"
+              id="header-cell-{{index}}" col-index=[[index]] class="table-data" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]] enable-inline-filter="[[enableInlineFilter]]"
               style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-header-cell>
           </template>
           <template is="dom-if" if=[[rowActions.length]]>
             <div class="table-data" style$="flex: [[_computeRowActionWidth(rowActions.length)]]"></div>
           </template>
+          <template is="dom-if" if=[[showAccordian]]>
+						<div class="table-data" style="flex: 0 0 48px"></div>
+					</template>
         </div>
         <div class$="table-body [[_computeTableBodyClass(aggregatorAlignTop)]]">
           <template is="dom-if" if={{_loadingData}}>
@@ -507,34 +543,53 @@ Custom property | Description | Default
           </template>
           <div style$="height: [[__tableRowHeight]]px">
             <template is="dom-if" if=[[_items.length]] restamp=true>
-              <iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key">
+              <iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" selection-enabled multi-selection>
                 <template>
-                  <div class$="table-row [[_computeClassforRow(row,_computeSelection)]]" tabindex$="[[tabIndex]]" on-tap="_rowClicked">
-                    <template is="dom-if" if="[[!disableSelection]]">
-                      <div class="selection-cell">
-                        <paper-checkbox class="selection-checkbox" on-change="_toggleSelection" on-keydown="_goToCell" on-tap="_checkboxTapped" checked={{_getSelectionState(row,_computeSelection)}}></paper-checkbox>
-                        <template is="dom-if" if="[[selectionCellContent]]">
-                          <div class="selection-cell-content" style$="[[_computeSelectionCellContentStyle(row,selectionCellContent)]];">
-                            <template is="dom-if" if="[[_enableSelectionCellContent(row, selectionCellContent)]]">
-                              <div> [[_getFirstLetter(row,selectionCellContent.content)]] </div>
-                            </template>
-                          </div>
-                        </template>
-                      </div>
-                    </template>
-                    <template is="dom-repeat" items="[[columns]]" as="column" filter="_getVisibleColumns" observe="hidden">
-                      <oe-data-table-cell is-first-row=[[_isFirstRow(rowIndex,row)]] read-only=[[_computeReadOnly(disableEdit,disabled)]] key=[[key]] row={{row}} column=[[column]] class$="table-data [[_computeCellClass(row.*,column)]]" column-template=[[_getValidTemplate(row.*,row,column)]] style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-cell>
-                    </template>
-                    <template is="dom-if" if=[[rowActions.length]]>
-                      <div class="row-actions" style$="flex: [[_computeRowActionWidth(rowActions.length)]]">
-                        <template is="dom-repeat" items=[[rowActions]] as="action">
-                          <div>
-                            <paper-icon-button class="row-action" row$=[[row]] rowIndex$=[[rowIndex]]  icon="[[action.icon]]" on-tap="_rowActionClicked"></paper-icon-button>
-                            <paper-tooltip position="left"> [[action.title]] </paper-tooltip>
-                          </div>
-                        </template>
-                      </div>
-                    </template>
+                  <div tabindex="-1"  id="row-{{rowIndex}}">
+                    <div role="row" class$="table-row [[_computeClassforRow(row,_computeSelection)]]"  on-tap="_rowClicked" data-row-index$="[[rowIndex]]">
+                      <template is="dom-if" if="[[!disableSelection]]">
+                        <div class="selection-cell">
+                          <paper-checkbox 
+                            role="gridcell" data-cell-type="selection" data-col-index="-1" data-row-index$="[[rowIndex]]" tabindex="-1"
+                            class="selection-checkbox" on-change="_toggleSelection" on-keydown="_goToCell" on-tap="_checkboxTapped" checked={{_getSelectionState(row,_computeSelection)}}></paper-checkbox>
+                          <template is="dom-if" if="[[selectionCellContent]]">
+                            <div class="selection-cell-content" style$="[[_computeSelectionCellContentStyle(row,selectionCellContent)]];">
+                              <template is="dom-if" if="[[_enableSelectionCellContent(row, selectionCellContent)]]">
+                                <div> [[_getFirstLetter(row,selectionCellContent.content)]] </div>
+                              </template>
+                            </div>
+                          </template>
+                        </div>
+                      </template>
+                      <template is="dom-repeat" items="[[columns]]" as="column" filter="_getVisibleColumns" observe="hidden">
+                        <oe-data-table-cell 
+                          role="gridcell" data-cell-type="data-cell" data-row-index$="[[rowIndex]]" data-col-index$="[[index]]" tabindex="-1"
+                          id="cell-{{index}}" is-first-row=[[_isFirstRow(rowIndex,row)]] read-only=[[_computeReadOnly(disableEdit,disabled)]] key=[[rowIndex]] row={{row}} column=[[column]] items="{{_items}}" class$="table-data [[_computeCellClass(row.*,column)]]" column-template=[[_getValidTemplate(row.*,row,column)]] style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]]"></oe-data-table-cell>
+                      </template>
+                      <template is="dom-if" if=[[rowActions.length]]>
+                        <div class="row-actions" style$="flex: [[_computeRowActionWidth(rowActions.length)]]">
+                          <template is="dom-repeat" items=[[rowActions]] as="action">
+                            <div>
+                              <template is="dom-if" if={{action.icon}}>
+                                <paper-icon-button class="row-action" row$=[[row]] icon="[[action.icon]]" on-tap="_rowActionClicked"></paper-icon-button>
+                                <paper-tooltip position="left"> [[action.title]] </paper-tooltip>
+                              </template>
+                              <template is="dom-if" if={{!action.icon}}>
+                                <paper-button class="row-action" row$=[[row]] on-tap="_rowActionClicked">[[action.title]]</paper-button>
+                              </template>
+                            </div>
+                          </template>
+                        </div>
+                      </template>
+                      <template is="dom-if" if=[[showAccordian]]>
+												<div class="row-actions" style="flex: 0 0 48px">
+													<iron-icon id$="paper-expand-[[rowIndex]]" icon="icons:expand-more" row$="[[row]]" selected$="[[selected]]" rowIndex$="[[rowIndex]]"
+													 on-tap="_rowAccordianClicked"></iron-icon>
+												</div>
+											</template>
+                    </div>
+                    <div id$="expandedView-[[rowIndex]]" class="hookClass">
+                    </div>
                   </div>
                 </template>
               </iron-list>
@@ -553,7 +608,7 @@ Custom property | Description | Default
                 </template>
                 <template is="dom-repeat" items="{{columns}}" as="column">
                   <oe-data-table-summary-cell class="summary-cell table-data" style$="flex: [[_computeCellWidth(column.width)]]; min-width: [[_computeCellMinWidth(column.minWidth)]];">
-                    <div class="summary-cell-content" style$="[[_computeCellAlignment(column)]]"> [[_computeSummary(column,_items.*)]] </div>
+                    <div class="summary-cell-content margin-right-45" style$="[[_computeCellAlignment(column)]]"> [[_computeSummary(column,_items.*)]] </div>
                   </oe-data-table-summary-cell>
                 </template>
               </div>
@@ -570,11 +625,11 @@ Custom property | Description | Default
                 </template>
               </paper-listbox>
             </paper-dropdown-menu>
-            <div class="row-details">
+            <div class="row-details" tabindex="-1">
               <span> [[_startRow]]-[[_endRow]] of [[_totalRowsCount(rowCount)]] </span>
             </div>
-            <paper-icon-button disabled$="[[_disablePrevious(currentPage)]]" icon="image:navigate-before" on-tap="_previousPage"> </paper-icon-button>
-            <paper-icon-button disabled$="[[_disableNext(_isLastPage)]]" icon="image:navigate-next" on-tap="_nextPage"> </paper-icon-button>
+            <paper-icon-button aria-label="previous page" disabled$="[[_disablePrevious(currentPage)]]" icon="image:navigate-before" on-tap="_previousPage"> </paper-icon-button>
+            <paper-icon-button aria-label="next page" disabled$="[[_disableNext(_isLastPage)]]" icon="image:navigate-next" on-tap="_nextPage"> </paper-icon-button>
           </div>
         </template>
       </iron-collapse>
@@ -759,6 +814,43 @@ Custom property | Description | Default
        */
       rowActions: {
         type: Array
+      },
+
+			searchFields: {
+				type: Array,
+				notify: true
+			},
+
+			expandedRow: {
+				type: Number,
+				notify: true
+			},
+
+			accordianUrls: {
+				type: Array,
+				notify: true
+			},
+
+      maxHeaderHeight: {
+        type: Number,
+        value: 50,
+        notify: true
+      },
+
+      showEditOptions: {
+        type: Boolean,
+        value: false,
+        notify: true
+      },
+      
+      /*
+       *  Setting to `true` shows the inline filter, otherwise oe-data-table-filter is used
+       */
+       enableInlineFilter: {
+        type: Boolean,
+        value: false,
+        notify: true,
+        observer: 'onUpdateInlineFilter'
       }
 
     },
@@ -777,47 +869,69 @@ Custom property | Description | Default
 
     observers: [
       '_updateRowWidth(_items.*)',
-      '_keyHandlers(disabled,_items.length)',
       '_showPagination(dataController)',
       '_showPagination(paginationType)',
-      '_computeGridHeight(pageSize,_items.length)'
+      '_computeGridHeight(pageSize,_items.length)',
+      'accordianUrlsChanged(accordianUrls.splices)',
     ],
-    _keyHandlers:function(){
-      if(this._items.length == 0){
-        return;
+    onUpdateInlineFilter: function(){
+      if(this.enableInlineFilter){
+        this.$["table-header"].classList.add("table-header-style");
       }
-      this.async(function(){
-        var ironList = this.querySelector('#row-list');
-        if(this.disabled){
-          this.listen(ironList, 'keydown', '_keyDownListener');
-        }else{
-          this.unlisten(ironList, 'keydown', '_keyDownListener');
-        }
-      })  
     },
-    _keyDownListener:function(e){
-      if(this.selectedItems.length !== 1){
-        return;
+    createExpandedView: function () {
+
+      var self = this;
+
+      if (this.$$('#expandedView-' + self.expandedRow) && !this.$$('#expanded-hook-' + self.expandedRow)) {
+        var elem = document.createElement(self.accordianElement);
+        elem.id = 'expanded-hook-' + self.expandedRow;
+        elem.set('data',self.items[self.expandedRow]);
+        this.$$('#expandedView-' + self.expandedRow).appendChild(elem);
       }
-      if(e.keyCode === 40 || e.keyCode === 38){
-        var selectedIndex = this._items.indexOf(this.selectedItems[0]);
-        if(e.keyCode === 40){
-          //down arrow
-          if(selectedIndex+1 === this._items.length){
-            return;
-          }
-          selectedIndex++;
-        }else if(e.keyCode === 38){
-          //up arrow
-          if(selectedIndex === 0){
-            return;
-          }
-          selectedIndex--;
-        }
-        this.toggleSelection(this._items[selectedIndex]);
+      else if(this.$$('#expandedView-' + self.expandedRow) && this.$$('#expanded-hook-' + self.expandedRow)){
+        var elem = this.$$('#expanded-hook-' + self.expandedRow);
+        elem.style.visibility = "visible";
+        elem.set('data', {});
+        elem.set('data',self.items[self.expandedRow]);
       }
-     
     },
+
+    _rowAccordianClicked: function (e) {
+      var rowIndex = Number(e.currentTarget.getAttribute('rowIndex'));
+
+      this.expandedRow = rowIndex;
+
+      if (e.currentTarget.icon === "icons:expand-more") {
+
+        this.$$('#expandedView-' + this.expandedRow).classList.remove("expanded");
+        this.$$('#expandedView-' + this.expandedRow).classList.add("expanded");
+        this.$$("#paper-expand-" + rowIndex).setAttribute('icon', 'icons:expand-less');
+
+        this.createExpandedView();
+      }
+      else {
+
+        this.$$('#expandedView-' + this.expandedRow).classList.remove("expanded");
+        this.$$('#expandedView-' + this.expandedRow).classList.add("hookClass");
+        this.$$("#paper-expand-" + rowIndex).setAttribute('icon', 'icons:expand-more');
+        var expandedHook = this.$$("#expanded-hook-" + rowIndex);
+        if(expandedHook){
+          expandedHook.style.visibility = "hidden";
+        }
+        // expandedHook.parentNode.removeChild(expandedHook);
+
+      }
+    },
+
+    clearSearch: function () {
+      var headercells = document.getElementsByTagName('oe-data-table-header-cell');
+      for (var i = 0; i < headercells.length; i++) {
+        headercells[i].resetSearch();
+      }
+      this.items = JSON.parse(JSON.stringify(this.originalData));
+    },
+
     _isFirstRow:function(idx,row){
       return (idx === 0);
     },
@@ -834,6 +948,20 @@ Custom property | Description | Default
       var rowList = this.$$('#row-list');
       if (rowList) {
         rowList.notifyResize();
+      }
+    },
+    accordianUrlsChanged: function () {
+      if (typeof (this.accordianUrls) === "string") {
+        try {
+          var urls = JSON.parse(this.accordianUrls);
+          this.accordianUrls = urls;
+        } catch (err) {
+          return;
+        }
+      }
+      if (this.accordianUrls && this.accordianUrls.length > 0) {
+        for (var i = 0; i < this.accordianUrls.length; i++)
+          this.importHref(this.accordianUrls[i]);
       }
     },
     ready: function () {
@@ -956,7 +1084,9 @@ Custom property | Description | Default
       var items = this.dataController ? this._items : this.items;
       if (evt.currentTarget.checked) {
         items.forEach(function (item) {
-          this.selectItem(item);
+          if(!item.isDisabled){
+            this.selectItem(item);
+          }
         }.bind(this));
       } else {
         this.selectedItems.forEach(function (item) {
@@ -1255,6 +1385,9 @@ Custom property | Description | Default
     },
 
     _rowClicked: function (event) {
+      if( event.target.id.indexOf("paper-expand-") > -1) {
+        return;
+      }
       // event.model.row will contain the object
       this.fire('oe-data-table-row-clicked', event);
       this.toggleSelection(event.model.row);

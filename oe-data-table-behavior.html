@@ -143,22 +143,114 @@
        *  "scroll" - support infinite scrolling for pagination , 
        *  "page" - show distinct records per page.
        */
-       paginationType: {
+      paginationType: {
         type: String,
-        value:"scroll"
+        value: "scroll"
       }
 
     },
 
     listeners: {
       'apply-criteria': 'render',
-      'oe-data-table-cell-value-changed': '_organizeData'
+      'oe-data-table-cell-value-changed': '_organizeData',
+      'keydown': '__cellNavigationHandler'
     },
 
     observers: [
       '_itemsChanged(items.*)',
       '_organizeData(currentPage)'
     ],
+    __cellNavigationHandler: function (ev) {
+
+      var maxColumns = this.columns.filter(function (c) {
+        return !c.hidden;
+      }).length;
+      var allRows = this.querySelectorAll('.table-row[role="row"]');
+      var maxRow, minRow;
+      [].forEach.call(allRows, function (row) {
+        var rowIndex = parseInt(row.dataset.rowIndex);
+        minRow = minRow < rowIndex ? minRow : rowIndex;
+        maxRow = maxRow > rowIndex ? maxRow : rowIndex;
+      });
+      if ([33, 34, 35, 36, 37, 38, 39, 40, 13].indexOf(ev.keyCode) === -1) {
+        return;
+      }
+      var _activeEl = document.activeElement;
+      if (_activeEl && _activeEl.getAttribute('role') === "gridcell") {
+        var cellInfo = _activeEl.dataset;
+        var curRow = parseInt(cellInfo.rowIndex);
+        var curCol = parseInt(cellInfo.colIndex);
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        switch (ev.keyCode) {
+          case 13://Enter key
+            if (cellInfo.cellType === "header") {
+              //Header cell changes sort
+              _activeEl._changeSortOrder();
+            } else if (this.disabled && cellInfo.cellType === "data-cell") {
+              this.toggleSelection(this._items[curRow]);
+              return;
+            } else if (cellInfo.cellType === "data-cell") {
+              this.fire('set-active-cell', {
+                element: _activeEl
+              });
+              return;
+            }
+            break;
+          case 33://page Up
+            curRow -= 5;
+            if (curRow < minRow) {
+              curRow = minRow;
+            }
+            break;
+          case 34://page Down
+            curRow += 5;
+            if (curRow > maxRow) {
+              curRow = maxRow;
+            }
+            break;
+          case 35://End
+            if (ev.ctrlKey) {
+              curRow = maxRow;
+            }
+            curCol = maxColumns - 1;
+            break;
+          case 36://Home
+            if (ev.ctrlKey) {
+              curRow = minRow;
+            }
+            curCol = -1;
+            break;
+          case 37://Left arrow
+            curCol--;
+            if (curCol < -1) {
+              curRow--;
+              curCol = maxColumns - 1;
+            }
+            break;
+          case 38://Up arrow
+            curRow--;
+            break;
+          case 39://Right arrow;
+            curCol++;
+            if (curCol >= maxColumns) {
+              curRow++;
+              curCol = -1;
+            }
+            break;
+          case 40://Down arrow
+            curRow++;
+            break;
+        }
+        var queryStr = '[role="gridcell"][data-col-index="' + curCol + '"][data-row-index="' + curRow + '"]';
+        var targetCell = this.querySelector(queryStr);
+        if (targetCell && targetCell.focus) {
+          targetCell.focus();
+          targetCell.scrollIntoViewIfNeeded();
+        }
+      }
+    },
 
     attached: function () {
       this._setSelectedItems([]);
@@ -209,7 +301,7 @@
                 });
               });
               self.set('columns', self._getColumnsFromModelDef(modelDefinition));
-            }).catch(function (error) {});
+            }).catch(function (error) { });
 
           }.bind(this));
         }
@@ -285,7 +377,7 @@
 
     _organizeData: function (event) { // eslint-disable-line no-unused-vars
       if (this.columns) {
-        
+
         if (this.dataController) {
 
           var dataController = this.dataController.controller || this._dataController;
@@ -329,22 +421,22 @@
             }
           }.bind(this));
 
-        }else if ((this.paginationType === "page") && this.items){
-          this._processData(this.items,function(processedData){
+        } else if ((this.paginationType === "page") && this.items) {
+          this._processData(this.items, function (processedData) {
             //Array Index
             var startIndex = (this.currentPage - 1) * this.pageSize;
-            var pageItems = processedData.slice(startIndex,startIndex+this.pageSize);
+            var pageItems = processedData.slice(startIndex, startIndex + this.pageSize);
 
-            if(startIndex > processedData.length){
-              this.set('currentPage',Math.ceil(processedData.length/this.pageSize));
+            if (startIndex > processedData.length) {
+              this.set('currentPage', Math.ceil(processedData.length / this.pageSize));
               return;
             }
 
-            this.set('_startRow',startIndex+1);
+            this.set('_startRow', startIndex + 1);
             this.set('_endRow', startIndex + pageItems.length);
 
-            this.set('rowCount',processedData.length);
-            this.set('_isLastPage',this._endRow == this.rowCount);
+            this.set('rowCount', processedData.length);
+            this.set('_isLastPage', this._endRow == this.rowCount);
 
             this.set('isServerData', false);
             this.set('_items', pageItems);
@@ -352,7 +444,7 @@
         } else if (this.items) {
           this.set('_hasPagination', false);
           this.set('isServerData', false);
-          this._processData(this.items,function(processedData){
+          this._processData(this.items, function (processedData) {
             this.set('_items', processedData);
           }.bind(this));
         }
@@ -365,11 +457,11 @@
       in the view for new page-size. */
       var cPage = this.currentPage || 1;
       var nPage = cPage;
-      if(pageSize && oldSize) {
-        var firstVisibleIndex = (cPage - 1)*oldSize + 1;
-        nPage = Math.ceil(firstVisibleIndex/pageSize);
+      if (pageSize && oldSize) {
+        var firstVisibleIndex = (cPage - 1) * oldSize + 1;
+        nPage = Math.ceil(firstVisibleIndex / pageSize);
       }
-      if(nPage != cPage) {
+      if (nPage != cPage) {
         /*Current Page observer will call _organizeData */
         this.set('currentPage', nPage);
       } else {
@@ -378,7 +470,7 @@
       }
     },
 
-    _processData: function (data,cb) {
+    _processData: function (data, cb) {
       var self = this;
       self._sort(data, function (err, sortedData) {
         if (err) {
@@ -398,18 +490,21 @@
       var filters = {},
         filterExists = false,
         filteredData;
+      var self = this;
       this.columns.forEach(function (col) {
         filters[col.key || col.field] = {
           selectedItems: col.selectedItems
         };
-        if (col.selectedItems && col.selectedItems.length) filterExists = true;
+        if (col.selectedItems && col.selectedItems.length && !self.enableInlineFilter) filterExists = true;
+        if (col.selectedItems && self.enableInlineFilter) filterExists = true;
       });
 
       filteredData = filterExists ? items.filter(function (d) {
         var isValid = true;
         filters && Object.keys(filters).forEach(function (key) {
           var filter = filters[key];
-          if (filter.selectedItems && filter.selectedItems.length) {
+          if (filter.selectedItems && ((!self.enableInlineFilter && filter.selectedItems.length) || (self.enableInlineFilter) )) {
+            val = OEUtils.deepValue(d,key);
             isValid = isValid && filter.selectedItems.indexOf(d[key]) != -1;
           }
         });
@@ -554,9 +649,9 @@
         }
 
         var columnWhere = {};
-        if(filterSort.filter){
+        if (filterSort.filter) {
           var columnFilter = filterSort.filter;
-          
+
           columnWhere.and = Object.keys(columnFilter).filter(function (key) {
             return columnFilter[key] && columnFilter[key].length;
           }).map(function (prop) {
@@ -607,7 +702,7 @@
       //if appended , remove the filter to avoid incorrect count
       var index = url.indexOf("?");
       if (index > -1) {
-          url = url.slice(url, index);
+        url = url.slice(url, index);
       }
       ajaxRequest.url = url + '/count';
 
