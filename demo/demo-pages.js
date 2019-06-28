@@ -15,6 +15,8 @@ import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/paper-toast/paper-toast.js';
 import 'oe-info/oe-info.js';
 import 'oe-input/oe-decimal.js';
+import 'oe-input/oe-json-input.js';
+import 'oe-input/oe-input.js';
 import 'oe-app-route/oe-app-route.js';
 import './custom-demo-snippet';
 import 'oe-combo/oe-typeahead.js';
@@ -57,6 +59,9 @@ window.customElements.define("overview-detail", class extends DemoMixin(PolymerE
             --oe-data-table-data-header-dense:{
               height: 36px;
             }
+            --edit-control: {
+              max-height: 33px;
+            }
           }
         </style>
         <div>
@@ -74,6 +79,9 @@ window.customElements.define("overview-detail", class extends DemoMixin(PolymerE
               }
               --oe-data-table-data-header-dense:{
                 height: 36px;
+              }
+              --edit-control: {
+                max-height: 33px;
               }
             }
           </style>
@@ -1154,6 +1162,9 @@ window.customElements.define("inline-editing", class extends DemoMixin(PolymerEl
           --oe-data-table-data-header-dense:{
             height: 40px;
           }
+          --edit-control: {
+            max-height: 33px;
+          }
         }
         </style>
         <div>
@@ -1170,6 +1181,9 @@ window.customElements.define("inline-editing", class extends DemoMixin(PolymerEl
             }
             --oe-data-table-data-header-dense:{
               height: 40px;
+            }
+            --edit-control: {
+              max-height: 33px;
             }
           }
           </style>
@@ -1517,6 +1531,9 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
             height: 33px;
             width: 33px;
          }
+         --edit-control: {
+          max-height: 30px;
+        }
         }
         </style>
         <div>
@@ -1554,6 +1571,9 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
             height: 33px;
             width: 33px;
          }
+         --edit-control: {
+          max-height: 30px;
+        }
         }
         </style>
                 <oe-data-table disable-dense label="User" disable-selection id="table" items=[[items]] columns=[[columns]] row-actions=[[rowActions]] on-oe-data-table-row-action="handleRowActions">
@@ -1889,6 +1909,9 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
           --oe-data-table-data-header-dense:{
             height: 40px;
           }
+          --edit-control: {
+            max-height: 33px;
+          }
         }
         </style>
         <div>
@@ -1913,6 +1936,19 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
           Check the below example for the usage of virtual pagination , client side pagination and server side pagination using the "dataController" property.
         </p>
         <custom-demo-snippet>
+        <style include="demo-pages-shared-styles iron-flex iron-flex-alignment">
+        oe-data-table {
+          --oe-data-table-data-row-dense:{
+            min-height: 36px;
+          }
+          --oe-data-table-data-header-dense:{
+            height: 40px;
+          }
+          --edit-control: {
+            max-height: 33px;
+          }
+        }
+        </style>
           <div>
             <dom-bind id="pagination-table">
               <template>
@@ -1923,6 +1959,9 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
                 }
                 --oe-data-table-data-header-dense:{
                   height: 40px;
+                }
+                --edit-control: {
+                  max-height: 33px;
                 }
               }
               </style>
@@ -3490,7 +3529,9 @@ window.customElements.define('accordian-view', class extends DemoMixin(PolymerEl
       --oe-data-table-data-header-dense:{
         height: 36px;
       }
-      
+      --edit-control: {
+        max-height: 33px;
+      }
     }  
     </style>
     <div>

@@ -85,6 +85,7 @@ var OEUtils = window.OEUtils || {};
  * `--oe-data-table-data-rowaction-dense` | Mixin to be applied to rowaction when dense property is provided | {}
  * `--oe-data-table-data-header-dense` | Mixin to be applied to header when dense property is provided | {}
  * `--oe-data-table-data-row-dense` | Mixin to be applied to row when dense property is provided | {}
+ * `--edit-control` | Mixin applied to set the height of edit cell | {}
  * 
  * @customElement
  * @polymer
@@ -215,7 +216,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       <paper-material class="data-table">
         <iron-selector selected="[[_mainView]]" class="data-table" attr-for-selected="view">
 
-          <iron-collapse view="grid" class="data-table" opened=[[_showPanel(_mainView,'grid')]]>
+        <iron-collapse view="grid" class="data-table" opened=[[_showPanel(_mainView,'grid')]]>
             <div class="data-table layout vertical">
             <template is="dom-if" if="[[!hideHeader]]">
               <oe-data-table-header selected-length="[[selectedItems.length]]" 
@@ -225,7 +226,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
                     menu-actions=[[menuActions]]></oe-data-table-header>
             </template>
 
-            <div id="table-header" class$="[[_computeDense(disableDense)]]"  style$="margin-right: [[_scrollBarWidth]]px;" hidden=[[hideColumnHeader]]>
+            <div id="table-header" class$="[[_computeDense(disableDense)]]" style$="margin-right: [[_scrollBarWidth]]px;" hidden=[[hideColumnHeader]]>
               <template is="dom-if" if="[[!disableSelection]]">
                 <div class="selection-cell">
                   <paper-checkbox class="selection-checkbox" checked=[[_selectedAll]] disabled$=[[!multiSelection]] on-change="_toggleSelectAll"></paper-checkbox>

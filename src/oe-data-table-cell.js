@@ -34,6 +34,9 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
         overflow: hidden;
         width: 100%;
       }
+      .edit-ctrl {
+        @apply --edit-control;
+      }
 
     </style>
     <template is="dom-if" if="[[_hideDefaultValue(_inEdit,_hasCustomRenderer)]]">
@@ -48,7 +51,7 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
       <span class="cell-content" id="custom-container">  </span>
     </template>
     <div hidden$="{{!column.externalEl}}" id="createNewEl"></div>
-    <div hidden$="{{!_inEdit}}" id="injectionPoint"></div>
+    <div hidden$="{{!_inEdit}}" id="injectionPoint" class="edit-ctrl"></div>
     <template is="dom-if" if="[[column.valueAsTooltip]]" restamp="true">
       <paper-tooltip  offset$="[[_getOffset(isFirstRow)]]" position="top" id="[[column.label]]">  [[_displayValue]]  </paper-tooltip>  
     </template>

@@ -63,3 +63,4 @@ Custom property | Description | Default
 `--oe-data-table-data-rowaction-dense` | Mixin to be applied to rowaction when dense property is provided | {}
 `--oe-data-table-data-header-dense` | Mixin to be applied to header when dense property is provided | {}
 `--oe-data-table-data-row-dense` | Mixin to be applied to row when dense property is provided | {}
+`--edit-control` | Mixin applied to set the height of edit cell | {}
