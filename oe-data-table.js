@@ -248,24 +248,16 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
               </template>
 
               <template is="dom-if" if=[[_items.length]] restamp=true>
-                <template is="dom-if" if=[[_showInfinteScroll(paginationType)]] restamp=true>
+               
                   <iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key">
                     <template>
-                      <oe-data-table-row on-dblclick="_handleDblClick" accordian-element=[[accordianElement]] disable-dense=[[disableDense]] show-accordian=[[showAccordian]] columns=[[columns]] selection-cell-content=[[selectionCellContent]] row=[[row]] row-index=[[rowIndex]] table-host=[[tableHost]]
+                      <oe-data-table-row on-dblclick="_handleDblClick" accordian-element=[[accordianElement]] disable-dense=[[disableDense]] show-accordian=[[showAccordian]] 
+                      columns=[[columns]] selection-cell-content=[[selectionCellContent]] row=[[row]] row-index=[[rowIndex]] table-host=[[tableHost]]
                       tab-index=[[tabIndex]] selected=[[_getSelectionState(row,_computeSelection)]] disable-selection=[[disableSelection]] row-actions=[[rowActions]]
-                      row-action-width=[[__rowActionWidth]] read-only=[[__isCellReadOnly]] min-col-width=[[minColWidth]] column-templates=[[columnTemplates]]></oe-data-table-row>
+                      row-action-width=[[__rowActionWidth]] read-only=[[__isCellReadOnly]] min-col-width=[[minColWidth]] column-templates=[[columnTemplates]] auto-fit=[[autoFit]]></oe-data-table-row>
                     </template>
                   </iron-list>
-                </template>
-                <template is="dom-if" if=[[!_showInfinteScroll(paginationType)]] restamp=true>
-                  <div id="pagination-table-body">
-                    <template is="dom-repeat" id="pagination-repeater" index-as="rowIndex" items="{{_items}}" as="row" max="[[_maxDomElement]]" index-as="key">
-                      <oe-data-table-row disable-dense=[[disableDense]] columns=[[columns]] selection-cell-content=[[selectionCellContent]] row=[[row]] row-index=[[rowIndex]] table-host=[[tableHost]]
-                      tab-index=[[tabIndex]] selected=[[_getSelectionState(row,_computeSelection)]] disable-selection=[[disableSelection]] row-actions=[[rowActions]]
-                      row-action-width=[[__rowActionWidth]] read-only=[[__isCellReadOnly]] min-col-width=[[minColWidth]] column-templates=[[columnTemplates]]></oe-data-table-row>
-                    </template>
-                  </div>
-                </template>
+               
               </template>
              
               <template is="dom-if" if=[[!_items.length]] restamp=true>
@@ -321,6 +313,10 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
        * Setting to `true` hides the header
        */
       hideHeader: {
+        type: Boolean,
+        value: false
+      },
+      autoFit: {
         type: Boolean,
         value: false
       },
@@ -668,7 +664,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       '_keyHandlers(disabled,_items.length)',
       '_showPagination(dataController)',
       '_showPagination(paginationType)',
-      '_computeGridHeight(pageSize,_items.length)',
+      '_computeGridHeight(pageSize,_items.length,autofit)',
 
       '_itemsChanged(items.*)',
       '_organizeData(currentPage)',
@@ -741,7 +737,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
     this.maxRowHeight = 49;  //iron-list height for row 48px + 1px for border bottom
     this.addEventListener('row-height-changed',function(event){
       this.maxRowHeight = event.detail;
-      this._computeGridHeight(this.pageSize,this._items.length);
+      this._computeGridHeight(this.pageSize,this._items.length,this.autoFit);
 
     })
     this.set('tableHost',this.getRootNode().host);
@@ -1516,7 +1512,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
     if (e.detail > this.maxRowHeight) {
       this.maxRowHeight = e.detail;
       this.debounce('rowHeight', function(){
-        this._computeGridHeight(this.pageSize,this._items.length);
+        this._computeGridHeight(this.pageSize,this._items.length,this.autoFit);
       }.bind(this), 300);
     }
   }
@@ -1615,23 +1611,28 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
    * @param {number} pageSize page size of data-table
    * @param {number} itemsToShow length of items to display
    */
-  _computeGridHeight(pageSize, itemsToShow) {
+  _computeGridHeight(pageSize, itemsToShow, autoFit) {
     if(this.pageSize < 0){
       this.set('__tableHeight', "auto");
       this.updateRowHeight();
       return;
     }
     this.async(function () {
-      
+      var size,height;
       //this.maxRowHeight = 48;
-      var size = ((itemsToShow > 5 && itemsToShow < pageSize) ? itemsToShow : pageSize);
+     
       this.set('_maxDomElement', size * 2);
       var rowList = this.shadowRoot.querySelector("#row-list");
       var hasScroll = false;
       if (rowList) {
         hasScroll = this.shadowRoot.querySelector("#row-list").scrollWidth > this.shadowRoot.querySelector("#row-list").clientWidth;
       }
-      var height = size * this.maxRowHeight + (hasScroll ? 16 : 0);
+      height = this.maxRowHeight + (hasScroll ? 16 : 0);
+      if(!this.autoFit){
+        size = ((itemsToShow > 5 && itemsToShow < pageSize) ? itemsToShow : pageSize);
+        height = size * this.maxRowHeight + (hasScroll ? 16 : 0);
+     }
+      
       this.set('__tableHeight', height+"px");
       this.updateRowHeight();
     }, 0);

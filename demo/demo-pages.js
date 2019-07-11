@@ -53,6 +53,7 @@ window.customElements.define("overview-detail", class extends DemoMixin(PolymerE
     return html`
         <style include="demo-pages-shared-styles">
         oe-data-table {
+          height : 800px;
             --oe-data-table-data-row-dense:{
               min-height: 33px;
             }
@@ -72,20 +73,7 @@ window.customElements.define("overview-detail", class extends DemoMixin(PolymerE
           definitions to show. </p>
         <custom-demo-snippet>
           <div>
-          <style include="demo-pages-shared-styles">
-          oe-data-table {
-              --oe-data-table-data-row-dense:{
-                min-height: 33px;
-              }
-              --oe-data-table-data-header-dense:{
-                height: 36px;
-              }
-              --edit-control: {
-                max-height: 33px;
-              }
-            }
-          </style>
-              <oe-data-table id="simple-table" label="Simple Table"></oe-data-table>
+              <oe-data-table auto-fit id="simple-table" label="Simple Table"></oe-data-table>
               <script>
               var dataTable = this.shadowRoot.querySelector('#simple-table');
               dataTable.set('columns', [{
@@ -142,7 +130,7 @@ window.customElements.define("overview-detail", class extends DemoMixin(PolymerE
                   gender: 'male',
                   location: 'Chennai',
                   country: 'India'
-                }
+                },
               }]);
 
             </script>
@@ -179,6 +167,134 @@ window.customElements.define("overview-detail", class extends DemoMixin(PolymerE
     }]);
 
     dataTable.set('items', [{
+      id: 1,
+      name: 'Admin',
+      details: {
+        gender: 'male',
+        location: 'Bangalore',
+        country: 'India'
+      }
+    }, {
+      id: 2,
+      name: 'Developer',
+      details: {
+        gender: 'female',
+        location: 'Bangalore',
+        country: 'India'
+      }
+    }, {
+      id: 3,
+      name: 'Designer',
+      details: {
+        gender: 'male',
+        location: 'Chennai',
+        country: 'India'
+      }
+    }, {
+      id: 4,
+      name: 'Tester',
+      details: {
+        gender: 'male',
+        location: 'Chennai',
+        country: 'India'
+      }
+    },{
+      id: 1,
+      name: 'Admin',
+      details: {
+        gender: 'male',
+        location: 'Bangalore',
+        country: 'India'
+      }
+    }, {
+      id: 2,
+      name: 'Developer',
+      details: {
+        gender: 'female',
+        location: 'Bangalore',
+        country: 'India'
+      }
+    }, {
+      id: 3,
+      name: 'Designer',
+      details: {
+        gender: 'male',
+        location: 'Chennai',
+        country: 'India'
+      }
+    }, {
+      id: 4,
+      name: 'Tester',
+      details: {
+        gender: 'male',
+        location: 'Chennai',
+        country: 'India'
+      }
+    },{
+      id: 1,
+      name: 'Admin',
+      details: {
+        gender: 'male',
+        location: 'Bangalore',
+        country: 'India'
+      }
+    }, {
+      id: 2,
+      name: 'Developer',
+      details: {
+        gender: 'female',
+        location: 'Bangalore',
+        country: 'India'
+      }
+    }, {
+      id: 3,
+      name: 'Designer',
+      details: {
+        gender: 'male',
+        location: 'Chennai',
+        country: 'India'
+      }
+    }, {
+      id: 4,
+      name: 'Tester',
+      details: {
+        gender: 'male',
+        location: 'Chennai',
+        country: 'India'
+      }
+    },{
+      id: 1,
+      name: 'Admin',
+      details: {
+        gender: 'male',
+        location: 'Bangalore',
+        country: 'India'
+      }
+    }, {
+      id: 2,
+      name: 'Developer',
+      details: {
+        gender: 'female',
+        location: 'Bangalore',
+        country: 'India'
+      }
+    }, {
+      id: 3,
+      name: 'Designer',
+      details: {
+        gender: 'male',
+        location: 'Chennai',
+        country: 'India'
+      }
+    }, {
+      id: 4,
+      name: 'Tester',
+      details: {
+        gender: 'male',
+        location: 'Chennai',
+        country: 'India'
+      }
+    },{
       id: 1,
       name: 'Admin',
       details: {
@@ -272,9 +388,7 @@ window.customElements.define("declaring-column", class extends DemoMixin(Polymer
       id: 4,
       name: 'Tester'
     }]);
-
   }
-
 });
 
 window.customElements.define("column-resize", class extends DemoMixin(PolymerElement) {
@@ -1903,6 +2017,7 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
     return html`
         <style include="demo-pages-shared-styles iron-flex iron-flex-alignment">
         oe-data-table {
+          
           --oe-data-table-data-row-dense:{
             min-height: 36px;
           }
@@ -1938,6 +2053,7 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
         <custom-demo-snippet>
         <style include="demo-pages-shared-styles iron-flex iron-flex-alignment">
         oe-data-table {
+          
           --oe-data-table-data-row-dense:{
             min-height: 36px;
           }
@@ -1954,6 +2070,7 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
               <template>
               <style include="demo-pages-shared-styles iron-flex iron-flex-alignment">
               oe-data-table {
+               
                 --oe-data-table-data-row-dense:{
                   min-height: 36px;
                 }
@@ -1966,9 +2083,9 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
               }
               </style>
                 <h3> Default Virtual Pagination </h3>
-                <oe-data-table id="table" label="Phone" columns=[[columns]] items=[[defaultItems]]></oe-data-table>
+                <oe-data-table style="height: 400px" auto-fit id="table" label="Phone" columns=[[columns]] items=[[defaultItems]]></oe-data-table>
                 <h3> Client Pagination </h3>
-                <oe-data-table id="table" label="Phone Pagination" columns=[[columns]] items=[[defaultItems2]] pagination-type="page"></oe-data-table>
+                <oe-data-table auto-fit style="height: 400px" id="table" label="Phone Pagination" columns=[[columns]] items=[[defaultItems2]] pagination-type="page"></oe-data-table>
                 <h3> Server side pagination </h3>
                 <oe-data-table disable-dense label="Literal" columns=[[literalColumns]] rest-url='/api/Literals'></oe-data-table>
               </template>
@@ -1978,61 +2095,188 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
 
               var defaultItems = [{
                 user: 'Mike',
-                phone: 1242109098
+                phone: 1242109098,
+                serialNumber: 2,
+                userType: 'Developer',
+                userName: 'Matthews',
+                account: 861363459,
+                checknumber: 223457,
+                status: 'Approved',
+                exception_reason: 'Paid No Issue'
               }, {
                 user: 'John',
-                phone: 7812901028
+                phone: 7812901028,
+                serialNumber: 1,
+                userType: 'Admin',
+                userName: 'John',
+                account: 794659139,
+                checknumber: 23456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud'
               }, {
                 user: 'Stella',
-                phone: 1234522221
+                phone: 1234522221,
+                serialNumber: 3,
+                userType: 'Designer',
+                userName: 'Sarah',
+                account: 479677228,
+                checknumber: 223431,
+                status: 'Pending Decision',
+                exception_reason: 'Payee Missmatch',
+                action: 'Select'
               }, {
                 user: 'Francis',
-                phone: 1232323121
+                phone: 1232323121,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 334547856,
+                checknumber: 2234567,        
+                status: 'Rejected',
+                exception_reason: 'Paid Fraud',
               }, {
                 user: 'Kevin',
-                phone: 21209921001
+                phone: 21209921001,
+                serialNumber: 4,
+                userType: 'Designer',
+                userName: 'Tom',
+                account: 452135542,
+                checknumber: 123564,          
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
               }, {
                 user: 'Andrew',
-                phone: 12372819212
+                phone: 12372819212,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 135322523,
+                checknumber: 3341234,
+                status: 'Pending Decision',
+                exception_reason: 'Payee Missmatch',
               }, {
                 user: 'Catherine',
-                phone: 8762731212
+                phone: 8762731212,
+                serialNumber: 4,
+                userType: 'Developer',
+                userName: 'Tom',
+                account: 542412943,
+                checknumber: 342352,      
+                status: 'Pending Decision',
+                exception_reason: 'Paid No Issue',
               }, {
                 user: 'David',
-                phone: 12989978012
+                phone: 12989978012,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 135322523,
+                checknumber: 3341234,
+                status: 'Pending Decision',
+                exception_reason: 'Payee Missmatch',
               }, {
                 user: 'Henry',
-                phone: 123412123322
+                phone: 123412123322,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
               }, {
                 user: 'Ivan',
-                phone: 9867823231
+                phone: 9867823231,
+                serialNumber: 4,
+                userType: 'Developer',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
               }, {
                 user: 'Oliver',
-                phone: 8776767666
-              },{
+                phone: 8776767666,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
                 user: 'Bruce',
-                phone: 8772367666
-              },{
+                phone: 8772367666,
+                serialNumber: 4,
+                userType: 'Designer',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
                 user: 'Clark',
-                phone: 8773467666
-              },{
+                phone: 8773467666,
+                serialNumber: 4,
+                userType: 'Designer',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
                 user: 'Diana',
-                phone: 8246767666
-              },{
+                phone: 8246767666,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
                 user: 'Barry',
-                phone: 8776767876
-              },{
+                phone: 8776767876,
+                serialNumber: 4,
+                userType: 'Designer',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
                 user: 'Hal',
-                phone: 8776760366
-              },{
+                phone: 8776760366,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
                 user: 'Carter',
-                phone: 8776517666
-              },{
+                phone: 8776517666,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
                 user: 'Victor',
-                phone: 9076767666
+                phone: 9076767666,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
               }];
-
-              paginationTable.set('columns', [{
+          
+              var columns = [{
                 key: 'user',
                 label: 'User',
                 type: 'string'
@@ -2040,8 +2284,39 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
                 key: 'phone',
                 label: 'Phone Number',
                 type: 'phone'
-              }]);
-
+              },{
+                key: 'serialNumber',
+                label: 'Sr. Number',
+                uitype: 'number'
+              }, {
+                key: 'userType',
+                label: 'User Type',
+                uitype: 'string'
+              }, {
+                key: 'userName',
+                label: 'User',
+                uitype: 'string'
+              },
+              {
+                key: 'account',
+                label: 'Account',
+                type: 'number'
+              }, {
+                key: 'checknumber',
+                label: 'Check Number',
+                type: 'number',
+                cellClass: 'blue-color'
+              }, {
+                key: 'status',
+                label: 'Status',
+                type: 'string'
+              }, {
+                key: 'exception_reason',
+                label: 'Exception Reason',
+                type: 'string'
+              }];
+              paginationTable.set('columns', columns);
+          
               paginationTable.set('literalColumns', [{
                 key: 'key',
                 label: 'Key',
@@ -2050,7 +2325,8 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
                 key: 'value',
                 label: 'Value',
                 type: 'string'
-              }]);
+              },]);
+          
 
               paginationTable.set('defaultItems', defaultItems);
               paginationTable.set('defaultItems2', defaultItems.slice());
@@ -2058,46 +2334,40 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
           </div>
         </custom-demo-snippet>
         <p>
-            When page-size property is set to "-1" the oe-data-table fills the entire height of the container and displays available number of records.
-            When the height of the container varies the data-table adjests itself to display within the container.
+            When auto-fit property is set the height of the data-table has to be mentioned in the css then the data table fits to the height mentioned.
+            If the auto-fit is set and height is not mentioned then only one row will be displayed. which is demonstrated in Autofit without height demo
+            In Autofit table the auto fit is set and height is mentioned as 500px.
         </p>
         <custom-demo-snippet>
           <div>
-            <dom-bind id="dynamic-table">
+            <dom-bind id="autofit-table">
               <template>
                <style include="iron-flex iron-flex-alignment">
-                  .parent-block{
-                    height:500px;  
-                    overflow:auto;
-                  }
-                  .container{
-                    padding:8px;
-                  }
-                  oe-data-table{
-                    height:100%;
-                  }
-                  .table-container{
-                    height: -webkit-fill-available;
-                  }
                 </style>
                 <div class="layout vertical parent-block">
-                  <div class="container layout horizontal center">
-                    <label class="flex"> Demo </label>
-                    <button on-tap="_toggle">Toggle collapse</button>
-                    <button on-tap="_toggleHeadingPage">Toggle Heading Pane</button>
-                  </div>
-                  <iron-collapse opened=[[opened]]>
-                    <div class="container heading-content">
-                      <h3 class="title">
-                      As the parent container is set with CSS to "height: -webkit-fill-available", it adjusts its height automatically, allowing the oe-data-table to fill 100% of its height.</h3>
-                    </div>
-                  </iron-collapse>
                   <div class="table-container container">
-                    <oe-data-table id="simple-table" 
+                    <oe-data-table auto-fit style="height: 400px" id="simple-table" 
                     hide-header=[[_hideHeading]] 
                     columns=[[columns]] 
-                    items=[[defaultItems]] 
-                    page-size="-1" label="Dynamic Table"></oe-data-table>
+                    items=[[defaultItems]] label="AutoFit Table"></oe-data-table>
+                  </div>
+                </div> 
+              </template>
+            </dom-bind>
+          </div>
+        </custom-demo-snippet>
+        <custom-demo-snippet>
+          <div>
+            <dom-bind id="autofit-table2">
+              <template>
+               <style include="iron-flex iron-flex-alignment">
+                </style>
+                <div class="layout vertical parent-block">
+                  <div class="table-container container">
+                    <oe-data-table auto-fit id="simple-table" 
+                    hide-header=[[_hideHeading]] 
+                    columns=[[columns]] 
+                    items=[[defaultItems]] label="AutoFit Table without height"></oe-data-table>
                   </div>
                 </div> 
               </template>
@@ -2110,62 +2380,79 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
 
   _onPageVisible() {
     var paginationTable = this.shadowRoot.querySelector('#pagination-table');
-    var dynamicTable = this.shadowRoot.querySelector('#dynamic-table');
-
+    var autofitTable = this.shadowRoot.querySelector('#autofit-table');
+    var autofitTable2 = this.shadowRoot.querySelector('#autofit-table2');
     var defaultItems = [{
       user: 'Mike',
-      phone: 1242109098
+      phone: 1242109098,
+      serialNumber: 2,
+      userType: 'Developer',
+      userName: 'Matthews',
+      account: 861363459,
+      checknumber: 223457,
+      status: 'Approved',
+      exception_reason: 'Paid No Issue'
     }, {
       user: 'John',
-      phone: 7812901028
+      phone: 7812901028,
+      serialNumber: 1,
+      userType: 'Admin',
+      userName: 'John',
+      account: 794659139,
+      checknumber: 23456,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud'
     }, {
       user: 'Stella',
-      phone: 1234522221
+      phone: 1234522221,
+      serialNumber: 3,
+      userType: 'Designer',
+      userName: 'Sarah',
+      account: 479677228,
+      checknumber: 223431,
+      status: 'Pending Decision',
+      exception_reason: 'Payee Missmatch',
+      action: 'Select'
     }, {
       user: 'Francis',
-      phone: 1232323121
+      phone: 1232323121,
+      serialNumber: 4,
+      userType: 'Tester',
+      userName: 'Tom',
+      account: 334547856,
+      checknumber: 2234567,        
+      status: 'Rejected',
+      exception_reason: 'Paid Fraud',
     }, {
       user: 'Kevin',
-      phone: 21209921001
+      phone: 21209921001,
+      serialNumber: 4,
+      userType: 'Designer',
+      userName: 'Tom',
+      account: 452135542,
+      checknumber: 123564,          
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud',
     }, {
       user: 'Andrew',
-      phone: 12372819212
+      phone: 12372819212,
+      serialNumber: 4,
+      userType: 'Tester',
+      userName: 'Tom',
+      account: 135322523,
+      checknumber: 3341234,
+      status: 'Pending Decision',
+      exception_reason: 'Payee Missmatch',
     }, {
       user: 'Catherine',
-      phone: 8762731212
-    }, {
-      user: 'David',
-      phone: 12989978012
-    }, {
-      user: 'Henry',
-      phone: 123412123322
-    }, {
-      user: 'Ivan',
-      phone: 9867823231
-    }, {
-      user: 'Oliver',
-      phone: 8776767666
-    }, {
-      user: 'Bruce',
-      phone: 8772367666
-    }, {
-      user: 'Clark',
-      phone: 8773467666
-    }, {
-      user: 'Diana',
-      phone: 8246767666
-    }, {
-      user: 'Barry',
-      phone: 8776767876
-    }, {
-      user: 'Hal',
-      phone: 8776760366
-    }, {
-      user: 'Carter',
-      phone: 8776517666
-    }, {
-      user: 'Victor',
-      phone: 9076767666
+      phone: 8762731212,
+      serialNumber: 4,
+      userType: 'Developer',
+      userName: 'Tom',
+      account: 542412943,
+      checknumber: 342352,      
+      status: 'Pending Decision',
+      exception_reason: 'Paid No Issue',
     }];
 
     var columns = [{
@@ -2176,7 +2463,37 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
       key: 'phone',
       label: 'Phone Number',
       type: 'phone'
-    }]
+    },{
+      key: 'serialNumber',
+      label: 'Sr. Number',
+      uitype: 'number'
+    }, {
+      key: 'userType',
+      label: 'User Type',
+      uitype: 'string'
+    }, {
+      key: 'userName',
+      label: 'User',
+      uitype: 'string'
+    },
+    {
+      key: 'account',
+      label: 'Account',
+      type: 'number'
+    }, {
+      key: 'checknumber',
+      label: 'Check Number',
+      type: 'number',
+      cellClass: 'blue-color'
+    }, {
+      key: 'status',
+      label: 'Status',
+      type: 'string'
+    }, {
+      key: 'exception_reason',
+      label: 'Exception Reason',
+      type: 'string'
+    }];
     paginationTable.set('columns', columns);
 
     paginationTable.set('literalColumns', [{
@@ -2187,26 +2504,18 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
       key: 'value',
       label: 'Value',
       type: 'string'
-    }]);
+    },]);
 
 
     paginationTable.set('defaultItems', defaultItems);
     paginationTable.set('defaultItems2', defaultItems.slice());
 
-    dynamicTable.set('columns', columns);
-    dynamicTable.set('defaultItems', defaultItems);
-    dynamicTable._toggle = this._toggle;
-    dynamicTable._toggleHeadingPage = this._toggleHeadingPage;
+    autofitTable.set('columns', columns);
+    autofitTable.set('defaultItems', defaultItems);
+    autofitTable2.set('columns', columns);
+    autofitTable2.set('defaultItems', defaultItems);
+   
   }
-
-  _toggle() {
-    this.set("opened", !this.opened);
-  }
-
-  _toggleHeadingPage() {
-    this.set('_hideHeading', !this._hideHeading);
-  }
-
 
 
 });
