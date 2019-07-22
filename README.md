@@ -39,6 +39,7 @@ Column property | Description
 `cellClassRules` | Object having class name to be applied as key and an expression to evaluate as value
 `valueGetter` | A custom getter function which returns a value for the property specified in the `key`.
 `hidden` | Column will be hidden if it is set to true.
+`autoFit` | table height should be set by user when this property is true.
 
 
 ### Styling
@@ -60,7 +61,5 @@ Custom property | Description | Default
 `--oe-data-table-column-last` | Mixin to be applied to the last column | {}
 `--oe-data-table-selection-cell-content` | Mixiin to be applied to the selection cell content if provided | {}
 `--oe-data-table-row-action` | Mixin applied to the row action icon buttons | {}
-`--oe-data-table-data-rowaction-dense` | Mixin to be applied to rowaction when dense property is provided | {}
-`--oe-data-table-data-header-dense` | Mixin to be applied to header when dense property is provided | {}
-`--oe-data-table-data-row-dense` | Mixin to be applied to row when dense property is provided | {}
+`--oe-data-table-data` | Mixin to be applied to table-data class to set min-height | {}
 `--edit-control` | Mixin applied to set the height of edit cell | {}

@@ -17,26 +17,11 @@ styleElement.innerHTML =
         @apply --layout-inline;
         @apply --layout-flex;
         @apply --oe-data-table-data;
-    }
-    .row-action.dense-data {
-        @apply --oe-data-table-data-rowaction-dense;
-    }
-    #table-header.dense-data {
-        @apply --oe-data-table-data-header-dense;
-    }
-    .table-data:first-of-type {
-        padding: 0;
-        padding-right: 24px;
-    }
-    .table-data.dense-data {
-        min-height: 47px;
-        @apply --oe-data-table-data-row-dense;
-    }
-    
+    } 
     :host([disable-selection]) .table-data:first-of-type {
         padding-left: 24px;
     }
-
+    
     .table-data:last-of-type {
         padding-right: 24px;
     }

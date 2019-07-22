@@ -47,8 +47,8 @@ var OEUtils = window.OEUtils || {};
  * The column(s) to show in the table can be configured using the `columns` property.
  * The `columns` property takes an array of objects which can have the following properties.
  * 
- * Column property | Description
- * ----------------|-------------
+ * Column | property | Description
+ * -------|---------|-------------
  * `key` | The key of the row to get data from.
  * `label` | The string to be shown in column header.
  * `tooltip` | The string to be shown in column header as a tooltip.
@@ -69,6 +69,7 @@ var OEUtils = window.OEUtils || {};
  * `cellClassRules` | Object having class name to be applied as key and an expression to evaluate as value.
  * `valueGetter` | A custom getter function which returns a value for the property specified in the `key`.
  * `hidden` | Column will be hidden if it is set to true.
+ * `autoFit` | table height should be set by user when this property is true.
  * 
  * ### Styling
  * 
@@ -82,9 +83,7 @@ var OEUtils = window.OEUtils || {};
  * `--oe-data-table-row-first` | Mixin to be applied to the first row of the table | {}
  * `--oe-data-table-row-last` | Mixin to be applied to the last row of the table | {}
  * `--oe-data-table-selection-cell-content` | Mixiin to be applied to the selection cell content if provided | {}
- * `--oe-data-table-data-rowaction-dense` | Mixin to be applied to rowaction when dense property is provided | {}
- * `--oe-data-table-data-header-dense` | Mixin to be applied to header when dense property is provided | {}
- * `--oe-data-table-data-row-dense` | Mixin to be applied to row when dense property is provided | {}
+ * `--oe-data-table-data` | Mixin to be applied to table-data class to set min-height | {}
  * `--edit-control` | Mixin applied to set the height of edit cell | {}
  * 
  * @customElement
@@ -226,18 +225,18 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
                     menu-actions=[[menuActions]]></oe-data-table-header>
             </template>
 
-            <div id="table-header" class$="[[_computeDense(disableDense)]]" style$="margin-right: [[_scrollBarWidth]]px;" hidden=[[hideColumnHeader]]>
+            <div id="table-header" style$="margin-right: [[_scrollBarWidth]]px;" hidden=[[hideColumnHeader]]>
               <template is="dom-if" if="[[!disableSelection]]">
                 <div class="selection-cell">
                   <paper-checkbox class="selection-checkbox" checked=[[_selectedAll]] disabled$=[[!multiSelection]] on-change="_toggleSelectAll"></paper-checkbox>
                 </div>
               </template>
               <template is="dom-repeat" items="{{columns}}" as="column" filter="_getVisibleColumns" observe="hidden">
-                <oe-data-table-header-cell enable-inline-filter="[[enableInlineFilter]]" col-index=[[index]] class$="table-data [[_computeDense(disableDense)]]" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]]
+                <oe-data-table-header-cell enable-inline-filter="[[enableInlineFilter]]" col-index=[[index]] class="table-data" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]]
                 style$="[[_computeCellWidth(column.*,column)]]"></oe-data-table-header-cell>
               </template>
               <template is="dom-if" if=[[rowActions.length]]>
-                <div class$="table-data [[_computeDense(disableDense)]]" style$="flex: [[__rowActionWidth]]"></div>
+                <div class="table-data" style$="flex: [[__rowActionWidth]]"></div>
               </template>
             </div>
 
@@ -251,7 +250,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
                
                   <iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key">
                     <template>
-                      <oe-data-table-row on-dblclick="_handleDblClick" accordian-element=[[accordianElement]] disable-dense=[[disableDense]] show-accordian=[[showAccordian]] 
+                      <oe-data-table-row on-dblclick="_handleDblClick" accordian-element=[[accordianElement]] show-accordian=[[showAccordian]] 
                       columns=[[columns]] selection-cell-content=[[selectionCellContent]] row=[[row]] row-index=[[rowIndex]] table-host=[[tableHost]]
                       tab-index=[[tabIndex]] selected=[[_getSelectionState(row,_computeSelection)]] disable-selection=[[disableSelection]] row-actions=[[rowActions]]
                       row-action-width=[[__rowActionWidth]] read-only=[[__isCellReadOnly]] min-col-width=[[minColWidth]] column-templates=[[columnTemplates]] auto-fit=[[autoFit]]></oe-data-table-row>
@@ -273,7 +272,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
                       <div class="selection-cell summary-cell"> </div>
                     </template>
                     <template is="dom-repeat" items="{{columns}}" as="column">
-                      <oe-data-table-summary-cell class$="summary-cell table-data [[_computeDense(disableDense)]]" style$="[[_computeCellWidth(column.*,column)]]">
+                      <oe-data-table-summary-cell class="summary-cell table-data" style$="[[_computeCellWidth(column.*,column)]]">
                         <div class="summary-cell-content" style$="[[_computeCellAlignment(column)]]"> [[_computeSummary(column,_items.*)]] </div>
                       </oe-data-table-summary-cell>
                     </template>
@@ -316,6 +315,9 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
         type: Boolean,
         value: false
       },
+      /**
+       * Setting to true enable user to set height of table
+       */
       autoFit: {
         type: Boolean,
         value: false
@@ -642,10 +644,6 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
         type:Boolean,
         value:false
       },
-      disableDense :{
-        type: Boolean,
-        value:false
-      },
       /**
      *  Setting to `true` shows the inline filter, otherwise oe-data-table-filter is used
      */
@@ -739,7 +737,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       this.maxRowHeight = event.detail;
       this._computeGridHeight(this.pageSize,this._items.length,this.autoFit);
 
-    })
+    });
     this.set('tableHost',this.getRootNode().host);
     if(!this.paginationType){
       this.set('paginationType',(this.restUrl || this.dataController)?"page":"scroll");
@@ -1320,15 +1318,10 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
    * @param {number} rowActions length of row actions
    */
   _computeRowActionWidth(rowActions) {
-    var height = !this.disableDense ? 36 : 48;
     
-    this.set('__rowActionWidth', '0 0 ' + (rowActions * height) + 'px');
+    this.set('__rowActionWidth', '0 0 ' + (rowActions * 48) + 'px');
 
   }
-  _computeDense(dense){
-    return !dense ? "dense-data" : "";
-}
-
   /**
    * Computes `__isCellReadOnly` property to send to each cell
    * @param {boolean} disabled flag to disable data-table
@@ -1610,6 +1603,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
    * Computes and sets the table height
    * @param {number} pageSize page size of data-table
    * @param {number} itemsToShow length of items to display
+   *  @param {boolean} autoFit to check height set by user or not.
    */
   _computeGridHeight(pageSize, itemsToShow, autoFit) {
     if(this.pageSize < 0){

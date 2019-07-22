@@ -51,20 +51,6 @@ var DemoMixin = function (base) {
 window.customElements.define("overview-detail", class extends DemoMixin(PolymerElement) {
   static get template() {
     return html`
-        <style include="demo-pages-shared-styles">
-        oe-data-table {
-          height : 800px;
-            --oe-data-table-data-row-dense:{
-              min-height: 33px;
-            }
-            --oe-data-table-data-header-dense:{
-              height: 36px;
-            }
-            --edit-control: {
-              max-height: 33px;
-            }
-          }
-        </style>
         <div>
         <h1> Overview </h1>
         <p> The oe-data-table is a tabular component written in Polymer with the Material Design data table standards.
@@ -73,7 +59,7 @@ window.customElements.define("overview-detail", class extends DemoMixin(PolymerE
           definitions to show. </p>
         <custom-demo-snippet>
           <div>
-              <oe-data-table auto-fit id="simple-table" label="Simple Table"></oe-data-table>
+              <oe-data-table id="simple-table" label="Simple Table"></oe-data-table>
               <script>
               var dataTable = this.shadowRoot.querySelector('#simple-table');
               dataTable.set('columns', [{
@@ -1269,17 +1255,7 @@ window.customElements.define("inline-editing", class extends DemoMixin(PolymerEl
   static get template() {
     return html`
         <style include="demo-pages-shared-styles">
-        oe-data-table {
-          --oe-data-table-data-row-dense:{
-            min-height: 36px;
-          }
-          --oe-data-table-data-header-dense:{
-            height: 40px;
-          }
-          --edit-control: {
-            max-height: 33px;
-          }
-        }
+       
         </style>
         <div>
         <h1>Inline Editing</h1>
@@ -1288,19 +1264,7 @@ window.customElements.define("inline-editing", class extends DemoMixin(PolymerEl
           property can be set at column level.</p>
         <custom-demo-snippet>
           <div>
-          <style include="demo-pages-shared-styles">
-          oe-data-table {
-            --oe-data-table-data-row-dense:{
-              min-height: 36px;
-            }
-            --oe-data-table-data-header-dense:{
-              height: 40px;
-            }
-            --edit-control: {
-              max-height: 33px;
-            }
-          }
-          </style>
+        
             <oe-data-table id="inlineedit" label="Inline Table"></oe-data-table>
             <script>
               var inlineedit = this.shadowRoot.querySelector('#inlineedit');
@@ -1344,7 +1308,7 @@ window.customElements.define("inline-editing", class extends DemoMixin(PolymerEl
         <strong>Inline editing with oe-combo</strong>
         <custom-demo-snippet>
 					<div>
-            <oe-data-table disable-dense label="Inline Edit" id="inlineEditCombo"></oe-data-table>
+            <oe-data-table  label="Inline Edit" id="inlineEditCombo"></oe-data-table>
             <script>
               var dataTable = this.shadowRoot.querySelector('#inlineEditCombo'); // eslint-disable-line no-redeclare
               dataTable.set('columns', [{
@@ -1634,21 +1598,6 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
   static get template() {
     return html`
         <style include="demo-pages-shared-styles">
-        oe-data-table {
-          --oe-data-table-data-row-dense:{
-            min-height: 33px;
-          }
-          --oe-data-table-data-header-dense:{
-            height: 36px;
-          }
-          --oe-data-table-data-rowaction-dense: {
-            height: 33px;
-            width: 33px;
-         }
-         --edit-control: {
-          max-height: 30px;
-        }
-        }
         </style>
         <div>
         <h1> Row Action </h1>
@@ -1673,24 +1622,7 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
           <div>
             <dom-bind id="myapp">
               <template>
-              <style include="demo-pages-shared-styles">
-        oe-data-table {
-          --oe-data-table-data-row-dense:{
-            min-height: 33px;
-          }
-          --oe-data-table-data-header-dense:{
-            height: 36px;
-          }
-          --oe-data-table-data-rowaction-dense: {
-            height: 33px;
-            width: 33px;
-         }
-         --edit-control: {
-          max-height: 30px;
-        }
-        }
-        </style>
-                <oe-data-table disable-dense label="User" disable-selection id="table" items=[[items]] columns=[[columns]] row-actions=[[rowActions]] on-oe-data-table-row-action="handleRowActions">
+                <oe-data-table label="User" disable-selection id="table" items=[[items]] columns=[[columns]] row-actions=[[rowActions]] on-oe-data-table-row-action="handleRowActions">
                 </oe-data-table>
                 <template is="dom-if" if=[[eventString]]>
                   <h3>Event Data</h3>
@@ -2016,18 +1948,6 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
   static get template() {
     return html`
         <style include="demo-pages-shared-styles iron-flex iron-flex-alignment">
-        oe-data-table {
-          
-          --oe-data-table-data-row-dense:{
-            min-height: 36px;
-          }
-          --oe-data-table-data-header-dense:{
-            height: 40px;
-          }
-          --edit-control: {
-            max-height: 33px;
-          }
-        }
         </style>
         <div>
         <h1> Pagination </h1>
@@ -2051,43 +1971,16 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
           Check the below example for the usage of virtual pagination , client side pagination and server side pagination using the "dataController" property.
         </p>
         <custom-demo-snippet>
-        <style include="demo-pages-shared-styles iron-flex iron-flex-alignment">
-        oe-data-table {
-          
-          --oe-data-table-data-row-dense:{
-            min-height: 36px;
-          }
-          --oe-data-table-data-header-dense:{
-            height: 40px;
-          }
-          --edit-control: {
-            max-height: 33px;
-          }
-        }
-        </style>
+       
           <div>
             <dom-bind id="pagination-table">
               <template>
-              <style include="demo-pages-shared-styles iron-flex iron-flex-alignment">
-              oe-data-table {
-               
-                --oe-data-table-data-row-dense:{
-                  min-height: 36px;
-                }
-                --oe-data-table-data-header-dense:{
-                  height: 40px;
-                }
-                --edit-control: {
-                  max-height: 33px;
-                }
-              }
-              </style>
                 <h3> Default Virtual Pagination </h3>
-                <oe-data-table style="height: 400px" auto-fit id="table" label="Phone" columns=[[columns]] items=[[defaultItems]]></oe-data-table>
+                <oe-data-table id="table" label="Phone" columns=[[columns]] items=[[defaultItems]]></oe-data-table>
                 <h3> Client Pagination </h3>
-                <oe-data-table auto-fit style="height: 400px" id="table" label="Phone Pagination" columns=[[columns]] items=[[defaultItems2]] pagination-type="page"></oe-data-table>
+                <oe-data-table id="table" class="phone-pagination" label="Phone Pagination" columns=[[columns]] items=[[defaultItems2]] pagination-type="page"></oe-data-table>
                 <h3> Server side pagination </h3>
-                <oe-data-table disable-dense label="Literal" columns=[[literalColumns]] rest-url='/api/Literals'></oe-data-table>
+                <oe-data-table  label="Literal" columns=[[literalColumns]] rest-url='/api/Literals'></oe-data-table>
               </template>
             </dom-bind>
             <script>
@@ -3831,17 +3724,7 @@ window.customElements.define('accordian-view', class extends DemoMixin(PolymerEl
   static get template() {
     return html` 
     <style include="demo-pages-shared-styles">
-    oe-data-table {
-      --oe-data-table-data-row-dense:{
-        min-height: 33px;
-      }
-      --oe-data-table-data-header-dense:{
-        height: 36px;
-      }
-      --edit-control: {
-        max-height: 33px;
-      }
-    }  
+   
     </style>
     <div>
     <h1> Accordion View </h1>
@@ -4660,6 +4543,790 @@ window.customElements.define('inline-filtering', class extends DemoMixin(Polymer
 
   }
 });
+window.customElements.define("oe-data-table-styling", class extends DemoMixin(PolymerElement) {
+  static get template() {
+    return html`
+        <style include="demo-pages-shared-styles">
+        .style-applied {
+          --oe-data-table-data: {
+            min-height: 36px;
+          }
+          --oe-data-table-column-header:{
+            height: 40px;
+          }
+          --edit-control: {
+            height: 36px;
+          }
+          --oe-data-table-row-action:{
+            height: 36px;
+          }
+          }
+        </style>
+        <div>
+        <h1> Default table styling </h1>
+        <custom-demo-snippet>
+        
+          <div>
+            <dom-bind id="myapp">
+              <template>
+                <oe-data-table label="User" disable-selection id="table" items=[[items]] columns=[[columns]] row-actions=[[rowActions]] on-oe-data-table-row-action="handleRowActions">
+                </oe-data-table>
+                <template is="dom-if" if=[[eventString]]>
+                  <h3>Event Data</h3>
+                  <pre style="padding:8px;">
+                      [[eventString]]
+                  </pre>                   
+                </template>
+              </template>
+            </dom-bind>
+            <script>
+              var myapp = this.shadowRoot.querySelector('#myapp');
+              
+              myapp.set('columns', [{
+                key: 'key',
+                label: 'Key',
+                type: 'string'
+              }, {
+                key: 'value',
+                label: 'Value',
+                type: 'string'
+              }]);
+
+              myapp.set('items', [{
+                id: 1,
+                key: 'Mike',
+                value: 'mike@ev.com'
+              }, {
+                id: 2,
+                key: 'John',
+                value: 'john@ev.com'
+              }, {
+                id: 3,
+                key: 'Stella',
+                value: 'stella@ev.com'
+              }, {
+                id: 4,
+                key: 'Francis',
+                value: 'francis@ev.com'
+              }]);
+
+              myapp.set('rowActions', [{
+                icon: 'info',
+                action: 'info',
+                title: 'details',
+                formUrl:'../oe-data-table/demo/templates/literal-view.js'
+              }, {
+                icon: 'editor:mode-edit',
+                title: 'edit',
+                action: 'edit',
+                formUrl:'../oe-data-table/demo/templates/literal-default.js'
+              },{
+                icon: 'star',
+                action: 'bookmark',
+                title: 'bookmark'
+              }]);
+
+              myapp.handleRowActions = function (event) {
+                myapp.set('eventString',JSON.stringify(event.detail,null,2));
+              }
+
+              myapp.rowUpdated = function (event) {
+                event.stopPropagation();
+                if (myapp.userEdit) {
+                  var index = myapp.items.indexOf(myapp.userEdit);
+                  var newRecord = event.detail;
+                  (index >= 0) && myapp.splice('items', index, 1, newRecord);
+                  myapp.set('userEdit', null);
+                }
+              }</script>
+          </div>
+        </custom-demo-snippet>
+        <h1>Table styling Applied</h1>
+        <p>
+        These are mixins that can be used to set the height of the rows, header, editable data height and row-actions.
+        --oe-data-table-data, 
+        --oe-data-table-column-header, 
+        --edit-control, 
+        --oe-data-table-row-action, been used in the table below.
+        </p>
+      <custom-demo-snippet>
+      <div>
+          <dom-bind id="myappRowActionCompute">
+          <template>
+          <style include="demo-pages-shared-styles">
+          .style-applied {
+            --oe-data-table-data: {
+              min-height: 36px;
+            }
+            --oe-data-table-column-header:{
+              height: 40px;
+            }
+            --edit-control: {
+              height: 36px;
+            }
+            --oe-data-table-row-action:{
+              height: 36px;
+            }
+            }
+          </style>
+            <oe-data-table label="User" class="style-applied" disable-selection id="table" items=[[items]] columns=[[columns]] row-actions=[[rowActions]] on-oe-data-table-row-action="handleRowActions">
+            </oe-data-table>
+            <template is="dom-if" if=[[eventString]]>
+              <h3>Event Data</h3>
+              <pre style="padding:8px;">
+                  [[eventString]]
+              </pre>                   
+            </template>
+            </template>
+          </dom-bind>
+          <script>
+          var myapp = this.shadowRoot.querySelector('#myappRowActionCompute');
+            
+            myapp.set('columns', [{
+              key: 'key',
+              label: 'Key',
+              type: 'string'
+            }, {
+              key: 'value',
+              label: 'Value',
+              type: 'string'
+            }]);
+
+            myapp.set('items', [{
+              id: 1,
+              key: 'Mike',
+              value: 'mike@ev.com',
+              isHiddenView: true
+            }, {
+              id: 2,
+              key: 'John',
+              value: 'john@ev.com',
+              isHiddenEdit: true
+            }, {
+              id: 3,
+              key: 'Stella',
+              value: 'stella@ev.com',
+              isHiddenBookMark: true,
+              isHiddenEdit: true
+
+            }, {
+              id: 4,
+              key: 'Francis',
+              value: 'francis@ev.com',
+              isHiddenView: true,
+              isHiddenEdit: true
+            }]);
+
+            var isHiddenEdit = function (row) {
+                return row.isHiddenEdit;
+            }
+
+            var isHiddenView = function (row) {
+                return row.isHiddenView;
+            }
+
+            var isHiddenBookMark = function (row) {
+                return row.isHiddenBookMark;
+            }
+
+            myapp.set('rowActions', [{
+              icon: 'info',
+              action: 'info',
+              title: 'details',
+              formUrl:'templates/literal-view.js',
+              isHiddenFunction: isHiddenView
+            }, {
+              icon: 'editor:mode-edit',
+              title: 'edit',
+              action: 'edit',
+              formUrl:'templates/literal-default.js',
+              isHiddenFunction: isHiddenEdit
+            },{
+              icon: 'star',
+              action: 'bookmark',
+              title: 'bookmark',
+              isHiddenFunction: isHiddenBookMark
+            }]);
+
+            myapp.handleRowActions = function (event) {
+              myapp.set('eventString',JSON.stringify(event.detail,null,2));
+            }
+
+            myapp.rowUpdated = function (event) {
+              event.stopPropagation();
+              if (myapp.userEdit) {
+                var index = myapp.items.indexOf(myapp.userEdit);
+                var newRecord = event.detail;
+                (index >= 0) && myapp.splice('items', index, 1, newRecord);
+                myapp.set('userEdit', null);
+              }
+            }</script>
+        </div>
+        </custom-demo-snippet>
+        <style include="demo-pages-shared-styles iron-flex iron-flex-alignment">
+        .phone-pagination{
+        --oe-data-table-data: {
+          min-height: 36px;
+        }
+        --oe-data-table-column-header: {
+          height: 40px;
+        }
+        --edit-control: {
+          height: 36px;
+        }
+        }
+        </style>
+        <div>
+      <h1> Default without styling Pagination </h1>
+        <p>
+        These are mixins that can be used to set the height of the rows, header, editable data height.
+        --oe-data-table-data, 
+        --oe-data-table-column-header, 
+        --edit-control been used in the table below.
+        </p>
+        <custom-demo-snippet>
+        <style include="demo-pages-shared-styles iron-flex iron-flex-alignment">
+        .phone-pagination{
+        --oe-data-table-data: {
+          min-height: 36px;
+        }
+        --oe-data-table-column-header: {
+          height: 40px;
+        }
+        --edit-control: {
+          height: 36px;
+        }
+        }
+        </style>
+          <div>
+            <dom-bind id="pagination-table">
+              <template>
+                <h3> Default Virtual Pagination </h3>
+                <oe-data-table id="table" label="Phone" columns=[[columns]] items=[[defaultItems]]></oe-data-table>
+                <h3> Client Pagination with Styling </h3>
+                <oe-data-table id="table" class="phone-pagination" label="Phone Pagination" columns=[[columns]] items=[[defaultItems2]] pagination-type="page"></oe-data-table>
+              </template>
+            </dom-bind>
+            <script>
+              var paginationTable = this.shadowRoot.querySelector('#pagination-table');
+
+              var defaultItems = [{
+                user: 'Mike',
+                phone: 1242109098,
+                serialNumber: 2,
+                userType: 'Developer',
+                userName: 'Matthews',
+                account: 861363459,
+                checknumber: 223457,
+                status: 'Approved',
+                exception_reason: 'Paid No Issue'
+              }, {
+                user: 'John',
+                phone: 7812901028,
+                serialNumber: 1,
+                userType: 'Admin',
+                userName: 'John',
+                account: 794659139,
+                checknumber: 23456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud'
+              }, {
+                user: 'Stella',
+                phone: 1234522221,
+                serialNumber: 3,
+                userType: 'Designer',
+                userName: 'Sarah',
+                account: 479677228,
+                checknumber: 223431,
+                status: 'Pending Decision',
+                exception_reason: 'Payee Missmatch',
+                action: 'Select'
+              }, {
+                user: 'Francis',
+                phone: 1232323121,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 334547856,
+                checknumber: 2234567,        
+                status: 'Rejected',
+                exception_reason: 'Paid Fraud',
+              }, {
+                user: 'Kevin',
+                phone: 21209921001,
+                serialNumber: 4,
+                userType: 'Designer',
+                userName: 'Tom',
+                account: 452135542,
+                checknumber: 123564,          
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
+                user: 'Andrew',
+                phone: 12372819212,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 135322523,
+                checknumber: 3341234,
+                status: 'Pending Decision',
+                exception_reason: 'Payee Missmatch',
+              }, {
+                user: 'Catherine',
+                phone: 8762731212,
+                serialNumber: 4,
+                userType: 'Developer',
+                userName: 'Tom',
+                account: 542412943,
+                checknumber: 342352,      
+                status: 'Pending Decision',
+                exception_reason: 'Paid No Issue',
+              }, {
+                user: 'David',
+                phone: 12989978012,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 135322523,
+                checknumber: 3341234,
+                status: 'Pending Decision',
+                exception_reason: 'Payee Missmatch',
+              }, {
+                user: 'Henry',
+                phone: 123412123322,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
+                user: 'Ivan',
+                phone: 9867823231,
+                serialNumber: 4,
+                userType: 'Developer',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
+                user: 'Oliver',
+                phone: 8776767666,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
+                user: 'Bruce',
+                phone: 8772367666,
+                serialNumber: 4,
+                userType: 'Designer',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
+                user: 'Clark',
+                phone: 8773467666,
+                serialNumber: 4,
+                userType: 'Designer',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
+                user: 'Diana',
+                phone: 8246767666,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
+                user: 'Barry',
+                phone: 8776767876,
+                serialNumber: 4,
+                userType: 'Designer',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
+                user: 'Hal',
+                phone: 8776760366,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
+                user: 'Carter',
+                phone: 8776517666,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
+                user: 'Victor',
+                phone: 9076767666,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }];
+          
+              var columns = [{
+                key: 'user',
+                label: 'User',
+                type: 'string'
+              }, {
+                key: 'phone',
+                label: 'Phone Number',
+                type: 'phone'
+              },{
+                key: 'serialNumber',
+                label: 'Sr. Number',
+                uitype: 'number'
+              }, {
+                key: 'userType',
+                label: 'User Type',
+                uitype: 'string'
+              }, {
+                key: 'userName',
+                label: 'User',
+                uitype: 'string'
+              },
+              {
+                key: 'account',
+                label: 'Account',
+                type: 'number'
+              }, {
+                key: 'checknumber',
+                label: 'Check Number',
+                type: 'number',
+                cellClass: 'blue-color'
+              }, {
+                key: 'status',
+                label: 'Status',
+                type: 'string'
+              }, {
+                key: 'exception_reason',
+                label: 'Exception Reason',
+                type: 'string'
+              }];
+              paginationTable.set('columns', columns);
+          
+              paginationTable.set('literalColumns', [{
+                key: 'key',
+                label: 'Key',
+                type: 'string'
+              }, {
+                key: 'value',
+                label: 'Value',
+                type: 'string'
+              },]);
+          
+
+              paginationTable.set('defaultItems', defaultItems);
+              paginationTable.set('defaultItems2', defaultItems.slice());
+            </script>
+          </div>
+        </custom-demo-snippet>
+
+      </div>      
+        `;
+  }
+
+  _onPageVisible() {
+    var paginationTable = this.shadowRoot.querySelector('#pagination-table');
+    var myapp = this.shadowRoot.querySelector('#myapp');
+    var defaultItems = [{
+      user: 'Mike',
+      phone: 1242109098,
+      serialNumber: 2,
+      userType: 'Developer',
+      userName: 'Matthews',
+      account: 861363459,
+      checknumber: 223457,
+      status: 'Approved',
+      exception_reason: 'Paid No Issue'
+    }, {
+      user: 'John',
+      phone: 7812901028,
+      serialNumber: 1,
+      userType: 'Admin',
+      userName: 'John',
+      account: 794659139,
+      checknumber: 23456,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud'
+    }, {
+      user: 'Stella',
+      phone: 1234522221,
+      serialNumber: 3,
+      userType: 'Designer',
+      userName: 'Sarah',
+      account: 479677228,
+      checknumber: 223431,
+      status: 'Pending Decision',
+      exception_reason: 'Payee Missmatch',
+      action: 'Select'
+    }, {
+      user: 'Francis',
+      phone: 1232323121,
+      serialNumber: 4,
+      userType: 'Tester',
+      userName: 'Tom',
+      account: 334547856,
+      checknumber: 2234567,        
+      status: 'Rejected',
+      exception_reason: 'Paid Fraud',
+    }, {
+      user: 'Kevin',
+      phone: 21209921001,
+      serialNumber: 4,
+      userType: 'Designer',
+      userName: 'Tom',
+      account: 452135542,
+      checknumber: 123564,          
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud',
+    }, {
+      user: 'Andrew',
+      phone: 12372819212,
+      serialNumber: 4,
+      userType: 'Tester',
+      userName: 'Tom',
+      account: 135322523,
+      checknumber: 3341234,
+      status: 'Pending Decision',
+      exception_reason: 'Payee Missmatch',
+    }, {
+      user: 'Catherine',
+      phone: 8762731212,
+      serialNumber: 4,
+      userType: 'Developer',
+      userName: 'Tom',
+      account: 542412943,
+      checknumber: 342352,      
+      status: 'Pending Decision',
+      exception_reason: 'Paid No Issue',
+    }];
+
+    var columns = [{
+      key: 'user',
+      label: 'User',
+      type: 'string'
+    }, {
+      key: 'phone',
+      label: 'Phone Number',
+      type: 'phone'
+    },{
+      key: 'serialNumber',
+      label: 'Sr. Number',
+      uitype: 'number'
+    }, {
+      key: 'userType',
+      label: 'User Type',
+      uitype: 'string'
+    }, {
+      key: 'userName',
+      label: 'User',
+      uitype: 'string'
+    },
+    {
+      key: 'account',
+      label: 'Account',
+      type: 'number'
+    }, {
+      key: 'checknumber',
+      label: 'Check Number',
+      type: 'number',
+      cellClass: 'blue-color'
+    }, {
+      key: 'status',
+      label: 'Status',
+      type: 'string'
+    }, {
+      key: 'exception_reason',
+      label: 'Exception Reason',
+      type: 'string'
+    }];
+    paginationTable.set('columns', columns);
+
+    paginationTable.set('literalColumns', [{
+      key: 'key',
+      label: 'Key',
+      type: 'string'
+    }, {
+      key: 'value',
+      label: 'Value',
+      type: 'string'
+    },]);
+
+
+    paginationTable.set('defaultItems', defaultItems);
+    paginationTable.set('defaultItems2', defaultItems.slice());
+    
+    myapp.set('columns', [{
+      key: 'key',
+      label: 'Key',
+      type: 'string'
+    }, {
+      key: 'value',
+      label: 'Value',
+      type: 'string'
+    }]);
+
+    myapp.set('items', [{
+      id: 1,
+      key: 'Mike',
+      value: 'mike@ev.com'
+    }, {
+      id: 2,
+      key: 'John',
+      value: 'john@ev.com'
+    }, {
+      id: 3,
+      key: 'Stella',
+      value: 'stella@ev.com'
+    }, {
+      id: 4,
+      key: 'Francis',
+      value: 'francis@ev.com'
+    }]);
+
+    myapp.set('rowActions', [{
+      icon: 'info',
+      action: 'info',
+      title: 'details',
+      formUrl: '../oe-data-table/demo/templates/literal-view.js'
+    }, {
+      icon: 'editor:mode-edit',
+      title: 'edit',
+      action: 'edit',
+      formUrl: '../oe-data-table/demo/templates/literal-default.js'
+    }, {
+      icon: 'star',
+      action: 'bookmark',
+      title: 'bookmark'
+    }]);
+
+    myapp.handleRowActions = function (event) {
+      myapp.set('eventString', JSON.stringify(event.detail, null, 2));
+    };
+
+    myapp.rowUpdated = function (event) {
+      event.stopPropagation();
+      if (myapp.userEdit) {
+        var index = myapp.items.indexOf(myapp.userEdit);
+        var newRecord = event.detail;
+        (index >= 0) && myapp.splice('items', index, 1, newRecord);
+        myapp.set('userEdit', null);
+      }
+    };
+    var myapp = this.shadowRoot.querySelector('#myappRowActionCompute');
+
+    myapp.set('columns', [{
+      key: 'key',
+      label: 'Key',
+      type: 'string'
+    }, {
+      key: 'value',
+      label: 'Value',
+      type: 'string'
+    }]);
+
+    myapp.set('items', [{
+      id: 1,
+      key: 'Mike',
+      value: 'mike@ev.com',
+      isHiddenView: true
+    }, {
+      id: 2,
+      key: 'John',
+      value: 'john@ev.com',
+      isHiddenEdit: true
+    }, {
+      id: 3,
+      key: 'Stella',
+      value: 'stella@ev.com',
+      isHiddenBookMark: true,
+      isHiddenEdit: true
+
+    }, {
+      id: 4,
+      key: 'Francis',
+      value: 'francis@ev.com',
+      isHiddenView: true,
+      isHiddenEdit: true
+    }]);
+
+    var isHiddenEdit = function (row) {
+      return row.isHiddenEdit;
+    }
+
+    var isHiddenView = function (row) {
+      return row.isHiddenView;
+    }
+
+    var isHiddenBookMark = function (row) {
+      return row.isHiddenBookMark;
+    }
+
+    myapp.set('rowActions', [{
+      icon: 'info',
+      action: 'info',
+      title: 'details',
+      formUrl: '../oe-data-table/demo/templates/literal-view.js',
+      isHiddenFunction: isHiddenView
+    }, {
+      icon: 'editor:mode-edit',
+      title: 'edit',
+      action: 'edit',
+      formUrl: '../oe-data-table/demo/templates/literal-default.js',
+      isHiddenFunction: isHiddenEdit
+    }, {
+      icon: 'star',
+      action: 'bookmark',
+      title: 'bookmark',
+      isHiddenFunction: isHiddenBookMark
+    }]);
+
+    myapp.handleRowActions = function (event) {
+      myapp.set('eventString', JSON.stringify(event.detail, null, 2));
+    }
+
+    myapp.rowUpdated = function (event) {
+      event.stopPropagation();
+      if (myapp.userEdit) {
+        var index = myapp.items.indexOf(myapp.userEdit);
+        var newRecord = event.detail;
+        (index >= 0) && myapp.splice('items', index, 1, newRecord);
+        myapp.set('userEdit', null);
+      }
+    }
+  }
+
+});
 
 window.customElements.define('table-demo-pages', class extends PolymerElement {
   static get template() {
@@ -4828,6 +5495,12 @@ window.customElements.define('table-demo-pages', class extends PolymerElement {
       "type": "elem",
       "path": "inline-filtering",
       "name": "inline-filtering"
+    },
+    {
+      "title": "Oe-data-table Styling",
+      "type": "elem",
+      "path": "oe-data-table-styling",
+      "name": "oe-data-table-styling"
     }];
     this.set('RouteList', demoList);
     this.set('dropDownList', demoList.map(function (d) {
