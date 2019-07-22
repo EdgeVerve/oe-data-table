@@ -4360,7 +4360,7 @@ window.customElements.define('inline-filtering', class extends DemoMixin(Polymer
       <custom-demo-snippet>
       <div>
                 
-      <oe-data-table  disable-selection=true disabled disable-config-editor disable-edit disable-delete disable-add id="oefilter-table" label="Inline Filter"></oe-data-table>
+      <oe-data-table disabled disable-config-editor disable-edit disable-delete disable-add  id="oefilter-table" label="Inline Filter"></oe-data-table>
       <script>
         var dataTable = this.shadowRoot.querySelector('#oefilter-table');
         
@@ -4372,20 +4372,19 @@ window.customElements.define('inline-filtering', class extends DemoMixin(Polymer
           type: 'number',
           width: 20,
           alignment: 'right'
-        }, {
-          key: 'checknumber',
-          label: 'Check Number',
-          type: 'number',
-          width: 180,
-          hideSearch: true
-        },
-        {
+        },{
           key: 'name',
           label: 'Name',
           type: 'string',
           width: 20,
           alignment: 'center'
           
+        }, {
+          key: 'checknumber',
+          label: 'Check Number',
+          type: 'number',
+          width: 20,
+          hideSearch: true
         }
         ]);
 
@@ -4397,38 +4396,23 @@ window.customElements.define('inline-filtering', class extends DemoMixin(Polymer
           },
           {
             account: 794659139,
-            checknumber: 23456,
-            name: "Rob"
+            name: "Rob",
+            checknumber: 23456
           },
           {
             account: 479677228,
-            checknumber: 223431,
-            name: "Sansa"
+            name: "Sansa",
+            checknumber: 223431
           },
           {
             account: 334547856,
-            checknumber: 2234567,
-            name: "Arya"
-          },
-          {
-            account: 452135542,
-            checknumber: 123564,
-            action: 'Select'
-          },
-          {
-            account: 542412943,
-            checknumber: 342352,
-            action: 'Select'
-          },
-          {
-            account: 135322523,
-            checknumber: 3341234,
-            action: 'Select'
+            name: "Arya",
+            checknumber: 2234567
           },
           {
             account: 432356742,
-            checknumber: 223456,
-            name: "Cersie"
+            name: "Cersie",
+            checknumber: 223456
           }
 
           ];
@@ -4493,12 +4477,6 @@ window.customElements.define('inline-filtering', class extends DemoMixin(Polymer
       type: 'number',
       width: 20,
       alignment: 'right'
-    }, {
-      key: 'checknumber',
-      label: 'Check Number',
-      type: 'number',
-      width: 180,
-      hideSearch: true
     },
     {
       key: 'name',
@@ -4507,6 +4485,14 @@ window.customElements.define('inline-filtering', class extends DemoMixin(Polymer
       width: 20,
       alignment: 'center'
 
+    },
+    {
+      key: 'checknumber',
+      label: 'Check Number',
+      type: 'number',
+      width: 20,
+      hideSearch: true,
+      alignment: 'center'
     }
     ]);
 
@@ -4514,30 +4500,30 @@ window.customElements.define('inline-filtering', class extends DemoMixin(Polymer
       account: 861363459,
       checknumber: 223457,
       name: "Mark"
+      
+      },
+      {
+        account: 794659139,
+        name: "Rob",
+        checknumber: 23456
+      },
+      {
+        account: 479677228,
+        name: "Sansa",
+        checknumber: 223431
+      },
+      {
+        account: 334547856,
+        name: "Arya",
+        checknumber: 2234567
+      },
+      {
+        account: 432356742,
+        name: "Cersie",
+        checknumber: 223456
+      }
 
-    },
-    {
-      account: 794659139,
-      checknumber: 23456,
-      name: "Rob"
-    },
-    {
-      account: 479677228,
-      checknumber: 223431,
-      name: "Sansa"
-    },
-    {
-      account: 334547856,
-      checknumber: 2234567,
-      name: "Arya"
-    },
-    {
-      account: 452135542,
-      checknumber: 123564,
-      name: "Cersie"
-    }
-
-    ];
+      ];
     dataTable2.set('items', data2);
     dataTable2.set('enableInlineFilter', true);
 
