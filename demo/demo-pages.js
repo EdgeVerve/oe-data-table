@@ -4028,7 +4028,6 @@ window.customElements.define('oecombo-showcell', class extends DemoMixin(Polymer
     <h1> Conditional oe-combo using showCell</h1>
              
               <p>To use oe-combo, following attributes need to be defined.</p>
-              <p>externalEl: true,</p>
               <p>uiType: 'oe-combo'</p>
               <p>type: 'combo'</p>
               <p>editorAttributes</p>
@@ -4036,7 +4035,7 @@ window.customElements.define('oecombo-showcell', class extends DemoMixin(Polymer
               <custom-demo-snippet>
                 <div>
                   
-                  <oe-data-table  disable-selection=true disabled disable-config-editor disable-edit disable-delete disable-add id="oecombo-table" label="Simple Table"></oe-data-table>
+                  <oe-data-table  id="oecombo-table" label="Simple Table"></oe-data-table>
                   <script>
                     var dataTable = this.shadowRoot.querySelector('#oecombo-table');
   
@@ -4075,8 +4074,6 @@ window.customElements.define('oecombo-showcell', class extends DemoMixin(Polymer
                     {
                       key: 'action',
                       label: 'Action',
-                      externalEl: true,
-                    
                       uiType: 'oe-combo',
                       type: 'combo',
                       showCell: this.showCell,
@@ -4206,7 +4203,6 @@ window.customElements.define('oecombo-showcell', class extends DemoMixin(Polymer
     {
       key: 'action',
       label: 'Action',
-      externalEl: true,
 
       uiType: 'oe-combo',
       type: 'combo',

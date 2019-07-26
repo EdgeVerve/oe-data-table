@@ -216,11 +216,13 @@
         });
 
         test('Change the selected row by using arrow keys.', function (done) {
+          flush(function () {
           expect(table.selectedItems.length).to.be.equal(0);
           var row = table.deepQuery('oe-data-table-row');
           row.click();
           flush(function () {
-            var ironList = table._RepeaterElement;
+            var ironList = table.shadowRoot.querySelector('#row-list');
+            flush(function () {
             expect(table.selectedItems[0].id).to.be.equal(1);
             MockInteractions.keyDownOn(ironList, 40);
             flush(function () {
@@ -231,8 +233,10 @@
                 done();
               }, 1000);
             }, 1000);
-          });
+          }, 1000);
+        },1000);
         });
+      });
       });
 
       suite('Table actions', function () {
@@ -322,7 +326,7 @@
 
         test('Change page based on pagination panel control', function (done) {
           flush(function () {
-            var rowItems = dataTable._RepeaterElement;
+            var rowItems = dataTable.shadowRoot.querySelector('#row-list');
             var icons = dataTable.deepQuery('oe-data-table-pagination-panel').deepQueryAll('paper-icon-button');
             var nextIcon = icons[1];
             expect(rowItems.items[0].id).to.be.equal(1);
@@ -1693,7 +1697,6 @@
           {
            key: 'action',
            label: 'Action',
-           externalEl: true,
            uiType: 'oe-combo',
            type: 'combo',
            showCell: showCell,
@@ -1727,12 +1730,27 @@
           });
 
           test('Checking conditional oe-combos', function () {
-            var tableRow = dataTable.shadowRoot.querySelector('paper-material').querySelector('iron-collapse').querySelector('#row-list');
-            setTimeout(function(){
-              expect(tableRow.querySelectorAll('oe-data-table-row')[0].shadowRoot.querySelectorAll('oe-data-table-cell')[1].shadowRoot.querySelector('oe-combo')).to.be.null;
-              expect(tableRow.querySelectorAll('oe-data-table-row')[1].shadowRoot.querySelectorAll('oe-data-table-cell')[1].shadowRoot.querySelector('oe-combo')).to.not.be.null;
-              expect(tableRow.querySelectorAll('oe-data-table-row')[2].shadowRoot.querySelectorAll('oe-data-table-cell')[1].shadowRoot.querySelector('oe-combo')).to.not.be.null;
-            })
+            flush(function () {
+            var cells = dataTable.deepQuery('oe-data-table-row').deepQueryAll('oe-data-table-cell');
+            var firstCell = cells[2];
+            setTimeout(function () {
+              firstCell.click();
+              expect(firstCell._inEdit).to.be.equal(true);
+              firstCell._element.$.dropdownicon.click();
+              flush(function () {
+                var items = firstCell._element.$.dropdown.querySelector('paper-material').querySelector('#menu').deepQueryAll('paper-item');
+                items = items[1];
+                items.click();
+                flush(function () {
+                  MockInteractions.tap(document.body);
+                  flush(function () {
+                  expect(firstCell.row.action).to.be.equal('Reject');
+                  done();
+                });
+              });
+              });
+            }, 2000);
+          });
            
           });
    

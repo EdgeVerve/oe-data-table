@@ -32,29 +32,34 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
+        display: inline-block;
         width: 100%;
       }
       .edit-ctrl {
         @apply --edit-control;
       }
+      .cell-container {
+        width: 100%;
+      }
 
     </style>
+    <div class="cell-container" hidden$="{{!_computeHidden(row,column)}}">
     <template is="dom-if" if="[[_hideDefaultValue(_inEdit,_hasCustomRenderer)]]">
       <template is="dom-if" if="[[column.href]]" restamp="true">
         <a href="[[_buildHref(column.href, row.*)]]" style$="[[_computeCellAlignment(column)]]"> [[_displayValue]] </a>
       </template>
       <template is="dom-if" if="[[!column.href]]" restamp="true">
-        <span class="cell-content" hidden$="[[column.externalEl]]" style$="[[_computeCellAlignment(column)]]">  [[_displayValue]] </span>
+        <span class="cell-content" style$="[[_computeCellAlignment(column)]]">  [[_displayValue]] </span>
       </template>
     </template>
     <template is="dom-if" if="[[_hasCustomRenderer]]" restamp="true">
       <span class="cell-content" id="custom-container">  </span>
     </template>
-    <div hidden$="{{!column.externalEl}}" id="createNewEl"></div>
     <div hidden$="{{!_inEdit}}" id="injectionPoint" class="edit-ctrl"></div>
     <template is="dom-if" if="[[column.valueAsTooltip]]" restamp="true">
       <paper-tooltip  offset$="[[_getOffset(isFirstRow)]]" position="top" id="[[column.label]]">  [[_displayValue]]  </paper-tooltip>  
     </template>
+    </div>
     `;
   }
 
@@ -159,8 +164,7 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
   static get observers() {
     return ['_buildCustomRenderer(row.*, column)',
       '_buildCustomRenderer(columnTemplate)',
-      '_computeCellData(row.*, column)',
-      '_buildNewElement(row, column)',
+      '_computeCellData(row.*, column)' 
     ];
   }
 
@@ -359,11 +363,6 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
     }
     this.set('_inEdit', false);
   }
-  _buildNewElement() {
-    if (this.column.externalEl) {
-      this._createElement(false);
-    }
-  }
 
   _extractDropdownAndAddToBody(elem) {
     // Due to stacking context, the iron-list content always keeps its position at top, results in incorrect positioning of iron-dropdown content
@@ -426,9 +425,16 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
       }
     }
     this.set('_element', elem);
-    if(isInEditMode)
     this.$.injectionPoint.appendChild(this._element);
-    else {
+    this._element.addEventListener('change', this._handleValueChange.bind(this));
+    this._element.addEventListener('keydown', this._handleActionKeyPress.bind(this));
+    this.async(function () {
+      this._extractDropdownAndAddToBody(elem);
+    });
+
+  }
+
+  _computeHidden(row,column){
       var show = true;
       if (this.column.showCell != undefined) {
 
@@ -440,20 +446,7 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
           show = this.column.showCell;
         }
       }
-
-      if (show && this.$['createNewEl'].childElementCount === 0) {
-        this.$['createNewEl'].appendChild(this._element);
-      }
-      else if (show === false && this.$['createNewEl'].childElementCount === 1) {
-        this.$['createNewEl'].removeChild(this.$['createNewEl'].childNodes[0]);
-      }
-    }
-    //this._element.addEventListener('change', this._handleValueChange.bind(this));
-
-    this._element.addEventListener('keydown', this._handleActionKeyPress.bind(this));
-    this.async(function () {
-      this._extractDropdownAndAddToBody(elem);
-    });
+    return show;
   }
 
   /**

@@ -1253,15 +1253,6 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
     });
   }
 
-  get _RepeaterElement(){
-    var containerId = this.paginationType == "page" ? "pagination-repeater" : "row-list";
-    return this.shadowRoot.querySelector('#' + containerId);
-  }
-
-  get __repeatContainer(){
-    var containerId = this.paginationType == "page" ? "pagination-table-body" : "row-list";
-    return this.shadowRoot.querySelector('#' + containerId);
-  }  
   /**
    * Attaches/Detaches event listeners based on 'disabled' flag and '_items' array length
    */
@@ -1270,9 +1261,8 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       return;
     }
     this.async(function () {
-      var container = this.__repeatContainer;
+      var container = this.shadowRoot.querySelector('#row-list');
       if (!container) {
-        console.log('__repeatContainer is not present');
         return;
       }
       if (this.disabled) {
