@@ -52,7 +52,6 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             }
 
             .table-row {
-                min-height: 48px;
                 border-bottom: 1px solid #ededed;
                 background: #FFF;
                 @apply --layout;
@@ -214,6 +213,7 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
                 type: Object
                 
             }
+
         };
         /**
          * Fired when the row is clicked.
@@ -388,6 +388,7 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
         
         this.fire('expanded-view');
       }
+    
       getIcon(){
           return !this.isAccordianOpen ? "expand-more": "expand-less";
       }
