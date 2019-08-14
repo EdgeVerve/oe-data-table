@@ -252,7 +252,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
                     <template>
                       <oe-data-table-row on-dblclick="_handleDblClick" accordian-element=[[accordianElement]] show-accordian=[[showAccordian]] 
                       columns=[[columns]] selection-cell-content=[[selectionCellContent]] row=[[row]] row-index=[[rowIndex]] table-host=[[tableHost]]
-                      tab-index=[[tabIndex]] selected=[[_getSelectionState(row,_computeSelection)]] disable-selection=[[disableSelection]] row-actions=[[rowActions]]
+                      tab-index="0" selected=[[_getSelectionState(row,_computeSelection)]] disable-selection=[[disableSelection]] row-actions=[[rowActions]]
                       row-action-width=[[__rowActionWidth]] read-only=[[__isCellReadOnly]] min-col-width=[[minColWidth]] column-templates=[[columnTemplates]] auto-fit=[[autoFit]]></oe-data-table-row>
                     </template>
                   </iron-list>

@@ -74,13 +74,26 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             }
         
             .row-action {
-                display: none;
+                opacity: 0;
                 @apply --oe-data-table-row-action;
             }
         
             .table-row:hover .row-action {
-                display: inline-block;
+              opacity: 1;
             }
+			
+			      .table-row:focus .row-action {
+              opacity: 1;
+            }
+			
+			      .row-action:focus {
+              opacity: 1;
+            }
+      
+            .row-action:focus ~ .row-action {
+              opacity: 1;
+            }
+
             .row {
                 cursor:pointer;
             }
@@ -90,15 +103,15 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
         
         </style>
         <div class$="table-row [[_computeClassforRow(selected)]]" tabindex$="[[tabIndex]]">      
-            <template is="dom-if" if="[[!disableSelection]]">
-                <div class="selection-cell">
-                    <oe-data-table-selection-cell selection-cell-content=[[selectionCellContent]] row=[[row]] selected=[[selected]]></oe-data-table-selection-cell>
-                </div>
-            </template>
-            <template is="dom-repeat" items="[[columns]]" as="column" filter="_getVisibleColumns" observe="hidden">
-                <oe-data-table-cell is-first-row=[[_isFirstRow(rowIndex)]] read-only=[[readOnly]] key=[[key]] row={{row}} column=[[column]] class$="table-data [[_computeCellClass(row.*,column)]]" column-template=[[_getValidTemplate(row.*,row,column)]] style$="[[_computeCellWidth(column.*,column)]]"></oe-data-table-cell> 
-            </template>
-            <template is="dom-if" if=[[showAccordian]]>
+          <template is="dom-if" if="[[!disableSelection]]">
+            <div class="selection-cell">
+              <oe-data-table-selection-cell selection-cell-content=[[selectionCellContent]] row=[[row]] selected=[[selected]]></oe-data-table-selection-cell>
+            </div>
+          </template>
+          <template is="dom-repeat" items="[[columns]]" as="column" filter="_getVisibleColumns" observe="hidden">
+            <oe-data-table-cell is-first-row=[[_isFirstRow(rowIndex)]] read-only=[[readOnly]] key=[[key]] row={{row}} column=[[column]] class$="table-data [[_computeCellClass(row.*,column)]]" column-template=[[_getValidTemplate(row.*,row,column)]] style$="[[_computeCellWidth(column.*,column)]]"></oe-data-table-cell> 
+          </template>
+          <template is="dom-if" if=[[showAccordian]]>
             <div class="row-actions row" style="flex: 0 0 48px">
               <iron-icon id="paperExpand" icon$="{{getIcon(isAccordianOpen)}}" row$="[[row]]" rowIndex$="[[rowIndex]]" on-tap="_toggleAccordian"></iron-icon>
             </div>
@@ -106,10 +119,8 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             <template is="dom-if" if=[[rowActions.length]]>
                 <div class="row-actions" style$="flex: [[rowActionWidth]]">
                     <template is="dom-repeat" items=[[rowActions]] as="action">
-                    <div hidden$="[[_computeDivHidden(action,row)]]">
-                    <paper-icon-button class="row-action" row$=[[row]] rowIndex$=[[rowIndex]] icon="[[action.icon]]" on-tap="_rowActionClicked"></paper-icon-button>
-                            <paper-tooltip position="left"> [[action.title]] </paper-tooltip>
-                        </div>
+                      <paper-icon-button hidden$="[[_computeDivHidden(action,row)]]" class="row-action" row$=[[row]] rowIndex$=[[rowIndex]] icon="[[action.icon]]" on-tap="_rowActionClicked"></paper-icon-button>
+<paper-tooltip position="left"> [[action.title]] </paper-tooltip>
                     </template>
                 </div>
             </template>           
