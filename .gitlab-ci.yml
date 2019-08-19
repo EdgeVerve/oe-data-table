@@ -19,7 +19,6 @@ install-deps:
     - set GIT_TRACE_PACKET=2
     - call npm install
     - echo "Node Modules Installed"
-    - call npm audit
 
   artifacts:
     untracked: true
