@@ -19,7 +19,6 @@ install-deps:
     - set GIT_TRACE_PACKET=2
     - call npm install
     - echo "Node Modules Installed"
-    - call npm audit --json > vulnerabilities.json | echo "Audit logged"
     - call npm audit
 
   artifacts:
