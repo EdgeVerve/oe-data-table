@@ -125,7 +125,7 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
                 </div>
             </template>           
         </div>       
-      <div id="accordianContainer" hidden$="[[!isAccordianOpen]]">
+      <div id="accordianContainer" hidden$="[[!isAccordianOpen]]" visible$=[[__computeVisibleEl(rowIndex,isAccordianOpen)]]>
       </div>       
     `;
     }
@@ -203,6 +203,8 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             },
             isAccordianOpen: {
                 type:Boolean,
+                notify:true,
+                reflectToAttribute: true,
                 value:false
             },
             /**
@@ -397,9 +399,21 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
                     this.accordianEle.set('data', self.row);
                 }
         
-        this.fire('expanded-view');
+        this.fire('expanded-view',this.rowIndex);
       }
-    
+      __computeVisibleEl(rowIndex,isAccordianOpen) {
+        var container = this.$.accordianContainer;
+        var isVisible = isAccordianOpen;
+        var accordianEl = this.accordianEle;                               //Find correct accordion Element for the rowIndex
+  
+        if (isVisible && accordianEl && !container.contains(accordianEl)) {              //If container doesn’t have related accordion append it
+          container.appendChild(accordianEl);
+        }
+        container.children && [].forEach.call(container.children, function (el) {
+          el.hidden = !isVisible || el !== accordianEl;                                 //Hide all children if not visible or if they are not correct accordion Element
+        });
+      }
+  
       getIcon(){
           return !this.isAccordianOpen ? "expand-more": "expand-less";
       }
