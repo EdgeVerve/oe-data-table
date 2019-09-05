@@ -124,9 +124,11 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
                     </template>
                 </div>
             </template>           
-        </div>       
+        </div>  
+      <template is="dom-if" if=[[showAccordian]]>
       <div id="accordianContainer" hidden$="[[!isAccordianOpen]]" visible$=[[__computeVisibleEl(rowIndex,isAccordianOpen)]]>
-      </div>       
+      </div>      
+      </template>
     `;
     }
 
@@ -143,7 +145,7 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             selectionCellContent: {
                 type: Object
             },
-
+           
             /**
              * Record data
              */
@@ -385,13 +387,11 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
     _getVisibleColumns(column) {
         return !(column.hidden === true || column.hidden === 'true');
     }
-    _toggleAccordian(e) {
-    
+    _toggleAccordian(e) {   
         var self = this;
-
         if (!this.accordianEle) {
           this.accordianEle = document.createElement(self.accordianElement);
-          self.$.accordianContainer.appendChild(this.accordianEle);
+          self.shadowRoot.querySelector('#accordianContainer').appendChild(this.accordianEle);
          
         }
         this.isAccordianOpen = !this.isAccordianOpen;
@@ -402,7 +402,8 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
         this.fire('expanded-view',this.rowIndex);
       }
       __computeVisibleEl(rowIndex,isAccordianOpen) {
-        var container = this.$.accordianContainer;
+        this.async(function () {
+        var container = this.shadowRoot.querySelector('#accordianContainer');
         var isVisible = isAccordianOpen;
         var accordianEl = this.accordianEle;                               //Find correct accordion Element for the rowIndex
   
@@ -412,6 +413,7 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
         container.children && [].forEach.call(container.children, function (el) {
           el.hidden = !isVisible || el !== accordianEl;                                 //Hide all children if not visible or if they are not correct accordion Element
         });
+        }.bind(this));
       }
   
       getIcon(){
