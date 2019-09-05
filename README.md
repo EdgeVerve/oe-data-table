@@ -62,4 +62,5 @@ Custom property | Description | Default
 `--oe-data-table-selection-cell-content` | Mixiin to be applied to the selection cell content if provided | {}
 `--oe-data-table-row-action` | Mixin applied to the row action icon buttons | {}
 `--oe-data-table-data` | Mixin to be applied to table-data class to set min-height | {}
+`--oe-data-table-selection-checkbox` | Mixin to be applied to table selection checkbox | {}
 `--edit-control` | Mixin applied to set the height of edit cell | {}
