@@ -84,6 +84,7 @@ var OEUtils = window.OEUtils || {};
  * `--oe-data-table-row-last` | Mixin to be applied to the last row of the table | {}
  * `--oe-data-table-selection-cell-content` | Mixiin to be applied to the selection cell content if provided | {}
  * `--oe-data-table-data` | Mixin to be applied to table-data class to set min-height | {}
+ * `--oe-data-table-selection-checkbox` | Mixin to be applied to table selection checkbox | {}
  * `--edit-control` | Mixin applied to set the height of edit cell | {}
  * 
  * @customElement
@@ -162,6 +163,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
 
         .selection-checkbox {
           padding: 0 24px;
+          @apply --oe-data-table-selection-checkbox;
         }
 
         paper-checkbox.selection-checkbox {
@@ -250,7 +252,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
                
                   <iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key">
                     <template>
-                      <oe-data-table-row on-dblclick="_handleDblClick" accordian-element=[[accordianElement]] show-accordian=[[showAccordian]] 
+                      <oe-data-table-row on-dblclick="_handleDblClick" is-accordian-open=[[_visibleAccordian(rowIndex)]] accordian-element=[[accordianElement]] show-accordian=[[showAccordian]] 
                       columns=[[columns]] selection-cell-content=[[selectionCellContent]] row=[[row]] row-index=[[rowIndex]] table-host=[[tableHost]]
                       tab-index="0" selected=[[_getSelectionState(row,_computeSelection)]] disable-selection=[[disableSelection]] row-actions=[[rowActions]]
                       row-action-width=[[__rowActionWidth]] read-only=[[__isCellReadOnly]] min-col-width=[[minColWidth]] column-templates=[[columnTemplates]] auto-fit=[[autoFit]]></oe-data-table-row>
@@ -686,7 +688,8 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       'show-column-customizer': '_showCustomizeView',
       'toggle-row-selection': '_toggleRowSelection',
       'apply-criteria': '_refreshRender',
-      'oe-data-table-cell-value-changed': '_organizeData'
+      'oe-data-table-cell-value-changed': '_organizeData',
+      'expanded-view': '_rowAccoridianclicked'
     };
 
     Object.keys(listenersList).forEach(function (eventName) {
@@ -728,6 +731,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
   connectedCallback() {
     super.connectedCallback();
     //Initialize default values
+    this.__visibleAccordians = {};  //Object map of rowIndex -> Should the accordion element be shown  
     this._showGridView();
     this.set('_selectionState', new WeakMap()); // eslint-disable-line no-undef
     this.refCodeMap = {};
@@ -799,6 +803,15 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
   disconnectedCallback() {
     super.disconnectedCallback();
     document.removeEventListener('tap', this._resetActiveCell.bind(this));
+  }
+  _rowAccoridianclicked(event){
+    var rowInd = event.detail;
+    var isAccordianVisible = this.__visibleAccordians[rowInd];
+    this.set('__visibleAccordians.' + rowInd, !isAccordianVisible);
+
+  }
+  _visibleAccordian(rowIndex){
+    return !!this.__visibleAccordians[rowIndex];
   }
   onUpdateInlineFilter() {
     if (this.enableInlineFilter) {
