@@ -44,85 +44,85 @@ var DemoMixin = function (base) {
       node.dispatchEvent(event);
       return event;
     }
-  }
-}
+  };
+};
 
 
 window.customElements.define("overview-detail", class extends DemoMixin(PolymerElement) {
   static get template() {
     return html`
         <div>
-        <h1> Overview </h1>
-        <p> The oe-data-table is a tabular component written in Polymer with the Material Design data table standards.
-        </p>
-        <p> The items property specifies an array of list item data and the columns property specifies an array of column
-          definitions to show. </p>
-        <custom-demo-snippet>
-          <div>
+          <h1> Overview </h1>
+          <p> The oe-data-table is a tabular component written in Polymer with the Material Design data table standards.
+          </p>
+          <p> The items property specifies an array of list item data and the columns property specifies an array of column
+            definitions to show. </p>
+          <custom-demo-snippet>
+            <div>
               <oe-data-table id="simple-table" label="Simple Table"></oe-data-table>
               <script>
-              var dataTable = this.shadowRoot.querySelector('#simple-table');
-              dataTable.set('columns', [{
-                key: 'id',
-                label: 'Id',
-                type: 'number',
-                readOnly: true,
-                tooltip:"Id"
-              }, {
-                key: 'name',
-                label: 'Name',
-                type: 'string',
-                alignment:'center'
-              }, {
-                key: 'details.location',
-                label: 'Location',
-                type: 'string'
-              }, {
-                key: 'details',
-                label: 'Details',
-                type: 'object',
-                tooltip:"Details of the user",
-                valueAsTooltip:true
-              }]);
-
-              dataTable.set('items', [{
-                id: 1,
-                name: 'Admin',
-                details: {
-                  gender: 'male',
-                  location: 'Bangalore',
-                  country: 'India'
-                }
-              }, {
-                id: 2,
-                name: 'Developer',
-                details: {
-                  gender: 'female',
-                  location: 'Bangalore',
-                  country: 'India'
-                }
-              }, {
-                id: 3,
-                name: 'Designer',
-                details: {
-                  gender: 'male',
-                  location: 'Chennai',
-                  country: 'India'
-                }
-              }, {
-                id: 4,
-                name: 'Tester',
-                details: {
-                  gender: 'male',
-                  location: 'Chennai',
-                  country: 'India'
-                },
-              }]);
-
-            </script>
+                var dataTable = this.shadowRoot.querySelector('#simple-table');
+                        dataTable.set('columns', [{
+                          key: 'id',
+                          label: 'Id',
+                          type: 'number',
+                          readOnly: true,
+                          tooltip:"Id"
+                        }, {
+                          key: 'name',
+                          label: 'Name',
+                          type: 'string',
+                          alignment:'center'
+                        }, {
+                          key: 'details.location',
+                          label: 'Location',
+                          type: 'string'
+                        }, {
+                          key: 'details',
+                          label: 'Details',
+                          type: 'object',
+                          tooltip:"Details of the user",
+                          valueAsTooltip:true
+                        }]);
+          
+                        dataTable.set('items', [{
+                          id: 1,
+                          name: 'Admin',
+                          details: {
+                            gender: 'male',
+                            location: 'Bangalore',
+                            country: 'India'
+                          }
+                        }, {
+                          id: 2,
+                          name: 'Developer',
+                          details: {
+                            gender: 'female',
+                            location: 'Bangalore',
+                            country: 'India'
+                          }
+                        }, {
+                          id: 3,
+                          name: 'Designer',
+                          details: {
+                            gender: 'male',
+                            location: 'Chennai',
+                            country: 'India'
+                          }
+                        }, {
+                          id: 4,
+                          name: 'Tester',
+                          details: {
+                            gender: 'male',
+                            location: 'Chennai',
+                            country: 'India'
+                          },
+                        }]);
+                                                                
+              </script>
             </div>
-        </custom-demo-snippet>
-      </div>      
+          </custom-demo-snippet>
+        </div>
         `;
   }
 
@@ -184,7 +184,7 @@ window.customElements.define("overview-detail", class extends DemoMixin(PolymerE
         location: 'Chennai',
         country: 'India'
       }
-    },{
+    }, {
       id: 1,
       name: 'Admin',
       details: {
@@ -216,7 +216,7 @@ window.customElements.define("overview-detail", class extends DemoMixin(PolymerE
         location: 'Chennai',
         country: 'India'
       }
-    },{
+    }, {
       id: 1,
       name: 'Admin',
       details: {
@@ -248,7 +248,7 @@ window.customElements.define("overview-detail", class extends DemoMixin(PolymerE
         location: 'Chennai',
         country: 'India'
       }
-    },{
+    }, {
       id: 1,
       name: 'Admin',
       details: {
@@ -280,7 +280,7 @@ window.customElements.define("overview-detail", class extends DemoMixin(PolymerE
         location: 'Chennai',
         country: 'India'
       }
-    },{
+    }, {
       id: 1,
       name: 'Admin',
       details: {
@@ -1898,15 +1898,15 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
 
     var isHiddenEdit = function (row) {
       return row.isHiddenEdit;
-    }
+    };
 
     var isHiddenView = function (row) {
       return row.isHiddenView;
-    }
+    };
 
     var isHiddenBookMark = function (row) {
       return row.isHiddenBookMark;
-    }
+    };
 
     myapp.set('rowActions', [{
       icon: 'info',
@@ -1929,7 +1929,7 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
 
     myapp.handleRowActions = function (event) {
       myapp.set('eventString', JSON.stringify(event.detail, null, 2));
-    }
+    };
 
     myapp.rowUpdated = function (event) {
       event.stopPropagation();
@@ -1939,7 +1939,7 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
         (index >= 0) && myapp.splice('items', index, 1, newRecord);
         myapp.set('userEdit', null);
       }
-    }
+    };
   }
 
 });
@@ -2313,7 +2313,7 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
       userType: 'Tester',
       userName: 'Tom',
       account: 334547856,
-      checknumber: 2234567,        
+      checknumber: 2234567,
       status: 'Rejected',
       exception_reason: 'Paid Fraud',
     }, {
@@ -2323,7 +2323,7 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
       userType: 'Designer',
       userName: 'Tom',
       account: 452135542,
-      checknumber: 123564,          
+      checknumber: 123564,
       status: 'Pending Decision',
       exception_reason: 'Paid Fraud',
     }, {
@@ -2343,7 +2343,7 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
       userType: 'Developer',
       userName: 'Tom',
       account: 542412943,
-      checknumber: 342352,      
+      checknumber: 342352,
       status: 'Pending Decision',
       exception_reason: 'Paid No Issue',
     }];
@@ -2356,7 +2356,7 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
       key: 'phone',
       label: 'Phone Number',
       type: 'phone'
-    },{
+    }, {
       key: 'serialNumber',
       label: 'Sr. Number',
       uitype: 'number'
@@ -2407,7 +2407,7 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
     autofitTable.set('defaultItems', defaultItems);
     autofitTable2.set('columns', columns);
     autofitTable2.set('defaultItems', defaultItems);
-   
+
   }
 
 
@@ -3730,43 +3730,28 @@ window.customElements.define('accordian-view', class extends DemoMixin(PolymerEl
     <h1> Accordion View </h1>
     <p> Accordion View is supported by the oe-data-table. Any external component can be imported into the accordion.
     </p>
-    <p> Three data level properties need to be defined. </p>
-    <p> 2. <strong>accordianElement:</strong> Name of the element to be shown inside accodion view. </p>
-    <p> 3. <strong>showAccordian:</strong> true/false to show/hide the accordion </p>
-    
+    <p> Two data level properties need to be defined. </p>
+    <p> 1. <strong>accordianElement:</strong> Name of the element to be shown inside accodion view. </p>
+    <p> 2. <strong>showAccordian:</strong> true/false to show/hide the accordion </p>
     <custom-demo-snippet>
     <div>
         <oe-data-table disabled disable-config-editor disable-edit disable-delete disable-add id="accordian-table" label="Simple Table"></oe-data-table>
         <script>
           var dataTable = this.shadowRoot.querySelector('#accordian-table');
-
-
-        var dropDownRenderer= function (column, row) { // eslint-disable-line no-unused-vars
-        
-
-        // var elementToReturn =
-        // '<paper-dropdown-menu label="Dinosaurs"><paper-listbox slot="dropdown-content" selected="1"><paper-item>allosaurus</paper-item><paper-item>brontosaurus</paper-item><paper-item>carcharodontosaurus</paper-item><paper-item>diplodocus</paper-item></paper-listbox></paper-dropdown-menu>';
-        
-        var elementToReturn = "";
-        if(row.status === 'Pending Decision'){
-             elementToReturn = 
-        '<select style=" background-color: transparent; border: 1px solid #d1d2d3;"><option value="" disabled selected>Select</option><option value="accept">Accept</option><option value="reject">Reject</option></select>';
-        }
-        else{
-            elementToReturn = 
-        '<select style="display: none; background-color: transparent; border: 1px solid #d1d2d3;"><option value="volvo">Volvo</option><option value="saab">Saab</option><option value="mercedes">Mercedes</option><option value="audi">Audi</option></select>';
-        }
-       
-        return elementToReturn;
-    };
-
-    var amountRenderer= function (column, row) { // eslint-disable-line no-unused-vars
-        var elementToReturn =
-            '<div style="text-align: right;display: flex;justify-content: flex-end;"> <div style="margin-top: 8px;">$&nbsp;</div> <oe-info class="amount-info" precision=[[row.precision]] type="decimal" value=[[row.amount]]></oe-info> </span> </div>';
-
-
-        return elementToReturn;
-    };
+          var dropDownRenderer= function (column, row) { // eslint-disable-line no-unused-vars
+            var elementToReturn = "";
+            if(row.status === 'Pending Decision'){
+                elementToReturn = '<select style=" background-color: transparent; border: 1px solid #d1d2d3;"><option value="" disabled selected>Select</option><option value="accept">Accept</option><option value="reject">Reject</option></select>';
+            }
+            else{
+                elementToReturn = '<select style="display: none; background-color: transparent; border: 1px solid #d1d2d3;"><option value="volvo">Volvo</option><option value="saab">Saab</option><option value="mercedes">Mercedes</option><option value="audi">Audi</option></select>';
+            }
+            return elementToReturn;
+          };
+          var amountRenderer= function (column, row) { // eslint-disable-line no-unused-vars
+              var elementToReturn ='<div style="text-align: right;display: flex;justify-content: flex-end;"> <div style="margin-top: 8px;">$&nbsp;</div> <oe-info class="amount-info" precision=[[row.precision]] type="decimal" value=[[row.amount]]></oe-info> </span> </div>';
+              return elementToReturn;
+          };
           dataTable.set('columns', [{
             key: 'account',
             label: 'Account',
@@ -3794,11 +3779,8 @@ window.customElements.define('accordian-view', class extends DemoMixin(PolymerEl
           {
             key: 'action',
             label: 'Action',
-
-
             type: 'string',
             renderer: dropDownRenderer
-
           }]);
 
           var data = [{
@@ -3869,16 +3851,13 @@ window.customElements.define('accordian-view', class extends DemoMixin(PolymerEl
           ];
           dataTable.set('items', data);
           
-
-          
           dataTable.set('accordianElement', "demo-accordian");
           dataTable.set('showAccordian', true);
-
         </script>
      </div>
     	</custom-demo-snippet>
   </div>
-  `
+  `;
   }
   _onPageVisible() {
     var dataTable = this.shadowRoot.querySelector('#accordian-table');
@@ -4157,7 +4136,7 @@ window.customElements.define('oecombo-showcell', class extends DemoMixin(Polymer
     </div>
     </custom-demo-snippet>
   </div>
-  `
+  `;
   }
   _onPageVisible() {
     var dataTable = this.shadowRoot.querySelector('#oecombo-table');
@@ -4422,7 +4401,7 @@ window.customElements.define('inline-filtering', class extends DemoMixin(Polymer
     </div>
     </custom-demo-snippet>
   </div>
-  `
+  `;
   }
   _onPageVisible() {
     var dataTable = this.shadowRoot.querySelector('#inlinefilter-table');
@@ -4496,30 +4475,30 @@ window.customElements.define('inline-filtering', class extends DemoMixin(Polymer
       account: 861363459,
       checknumber: 223457,
       name: "Mark"
-      
-      },
-      {
-        account: 794659139,
-        name: "Rob",
-        checknumber: 23456
-      },
-      {
-        account: 479677228,
-        name: "Sansa",
-        checknumber: 223431
-      },
-      {
-        account: 334547856,
-        name: "Arya",
-        checknumber: 2234567
-      },
-      {
-        account: 432356742,
-        name: "Cersie",
-        checknumber: 223456
-      }
 
-      ];
+    },
+    {
+      account: 794659139,
+      name: "Rob",
+      checknumber: 23456
+    },
+    {
+      account: 479677228,
+      name: "Sansa",
+      checknumber: 223431
+    },
+    {
+      account: 334547856,
+      name: "Arya",
+      checknumber: 2234567
+    },
+    {
+      account: 432356742,
+      name: "Cersie",
+      checknumber: 223456
+    }
+
+    ];
     dataTable2.set('items', data2);
     dataTable2.set('enableInlineFilter', true);
 
@@ -5078,7 +5057,7 @@ window.customElements.define("oe-data-table-styling", class extends DemoMixin(Po
       userType: 'Tester',
       userName: 'Tom',
       account: 334547856,
-      checknumber: 2234567,        
+      checknumber: 2234567,
       status: 'Rejected',
       exception_reason: 'Paid Fraud',
     }, {
@@ -5088,7 +5067,7 @@ window.customElements.define("oe-data-table-styling", class extends DemoMixin(Po
       userType: 'Designer',
       userName: 'Tom',
       account: 452135542,
-      checknumber: 123564,          
+      checknumber: 123564,
       status: 'Pending Decision',
       exception_reason: 'Paid Fraud',
     }, {
@@ -5108,7 +5087,7 @@ window.customElements.define("oe-data-table-styling", class extends DemoMixin(Po
       userType: 'Developer',
       userName: 'Tom',
       account: 542412943,
-      checknumber: 342352,      
+      checknumber: 342352,
       status: 'Pending Decision',
       exception_reason: 'Paid No Issue',
     }];
@@ -5121,7 +5100,7 @@ window.customElements.define("oe-data-table-styling", class extends DemoMixin(Po
       key: 'phone',
       label: 'Phone Number',
       type: 'phone'
-    },{
+    }, {
       key: 'serialNumber',
       label: 'Sr. Number',
       uitype: 'number'
@@ -5167,7 +5146,7 @@ window.customElements.define("oe-data-table-styling", class extends DemoMixin(Po
 
     paginationTable.set('defaultItems', defaultItems);
     paginationTable.set('defaultItems2', defaultItems.slice());
-    
+
     myapp.set('columns', [{
       key: 'key',
       label: 'Key',
@@ -5264,15 +5243,15 @@ window.customElements.define("oe-data-table-styling", class extends DemoMixin(Po
 
     var isHiddenEdit = function (row) {
       return row.isHiddenEdit;
-    }
+    };
 
     var isHiddenView = function (row) {
       return row.isHiddenView;
-    }
+    };
 
     var isHiddenBookMark = function (row) {
       return row.isHiddenBookMark;
-    }
+    };
 
     myapp.set('rowActions', [{
       icon: 'info',
@@ -5295,7 +5274,7 @@ window.customElements.define("oe-data-table-styling", class extends DemoMixin(Po
 
     myapp.handleRowActions = function (event) {
       myapp.set('eventString', JSON.stringify(event.detail, null, 2));
-    }
+    };
 
     myapp.rowUpdated = function (event) {
       event.stopPropagation();
@@ -5305,7 +5284,7 @@ window.customElements.define("oe-data-table-styling", class extends DemoMixin(Po
         (index >= 0) && myapp.splice('items', index, 1, newRecord);
         myapp.set('userEdit', null);
       }
-    }
+    };
   }
 
 });
