@@ -17,17 +17,11 @@ styleElement.innerHTML =
         @apply --layout-inline;
         @apply --layout-flex;
         @apply --oe-data-table-data;
-    }
-
-    .table-data:first-of-type {
-        padding: 0;
-        padding-right: 24px;
-    }
-
+    } 
     :host([disable-selection]) .table-data:first-of-type {
         padding-left: 24px;
     }
-
+    
     .table-data:last-of-type {
         padding-right: 24px;
     }

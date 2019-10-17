@@ -54,8 +54,6 @@ class DemoAccordian extends OECommonMixin(PolymerElement){
         return "demo-accordian";
     }
     dataChanged(e) {
-
-        console.log("pulkit");
         console.log(this.data);
     }
     imgFun(){

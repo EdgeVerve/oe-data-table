@@ -13,7 +13,10 @@ import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/paper-toast/paper-toast.js';
-import '@polymer/gold-phone-input/gold-phone-input.js';
+import 'oe-info/oe-info.js';
+import 'oe-input/oe-decimal.js';
+import 'oe-input/oe-json-input.js';
+import 'oe-input/oe-input.js';
 import 'oe-app-route/oe-app-route.js';
 import './custom-demo-snippet';
 import 'oe-combo/oe-typeahead.js';
@@ -41,88 +44,85 @@ var DemoMixin = function (base) {
       node.dispatchEvent(event);
       return event;
     }
-  }
-}
+  };
+};
 
 
 window.customElements.define("overview-detail", class extends DemoMixin(PolymerElement) {
   static get template() {
     return html`
-        <style include="demo-pages-shared-styles">
-        
-        </style>
         <div>
-        <h1> Overview </h1>
-        <p> The oe-data-table is a tabular component written in Polymer with the Material Design data table standards.
-        </p>
-        <p> The items property specifies an array of list item data and the columns property specifies an array of column
-          definitions to show. </p>
-        <custom-demo-snippet>
-					<div>
+          <h1> Overview </h1>
+          <p> The oe-data-table is a tabular component written in Polymer with the Material Design data table standards.
+          </p>
+          <p> The items property specifies an array of list item data and the columns property specifies an array of column
+            definitions to show. </p>
+          <custom-demo-snippet>
+            <div>
               <oe-data-table id="simple-table" label="Simple Table"></oe-data-table>
               <script>
-              var dataTable = this.shadowRoot.querySelector('#simple-table');
-              dataTable.set('columns', [{
-                key: 'id',
-                label: 'Id',
-                type: 'number',
-                readOnly: true,
-                tooltip:"Id"
-              }, {
-                key: 'name',
-                label: 'Name',
-                type: 'string',
-                alignment:'center'
-              }, {
-                key: 'details.location',
-                label: 'Location',
-                type: 'string'
-              }, {
-                key: 'details',
-                label: 'Details',
-                type: 'object',
-                tooltip:"Details of the user",
-                valueAsTooltip:true
-              }]);
-
-              dataTable.set('items', [{
-                id: 1,
-                name: 'Admin',
-                details: {
-                  gender: 'male',
-                  location: 'Bangalore',
-                  country: 'India'
-                }
-              }, {
-                id: 2,
-                name: 'Developer',
-                details: {
-                  gender: 'female',
-                  location: 'Bangalore',
-                  country: 'India'
-                }
-              }, {
-                id: 3,
-                name: 'Designer',
-                details: {
-                  gender: 'male',
-                  location: 'Chennai',
-                  country: 'India'
-                }
-              }, {
-                id: 4,
-                name: 'Tester',
-                details: {
-                  gender: 'male',
-                  location: 'Chennai',
-                  country: 'India'
-                }
-              }]);
-
-            </script>
+                var dataTable = this.shadowRoot.querySelector('#simple-table');
+                        dataTable.set('columns', [{
+                          key: 'id',
+                          label: 'Id',
+                          type: 'number',
+                          readOnly: true,
+                          tooltip:"Id"
+                        }, {
+                          key: 'name',
+                          label: 'Name',
+                          type: 'string',
+                          alignment:'center'
+                        }, {
+                          key: 'details.location',
+                          label: 'Location',
+                          type: 'string'
+                        }, {
+                          key: 'details',
+                          label: 'Details',
+                          type: 'object',
+                          tooltip:"Details of the user",
+                          valueAsTooltip:true
+                        }]);
+          
+                        dataTable.set('items', [{
+                          id: 1,
+                          name: 'Admin',
+                          details: {
+                            gender: 'male',
+                            location: 'Bangalore',
+                            country: 'India'
+                          }
+                        }, {
+                          id: 2,
+                          name: 'Developer',
+                          details: {
+                            gender: 'female',
+                            location: 'Bangalore',
+                            country: 'India'
+                          }
+                        }, {
+                          id: 3,
+                          name: 'Designer',
+                          details: {
+                            gender: 'male',
+                            location: 'Chennai',
+                            country: 'India'
+                          }
+                        }, {
+                          id: 4,
+                          name: 'Tester',
+                          details: {
+                            gender: 'male',
+                            location: 'Chennai',
+                            country: 'India'
+                          },
+                        }]);
+                                                                
+              </script>
             </div>
-        </custom-demo-snippet>
-      </div>      
+          </custom-demo-snippet>
+        </div>
         `;
   }
 
@@ -153,6 +153,134 @@ window.customElements.define("overview-detail", class extends DemoMixin(PolymerE
     }]);
 
     dataTable.set('items', [{
+      id: 1,
+      name: 'Admin',
+      details: {
+        gender: 'male',
+        location: 'Bangalore',
+        country: 'India'
+      }
+    }, {
+      id: 2,
+      name: 'Developer',
+      details: {
+        gender: 'female',
+        location: 'Bangalore',
+        country: 'India'
+      }
+    }, {
+      id: 3,
+      name: 'Designer',
+      details: {
+        gender: 'male',
+        location: 'Chennai',
+        country: 'India'
+      }
+    }, {
+      id: 4,
+      name: 'Tester',
+      details: {
+        gender: 'male',
+        location: 'Chennai',
+        country: 'India'
+      }
+    }, {
+      id: 1,
+      name: 'Admin',
+      details: {
+        gender: 'male',
+        location: 'Bangalore',
+        country: 'India'
+      }
+    }, {
+      id: 2,
+      name: 'Developer',
+      details: {
+        gender: 'female',
+        location: 'Bangalore',
+        country: 'India'
+      }
+    }, {
+      id: 3,
+      name: 'Designer',
+      details: {
+        gender: 'male',
+        location: 'Chennai',
+        country: 'India'
+      }
+    }, {
+      id: 4,
+      name: 'Tester',
+      details: {
+        gender: 'male',
+        location: 'Chennai',
+        country: 'India'
+      }
+    }, {
+      id: 1,
+      name: 'Admin',
+      details: {
+        gender: 'male',
+        location: 'Bangalore',
+        country: 'India'
+      }
+    }, {
+      id: 2,
+      name: 'Developer',
+      details: {
+        gender: 'female',
+        location: 'Bangalore',
+        country: 'India'
+      }
+    }, {
+      id: 3,
+      name: 'Designer',
+      details: {
+        gender: 'male',
+        location: 'Chennai',
+        country: 'India'
+      }
+    }, {
+      id: 4,
+      name: 'Tester',
+      details: {
+        gender: 'male',
+        location: 'Chennai',
+        country: 'India'
+      }
+    }, {
+      id: 1,
+      name: 'Admin',
+      details: {
+        gender: 'male',
+        location: 'Bangalore',
+        country: 'India'
+      }
+    }, {
+      id: 2,
+      name: 'Developer',
+      details: {
+        gender: 'female',
+        location: 'Bangalore',
+        country: 'India'
+      }
+    }, {
+      id: 3,
+      name: 'Designer',
+      details: {
+        gender: 'male',
+        location: 'Chennai',
+        country: 'India'
+      }
+    }, {
+      id: 4,
+      name: 'Tester',
+      details: {
+        gender: 'male',
+        location: 'Chennai',
+        country: 'India'
+      }
+    }, {
       id: 1,
       name: 'Admin',
       details: {
@@ -246,9 +374,7 @@ window.customElements.define("declaring-column", class extends DemoMixin(Polymer
       id: 4,
       name: 'Tester'
     }]);
-
   }
-
 });
 
 window.customElements.define("column-resize", class extends DemoMixin(PolymerElement) {
@@ -1072,7 +1198,7 @@ window.customElements.define("cell-rendering", class extends DemoMixin(PolymerEl
     });
 
     var flagsTable2 = this.shadowRoot.querySelector('#flags-table2');
-    
+
     flagsTable2.set('currencyColumns', [{
       key: 'code',
       label: 'Country',
@@ -1129,7 +1255,7 @@ window.customElements.define("inline-editing", class extends DemoMixin(PolymerEl
   static get template() {
     return html`
         <style include="demo-pages-shared-styles">
-        
+       
         </style>
         <div>
         <h1>Inline Editing</h1>
@@ -1137,7 +1263,8 @@ window.customElements.define("inline-editing", class extends DemoMixin(PolymerEl
           be changed by giving ui<b>T</b>ype property of the column. Also for columns that should not be editable, readOnly
           property can be set at column level.</p>
         <custom-demo-snippet>
-					<div>
+          <div>
+        
             <oe-data-table id="inlineedit" label="Inline Table"></oe-data-table>
             <script>
               var inlineedit = this.shadowRoot.querySelector('#inlineedit');
@@ -1181,7 +1308,7 @@ window.customElements.define("inline-editing", class extends DemoMixin(PolymerEl
         <strong>Inline editing with oe-combo</strong>
         <custom-demo-snippet>
 					<div>
-            <oe-data-table label="Inline Edit" id="inlineEditCombo"></oe-data-table>
+            <oe-data-table  label="Inline Edit" id="inlineEditCombo"></oe-data-table>
             <script>
               var dataTable = this.shadowRoot.querySelector('#inlineEditCombo'); // eslint-disable-line no-redeclare
               dataTable.set('columns', [{
@@ -1383,9 +1510,15 @@ window.customElements.define("cell-types", class extends DemoMixin(PolymerElemen
             var phoneTable = this.shadowRoot.querySelector('#phone-table');
 
             OEUtils.TypeMappings.phone = {
-              uiType: 'gold-phone-input'
+              uiType: 'oe-decimal'
             }
-
+            var decimalRenderer= function (column, row) { // eslint-disable-line no-unused-vars
+              var elementToReturn =
+                  '<div style="text-align: right;display: flex;justify-content: flex-end;"> <div style="margin-top: 8px;">$&nbsp;</div> <oe-info class="amount-info" precision=[[row.precision]] type="decimal" value=[[row.amount]]></oe-info> </span> </div>';
+      
+      
+              return elementToReturn;
+          };
             phoneTable.set('columns', [{
               key: 'user',
               label: 'User',
@@ -1393,7 +1526,8 @@ window.customElements.define("cell-types", class extends DemoMixin(PolymerElemen
             }, {
               key: 'phone',
               label: 'Phone Number',
-              type: 'phone'
+              type: 'phone',
+              renderer: decimalRenderer
             }]);
 
             phoneTable.set('items', [{
@@ -1401,7 +1535,7 @@ window.customElements.define("cell-types", class extends DemoMixin(PolymerElemen
               phone: 1242109098
             }, {
               user: 'John',
-              phone: 7812901028
+              phone:7812901028
             }, {
               user: 'Stella',
               phone: 1234522221
@@ -1420,9 +1554,16 @@ window.customElements.define("cell-types", class extends DemoMixin(PolymerElemen
 
   _onPageVisible() {
     var phoneTable = this.shadowRoot.querySelector('#phone-table');
+    var decimalRenderer = function (column, row) { // eslint-disable-line no-unused-vars
+      var elementToReturn =
+        '<div> <span><oe-info class="phone-info" precision=0 value=[[row.phone]]></oe-info> </span> </div>';
+
+
+      return elementToReturn;
+    };
 
     OEUtils.TypeMappings.phone = {
-      uiType: 'gold-phone-input'
+      uiType: 'oe-decimal'
     };
 
     phoneTable.set('columns', [{
@@ -1432,7 +1573,8 @@ window.customElements.define("cell-types", class extends DemoMixin(PolymerElemen
     }, {
       key: 'phone',
       label: 'Phone Number',
-      type: 'phone'
+      type: 'phone',
+      renderer: decimalRenderer
     }]);
 
     phoneTable.set('items', [{
@@ -1456,7 +1598,6 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
   static get template() {
     return html`
         <style include="demo-pages-shared-styles">
-        
         </style>
         <div>
         <h1> Row Action </h1>
@@ -1719,86 +1860,86 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
       }
     };
     var myapp = this.shadowRoot.querySelector('#myappRowActionCompute');
-            
-            myapp.set('columns', [{
-              key: 'key',
-              label: 'Key',
-              type: 'string'
-            }, {
-              key: 'value',
-              label: 'Value',
-              type: 'string'
-            }]);
 
-            myapp.set('items', [{
-              id: 1,
-              key: 'Mike',
-              value: 'mike@ev.com',
-              isHiddenView: true
-            }, {
-              id: 2,
-              key: 'John',
-              value: 'john@ev.com',
-              isHiddenEdit: true
-            }, {
-              id: 3,
-              key: 'Stella',
-              value: 'stella@ev.com',
-              isHiddenBookMark: true,
-              isHiddenEdit: true
+    myapp.set('columns', [{
+      key: 'key',
+      label: 'Key',
+      type: 'string'
+    }, {
+      key: 'value',
+      label: 'Value',
+      type: 'string'
+    }]);
 
-            }, {
-              id: 4,
-              key: 'Francis',
-              value: 'francis@ev.com',
-              isHiddenView: true,
-              isHiddenEdit: true
-            }]);
+    myapp.set('items', [{
+      id: 1,
+      key: 'Mike',
+      value: 'mike@ev.com',
+      isHiddenView: true
+    }, {
+      id: 2,
+      key: 'John',
+      value: 'john@ev.com',
+      isHiddenEdit: true
+    }, {
+      id: 3,
+      key: 'Stella',
+      value: 'stella@ev.com',
+      isHiddenBookMark: true,
+      isHiddenEdit: true
 
-            var isHiddenEdit = function (row) {
-                return row.isHiddenEdit;
-            }
+    }, {
+      id: 4,
+      key: 'Francis',
+      value: 'francis@ev.com',
+      isHiddenView: true,
+      isHiddenEdit: true
+    }]);
 
-            var isHiddenView = function (row) {
-                return row.isHiddenView;
-            }
+    var isHiddenEdit = function (row) {
+      return row.isHiddenEdit;
+    };
 
-            var isHiddenBookMark = function (row) {
-                return row.isHiddenBookMark;
-            }
+    var isHiddenView = function (row) {
+      return row.isHiddenView;
+    };
 
-            myapp.set('rowActions', [{
-              icon: 'info',
-              action: 'info',
-              title: 'details',
-              formUrl:'../oe-data-table/demo/templates/literal-view.js',
-              isHiddenFunction: isHiddenView
-            }, {
-              icon: 'editor:mode-edit',
-              title: 'edit',
-              action: 'edit',
-              formUrl:'../oe-data-table/demo/templates/literal-default.js',
-              isHiddenFunction: isHiddenEdit
-            },{
-              icon: 'star',
-              action: 'bookmark',
-              title: 'bookmark',
-              isHiddenFunction: isHiddenBookMark
-            }]);
+    var isHiddenBookMark = function (row) {
+      return row.isHiddenBookMark;
+    };
 
-            myapp.handleRowActions = function (event) {
-              myapp.set('eventString',JSON.stringify(event.detail,null,2));
-            }
+    myapp.set('rowActions', [{
+      icon: 'info',
+      action: 'info',
+      title: 'details',
+      formUrl: '../oe-data-table/demo/templates/literal-view.js',
+      isHiddenFunction: isHiddenView
+    }, {
+      icon: 'editor:mode-edit',
+      title: 'edit',
+      action: 'edit',
+      formUrl: '../oe-data-table/demo/templates/literal-default.js',
+      isHiddenFunction: isHiddenEdit
+    }, {
+      icon: 'star',
+      action: 'bookmark',
+      title: 'bookmark',
+      isHiddenFunction: isHiddenBookMark
+    }]);
 
-            myapp.rowUpdated = function (event) {
-              event.stopPropagation();
-              if (myapp.userEdit) {
-                var index = myapp.items.indexOf(myapp.userEdit);
-                var newRecord = event.detail;
-                (index >= 0) && myapp.splice('items', index, 1, newRecord);
-                myapp.set('userEdit', null);
-              }
-            }
+    myapp.handleRowActions = function (event) {
+      myapp.set('eventString', JSON.stringify(event.detail, null, 2));
+    };
+
+    myapp.rowUpdated = function (event) {
+      event.stopPropagation();
+      if (myapp.userEdit) {
+        var index = myapp.items.indexOf(myapp.userEdit);
+        var newRecord = event.detail;
+        (index >= 0) && myapp.splice('items', index, 1, newRecord);
+        myapp.set('userEdit', null);
+      }
+    };
   }
 
 });
@@ -1807,7 +1948,6 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
   static get template() {
     return html`
         <style include="demo-pages-shared-styles iron-flex iron-flex-alignment">
-        
         </style>
         <div>
         <h1> Pagination </h1>
@@ -1831,15 +1971,16 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
           Check the below example for the usage of virtual pagination , client side pagination and server side pagination using the "dataController" property.
         </p>
         <custom-demo-snippet>
+       
           <div>
             <dom-bind id="pagination-table">
               <template>
                 <h3> Default Virtual Pagination </h3>
                 <oe-data-table id="table" label="Phone" columns=[[columns]] items=[[defaultItems]]></oe-data-table>
                 <h3> Client Pagination </h3>
-                <oe-data-table id="table" label="Phone Pagination" columns=[[columns]] items=[[defaultItems2]] pagination-type="page"></oe-data-table>
+                <oe-data-table id="table" class="phone-pagination" label="Phone Pagination" columns=[[columns]] items=[[defaultItems2]] pagination-type="page"></oe-data-table>
                 <h3> Server side pagination </h3>
-                <oe-data-table label="Literal" columns=[[literalColumns]] rest-url='/api/Literals'></oe-data-table>
+                <oe-data-table  label="Literal" columns=[[literalColumns]] rest-url='/api/Literals'></oe-data-table>
               </template>
             </dom-bind>
             <script>
@@ -1847,61 +1988,188 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
 
               var defaultItems = [{
                 user: 'Mike',
-                phone: 1242109098
+                phone: 1242109098,
+                serialNumber: 2,
+                userType: 'Developer',
+                userName: 'Matthews',
+                account: 861363459,
+                checknumber: 223457,
+                status: 'Approved',
+                exception_reason: 'Paid No Issue'
               }, {
                 user: 'John',
-                phone: 7812901028
+                phone: 7812901028,
+                serialNumber: 1,
+                userType: 'Admin',
+                userName: 'John',
+                account: 794659139,
+                checknumber: 23456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud'
               }, {
                 user: 'Stella',
-                phone: 1234522221
+                phone: 1234522221,
+                serialNumber: 3,
+                userType: 'Designer',
+                userName: 'Sarah',
+                account: 479677228,
+                checknumber: 223431,
+                status: 'Pending Decision',
+                exception_reason: 'Payee Missmatch',
+                action: 'Select'
               }, {
                 user: 'Francis',
-                phone: 1232323121
+                phone: 1232323121,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 334547856,
+                checknumber: 2234567,        
+                status: 'Rejected',
+                exception_reason: 'Paid Fraud',
               }, {
                 user: 'Kevin',
-                phone: 21209921001
+                phone: 21209921001,
+                serialNumber: 4,
+                userType: 'Designer',
+                userName: 'Tom',
+                account: 452135542,
+                checknumber: 123564,          
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
               }, {
                 user: 'Andrew',
-                phone: 12372819212
+                phone: 12372819212,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 135322523,
+                checknumber: 3341234,
+                status: 'Pending Decision',
+                exception_reason: 'Payee Missmatch',
               }, {
                 user: 'Catherine',
-                phone: 8762731212
+                phone: 8762731212,
+                serialNumber: 4,
+                userType: 'Developer',
+                userName: 'Tom',
+                account: 542412943,
+                checknumber: 342352,      
+                status: 'Pending Decision',
+                exception_reason: 'Paid No Issue',
               }, {
                 user: 'David',
-                phone: 12989978012
+                phone: 12989978012,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 135322523,
+                checknumber: 3341234,
+                status: 'Pending Decision',
+                exception_reason: 'Payee Missmatch',
               }, {
                 user: 'Henry',
-                phone: 123412123322
+                phone: 123412123322,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
               }, {
                 user: 'Ivan',
-                phone: 9867823231
+                phone: 9867823231,
+                serialNumber: 4,
+                userType: 'Developer',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
               }, {
                 user: 'Oliver',
-                phone: 8776767666
-              },{
+                phone: 8776767666,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
                 user: 'Bruce',
-                phone: 8772367666
-              },{
+                phone: 8772367666,
+                serialNumber: 4,
+                userType: 'Designer',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
                 user: 'Clark',
-                phone: 8773467666
-              },{
+                phone: 8773467666,
+                serialNumber: 4,
+                userType: 'Designer',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
                 user: 'Diana',
-                phone: 8246767666
-              },{
+                phone: 8246767666,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
                 user: 'Barry',
-                phone: 8776767876
-              },{
+                phone: 8776767876,
+                serialNumber: 4,
+                userType: 'Designer',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
                 user: 'Hal',
-                phone: 8776760366
-              },{
+                phone: 8776760366,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
                 user: 'Carter',
-                phone: 8776517666
-              },{
+                phone: 8776517666,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
                 user: 'Victor',
-                phone: 9076767666
+                phone: 9076767666,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
               }];
-
-              paginationTable.set('columns', [{
+          
+              var columns = [{
                 key: 'user',
                 label: 'User',
                 type: 'string'
@@ -1909,8 +2177,39 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
                 key: 'phone',
                 label: 'Phone Number',
                 type: 'phone'
-              }]);
-
+              },{
+                key: 'serialNumber',
+                label: 'Sr. Number',
+                uitype: 'number'
+              }, {
+                key: 'userType',
+                label: 'User Type',
+                uitype: 'string'
+              }, {
+                key: 'userName',
+                label: 'User',
+                uitype: 'string'
+              },
+              {
+                key: 'account',
+                label: 'Account',
+                type: 'number'
+              }, {
+                key: 'checknumber',
+                label: 'Check Number',
+                type: 'number',
+                cellClass: 'blue-color'
+              }, {
+                key: 'status',
+                label: 'Status',
+                type: 'string'
+              }, {
+                key: 'exception_reason',
+                label: 'Exception Reason',
+                type: 'string'
+              }];
+              paginationTable.set('columns', columns);
+          
               paginationTable.set('literalColumns', [{
                 key: 'key',
                 label: 'Key',
@@ -1919,7 +2218,8 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
                 key: 'value',
                 label: 'Value',
                 type: 'string'
-              }]);
+              },]);
+          
 
               paginationTable.set('defaultItems', defaultItems);
               paginationTable.set('defaultItems2', defaultItems.slice());
@@ -1927,46 +2227,40 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
           </div>
         </custom-demo-snippet>
         <p>
-            When page-size property is set to "-1" the oe-data-table fills the entire height of the container and displays available number of records.
-            When the height of the container varies the data-table adjests itself to display within the container.
+            When auto-fit property is set the height of the data-table has to be mentioned in the css then the data table fits to the height mentioned.
+            If the auto-fit is set and height is not mentioned then only one row will be displayed. which is demonstrated in Autofit without height demo
+            In Autofit table the auto fit is set and height is mentioned as 500px.
         </p>
         <custom-demo-snippet>
           <div>
-            <dom-bind id="dynamic-table">
+            <dom-bind id="autofit-table">
               <template>
                <style include="iron-flex iron-flex-alignment">
-                  .parent-block{
-                    height:500px;  
-                    overflow:auto;
-                  }
-                  .container{
-                    padding:8px;
-                  }
-                  oe-data-table{
-                    height:100%;
-                  }
-                  .table-container{
-                    height: -webkit-fill-available;
-                  }
                 </style>
                 <div class="layout vertical parent-block">
-                  <div class="container layout horizontal center">
-                    <label class="flex"> Demo </label>
-                    <button on-tap="_toggle">Toggle collapse</button>
-                    <button on-tap="_toggleHeadingPage">Toggle Heading Pane</button>
-                  </div>
-                  <iron-collapse opened=[[opened]]>
-                    <div class="container heading-content">
-                      <h3 class="title">
-                      As the parent container is set with CSS to "height: -webkit-fill-available", it adjusts its height automatically, allowing the oe-data-table to fill 100% of its height.</h3>
-                    </div>
-                  </iron-collapse>
                   <div class="table-container container">
-                    <oe-data-table id="simple-table" 
+                    <oe-data-table auto-fit style="height: 400px" id="simple-table" 
                     hide-header=[[_hideHeading]] 
                     columns=[[columns]] 
-                    items=[[defaultItems]] 
-                    page-size="-1" label="Dynamic Table"></oe-data-table>
+                    items=[[defaultItems]] label="AutoFit Table"></oe-data-table>
+                  </div>
+                </div> 
+              </template>
+            </dom-bind>
+          </div>
+        </custom-demo-snippet>
+        <custom-demo-snippet>
+          <div>
+            <dom-bind id="autofit-table2">
+              <template>
+               <style include="iron-flex iron-flex-alignment">
+                </style>
+                <div class="layout vertical parent-block">
+                  <div class="table-container container">
+                    <oe-data-table auto-fit id="simple-table" 
+                    hide-header=[[_hideHeading]] 
+                    columns=[[columns]] 
+                    items=[[defaultItems]] label="AutoFit Table without height"></oe-data-table>
                   </div>
                 </div> 
               </template>
@@ -1979,62 +2273,79 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
 
   _onPageVisible() {
     var paginationTable = this.shadowRoot.querySelector('#pagination-table');
-    var dynamicTable = this.shadowRoot.querySelector('#dynamic-table');
-
+    var autofitTable = this.shadowRoot.querySelector('#autofit-table');
+    var autofitTable2 = this.shadowRoot.querySelector('#autofit-table2');
     var defaultItems = [{
       user: 'Mike',
-      phone: 1242109098
+      phone: 1242109098,
+      serialNumber: 2,
+      userType: 'Developer',
+      userName: 'Matthews',
+      account: 861363459,
+      checknumber: 223457,
+      status: 'Approved',
+      exception_reason: 'Paid No Issue'
     }, {
       user: 'John',
-      phone: 7812901028
+      phone: 7812901028,
+      serialNumber: 1,
+      userType: 'Admin',
+      userName: 'John',
+      account: 794659139,
+      checknumber: 23456,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud'
     }, {
       user: 'Stella',
-      phone: 1234522221
+      phone: 1234522221,
+      serialNumber: 3,
+      userType: 'Designer',
+      userName: 'Sarah',
+      account: 479677228,
+      checknumber: 223431,
+      status: 'Pending Decision',
+      exception_reason: 'Payee Missmatch',
+      action: 'Select'
     }, {
       user: 'Francis',
-      phone: 1232323121
+      phone: 1232323121,
+      serialNumber: 4,
+      userType: 'Tester',
+      userName: 'Tom',
+      account: 334547856,
+      checknumber: 2234567,
+      status: 'Rejected',
+      exception_reason: 'Paid Fraud',
     }, {
       user: 'Kevin',
-      phone: 21209921001
+      phone: 21209921001,
+      serialNumber: 4,
+      userType: 'Designer',
+      userName: 'Tom',
+      account: 452135542,
+      checknumber: 123564,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud',
     }, {
       user: 'Andrew',
-      phone: 12372819212
+      phone: 12372819212,
+      serialNumber: 4,
+      userType: 'Tester',
+      userName: 'Tom',
+      account: 135322523,
+      checknumber: 3341234,
+      status: 'Pending Decision',
+      exception_reason: 'Payee Missmatch',
     }, {
       user: 'Catherine',
-      phone: 8762731212
-    }, {
-      user: 'David',
-      phone: 12989978012
-    }, {
-      user: 'Henry',
-      phone: 123412123322
-    }, {
-      user: 'Ivan',
-      phone: 9867823231
-    }, {
-      user: 'Oliver',
-      phone: 8776767666
-    }, {
-      user: 'Bruce',
-      phone: 8772367666
-    }, {
-      user: 'Clark',
-      phone: 8773467666
-    }, {
-      user: 'Diana',
-      phone: 8246767666
-    }, {
-      user: 'Barry',
-      phone: 8776767876
-    }, {
-      user: 'Hal',
-      phone: 8776760366
-    }, {
-      user: 'Carter',
-      phone: 8776517666
-    }, {
-      user: 'Victor',
-      phone: 9076767666
+      phone: 8762731212,
+      serialNumber: 4,
+      userType: 'Developer',
+      userName: 'Tom',
+      account: 542412943,
+      checknumber: 342352,
+      status: 'Pending Decision',
+      exception_reason: 'Paid No Issue',
     }];
 
     var columns = [{
@@ -2045,8 +2356,38 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
       key: 'phone',
       label: 'Phone Number',
       type: 'phone'
-    }]
-    paginationTable.set('columns',columns );
+    }, {
+      key: 'serialNumber',
+      label: 'Sr. Number',
+      uitype: 'number'
+    }, {
+      key: 'userType',
+      label: 'User Type',
+      uitype: 'string'
+    }, {
+      key: 'userName',
+      label: 'User',
+      uitype: 'string'
+    },
+    {
+      key: 'account',
+      label: 'Account',
+      type: 'number'
+    }, {
+      key: 'checknumber',
+      label: 'Check Number',
+      type: 'number',
+      cellClass: 'blue-color'
+    }, {
+      key: 'status',
+      label: 'Status',
+      type: 'string'
+    }, {
+      key: 'exception_reason',
+      label: 'Exception Reason',
+      type: 'string'
+    }];
+    paginationTable.set('columns', columns);
 
     paginationTable.set('literalColumns', [{
       key: 'key',
@@ -2056,26 +2397,18 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
       key: 'value',
       label: 'Value',
       type: 'string'
-    }]);
+    },]);
 
 
     paginationTable.set('defaultItems', defaultItems);
     paginationTable.set('defaultItems2', defaultItems.slice());
 
-    dynamicTable.set('columns',columns );
-    dynamicTable.set('defaultItems', defaultItems);
-    dynamicTable._toggle = this._toggle;
-    dynamicTable._toggleHeadingPage = this._toggleHeadingPage;
-  }
+    autofitTable.set('columns', columns);
+    autofitTable.set('defaultItems', defaultItems);
+    autofitTable2.set('columns', columns);
+    autofitTable2.set('defaultItems', defaultItems);
 
-  _toggle(){
-    this.set("opened",!this.opened);
   }
-
-  _toggleHeadingPage(){
-    this.set('_hideHeading',!this._hideHeading);
-  }
-
 
 
 });
@@ -3387,53 +3720,38 @@ window.customElements.define("other-options", class extends DemoMixin(PolymerEle
   }
 
 });
-window.customElements.define('accordian-view',class extends DemoMixin(PolymerElement) {
-  static get template(){
+window.customElements.define('accordian-view', class extends DemoMixin(PolymerElement) {
+  static get template() {
     return html` 
     <style include="demo-pages-shared-styles">
-        
+   
     </style>
     <div>
     <h1> Accordion View </h1>
     <p> Accordion View is supported by the oe-data-table. Any external component can be imported into the accordion.
     </p>
-    <p> Three data level properties need to be defined. </p>
-    <p> 2. <strong>accordianElement:</strong> Name of the element to be shown inside accodion view. </p>
-    <p> 3. <strong>showAccordian:</strong> true/false to show/hide the accordion </p>
-    
+    <p> Two data level properties need to be defined. </p>
+    <p> 1. <strong>accordianElement:</strong> Name of the element to be shown inside accodion view. </p>
+    <p> 2. <strong>showAccordian:</strong> true/false to show/hide the accordion </p>
     <custom-demo-snippet>
     <div>
         <oe-data-table disabled disable-config-editor disable-edit disable-delete disable-add id="accordian-table" label="Simple Table"></oe-data-table>
         <script>
           var dataTable = this.shadowRoot.querySelector('#accordian-table');
-
-
-        var dropDownRenderer= function (column, row) { // eslint-disable-line no-unused-vars
-        
-
-        // var elementToReturn =
-        // '<paper-dropdown-menu label="Dinosaurs"><paper-listbox slot="dropdown-content" selected="1"><paper-item>allosaurus</paper-item><paper-item>brontosaurus</paper-item><paper-item>carcharodontosaurus</paper-item><paper-item>diplodocus</paper-item></paper-listbox></paper-dropdown-menu>';
-        
-        var elementToReturn = "";
-        if(row.status === 'Pending Decision'){
-             elementToReturn = 
-        '<select style=" background-color: transparent; border: 1px solid #d1d2d3;"><option value="" disabled selected>Select</option><option value="accept">Accept</option><option value="reject">Reject</option></select>';
-        }
-        else{
-            elementToReturn = 
-        '<select style="display: none; background-color: transparent; border: 1px solid #d1d2d3;"><option value="volvo">Volvo</option><option value="saab">Saab</option><option value="mercedes">Mercedes</option><option value="audi">Audi</option></select>';
-        }
-       
-        return elementToReturn;
-    };
-
-    var amountRenderer= function (column, row) { // eslint-disable-line no-unused-vars
-        var elementToReturn =
-            '<div style="text-align: right;display: flex;justify-content: flex-end;"> <div style="margin-top: 8px;">$&nbsp;</div> <oe-info class="amount-info" precision=[[row.precision]] type="decimal" value=[[row.amount]]></oe-info> </span> </div>';
-
-
-        return elementToReturn;
-    };
+          var dropDownRenderer= function (column, row) { // eslint-disable-line no-unused-vars
+            var elementToReturn = "";
+            if(row.status === 'Pending Decision'){
+                elementToReturn = '<select style=" background-color: transparent; border: 1px solid #d1d2d3;"><option value="" disabled selected>Select</option><option value="accept">Accept</option><option value="reject">Reject</option></select>';
+            }
+            else{
+                elementToReturn = '<select style="display: none; background-color: transparent; border: 1px solid #d1d2d3;"><option value="volvo">Volvo</option><option value="saab">Saab</option><option value="mercedes">Mercedes</option><option value="audi">Audi</option></select>';
+            }
+            return elementToReturn;
+          };
+          var amountRenderer= function (column, row) { // eslint-disable-line no-unused-vars
+              var elementToReturn ='<div style="text-align: right;display: flex;justify-content: flex-end;"> <div style="margin-top: 8px;">$&nbsp;</div> <oe-info class="amount-info" precision=[[row.precision]] type="decimal" value=[[row.amount]]></oe-info> </span> </div>';
+              return elementToReturn;
+          };
           dataTable.set('columns', [{
             key: 'account',
             label: 'Account',
@@ -3461,11 +3779,8 @@ window.customElements.define('accordian-view',class extends DemoMixin(PolymerEle
           {
             key: 'action',
             label: 'Action',
-
-
             type: 'string',
             renderer: dropDownRenderer
-
           }]);
 
           var data = [{
@@ -3536,154 +3851,1442 @@ window.customElements.define('accordian-view',class extends DemoMixin(PolymerEle
           ];
           dataTable.set('items', data);
           
-
-          
           dataTable.set('accordianElement', "demo-accordian");
           dataTable.set('showAccordian', true);
-
         </script>
      </div>
     	</custom-demo-snippet>
   </div>
-  `
+  `;
   }
   _onPageVisible() {
     var dataTable = this.shadowRoot.querySelector('#accordian-table');
 
 
-        var dropDownRenderer= function (column, row) { // eslint-disable-line no-unused-vars
-        
+    var dropDownRenderer = function (column, row) { // eslint-disable-line no-unused-vars
 
-        // var elementToReturn =
-        // '<paper-dropdown-menu label="Dinosaurs"><paper-listbox slot="dropdown-content" selected="1"><paper-item>allosaurus</paper-item><paper-item>brontosaurus</paper-item><paper-item>carcharodontosaurus</paper-item><paper-item>diplodocus</paper-item></paper-listbox></paper-dropdown-menu>';
+
+      // var elementToReturn =
+      // '<paper-dropdown-menu label="Dinosaurs"><paper-listbox slot="dropdown-content" selected="1"><paper-item>allosaurus</paper-item><paper-item>brontosaurus</paper-item><paper-item>carcharodontosaurus</paper-item><paper-item>diplodocus</paper-item></paper-listbox></paper-dropdown-menu>';
+
+      var elementToReturn = "";
+      if (row.status === 'Pending Decision') {
+        elementToReturn =
+          '<select style=" background-color: transparent; border: 1px solid #d1d2d3;"><option value="" disabled selected>Select</option><option value="accept">Accept</option><option value="reject">Reject</option></select>';
+      }
+      else {
+        elementToReturn =
+          '<select style="display: none; background-color: transparent; border: 1px solid #d1d2d3;"><option value="volvo">Volvo</option><option value="saab">Saab</option><option value="mercedes">Mercedes</option><option value="audi">Audi</option></select>';
+      }
+
+      return elementToReturn;
+    };
+
+    var amountRenderer = function (column, row) { // eslint-disable-line no-unused-vars
+      var elementToReturn =
+        '<div style="text-align: right;display: flex;justify-content: flex-end;"> <div style="margin-top: 8px;">$&nbsp;</div> <oe-info class="amount-info" precision=[[row.precision]] type="decimal" value=[[row.amount]]></oe-info> </span> </div>';
+
+
+      return elementToReturn;
+    };
+    dataTable.set('columns', [{
+      key: 'account',
+      label: 'Account',
+      type: 'number'
+    }, {
+      key: 'checknumber',
+      label: 'Check Number',
+      type: 'number',
+      cellClass: 'blue-color'
+    }, {
+      key: 'amount',
+      label: 'Amount',
+      type: 'number',
+      renderer: amountRenderer
+    }, {
+      key: 'exception_reason',
+      label: 'Exception Reason',
+      type: 'string'
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      type: 'string'
+    },
+    {
+      key: 'action',
+      label: 'Action',
+
+
+      type: 'string',
+      renderer: dropDownRenderer
+
+    }]);
+
+    var data = [{
+      account: 861363459,
+      checknumber: 223457,
+      amount: 470631.71,
+      status: 'Approved',
+      exception_reason: 'Paid No Issue',
+      action: 'Select'
+    },
+    {
+      account: 794659139,
+      checknumber: 23456,
+      amount: 4763.28,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    },
+    {
+      account: 479677228,
+      checknumber: 223431,
+      amount: 41170631.11,
+      status: 'Pending Decision',
+      exception_reason: 'Payee Missmatch',
+      action: 'Select'
+    },
+    {
+      account: 334547856,
+      checknumber: 2234567,
+      amount: 731.71,
+      status: 'Rejected',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    },
+    {
+      account: 452135542,
+      checknumber: 123564,
+      amount: 520631.51,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    },
+    {
+      account: 542412943,
+      checknumber: 342352,
+      amount: 41170631.71,
+      status: 'Pending Decision',
+      exception_reason: 'Paid No Issue',
+      action: 'Select'
+    },
+    {
+      account: 135322523,
+      checknumber: 3341234,
+      amount: 420631.16,
+      status: 'Pending Decision',
+      exception_reason: 'Payee Missmatch',
+      action: 'Select'
+    },
+    {
+      account: 432356742,
+      checknumber: 223456,
+      amount: 631.71,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    }
+
+    ];
+    dataTable.set('items', data);
+
+
+
+    dataTable.set('accordianElement', "demo-accordian");
+    dataTable.set('showAccordian', true);
+  }
+});
+window.customElements.define('oecombo-showcell', class extends DemoMixin(PolymerElement) {
+  static get template() {
+    return html` 
+    <style include="demo-pages-shared-styles">
         
-        var elementToReturn = "";
-        if(row.status === 'Pending Decision'){
-             elementToReturn = 
-        '<select style=" background-color: transparent; border: 1px solid #d1d2d3;"><option value="" disabled selected>Select</option><option value="accept">Accept</option><option value="reject">Reject</option></select>';
-        }
-        else{
-            elementToReturn = 
-        '<select style="display: none; background-color: transparent; border: 1px solid #d1d2d3;"><option value="volvo">Volvo</option><option value="saab">Saab</option><option value="mercedes">Mercedes</option><option value="audi">Audi</option></select>';
-        }
+    </style>
+    <div>
+    <h1> Conditional oe-combo using showCell</h1>
+             
+              <p>To use oe-combo, following attributes need to be defined.</p>
+              <p>uiType: 'oe-combo'</p>
+              <p>type: 'combo'</p>
+              <p>editorAttributes</p>
+              <p>showCell:if the cell needs to be shown</p>
+              <custom-demo-snippet>
+                <div>
+                  
+                  <oe-data-table  id="oecombo-table" label="Simple Table"></oe-data-table>
+                  <script>
+                    var dataTable = this.shadowRoot.querySelector('#oecombo-table');
+  
+  
+                    var  showCell = function(column, row){
+                      if(row.status === "Pending Decision")
+                          return true;
+                      else
+                          return false;
+                    };
+  
+             
+                    dataTable.set('columns', [{
+                      key: 'account',
+                      label: 'Account',
+                      type: 'number'
+                    }, {
+                      key: 'checknumber',
+                      label: 'Check Number',
+                      type: 'number'
+                    }, {
+                      key: 'amount',
+                      label: 'Amount',
+                      type: 'number',
+                      renderer: amountRenderer
+                    }, {
+                      key: 'exception_reason',
+                      label: 'Exception Reason',
+                      type: 'string'
+                    },
+                    {
+                      key: 'status',
+                      label: 'Status',
+                      type: 'string'
+                    },
+                    {
+                      key: 'action',
+                      label: 'Action',
+                      uiType: 'oe-combo',
+                      type: 'combo',
+                      showCell: this.showCell,
+                      editorAttributes: {
+                          listdata: ['Accept', 'Reject'],
+                          label: 'Select'
+                      }
+  
+                    }]);
+  
+                    var data = [{
+                      account: 861363459,
+                      checknumber: 223457,
+                      amount: 470631.71,
+                      status: 'Approved',
+                      exception_reason: 'Paid No Issue',
+                      action: 'Select'
+                    },
+                    {
+                      account: 794659139,
+                      checknumber: 23456,
+                      amount: 4763.28,
+                      status: 'Pending Decision',
+                      exception_reason: 'Paid Fraud',
+                      action: 'Select'
+                    },
+                    {
+                      account: 479677228,
+                      checknumber: 223431,
+                      amount: 41170631.11,
+                      status: 'Pending Decision',
+                      exception_reason: 'Payee Missmatch',
+                      action: 'Select'
+                    },
+                    {
+                      account: 334547856,
+                      checknumber: 2234567,
+                      amount: 731.71,
+                      status: 'Rejected',
+                      exception_reason: 'Paid Fraud',
+                      action: 'Select'
+                    },
+                    {
+                      account: 452135542,
+                      checknumber: 123564,
+                      amount: 520631.51,
+                      status: 'Pending Decision',
+                      exception_reason: 'Paid Fraud',
+                      action: 'Select'
+                    },
+                    {
+                      account: 542412943,
+                      checknumber: 342352,
+                      amount: 41170631.71,
+                      status: 'Pending Decision',
+                      exception_reason: 'Paid No Issue',
+                      action: 'Select'
+                    },
+                    {
+                      account: 135322523,
+                      checknumber: 3341234,
+                      amount: 420631.16,
+                      status: 'Pending Decision',
+                      exception_reason: 'Payee Missmatch',
+                      action: 'Select'
+                    },
+                    {
+                      account: 432356742,
+                      checknumber: 223456,
+                      amount: 631.71,
+                      status: 'Pending Decision',
+                      exception_reason: 'Paid Fraud',
+                      action: 'Select'
+                    }
+  
+                    ];
+                    dataTable.set('items', data);
+                    
+  
+                  </script>
+    </div>
+    </custom-demo-snippet>
+  </div>
+  `;
+  }
+  _onPageVisible() {
+    var dataTable = this.shadowRoot.querySelector('#oecombo-table');
+
+
+    var showCell = function (column, row) {
+      if (row.status === "Pending Decision")
+        return true;
+      else
+        return false;
+    };
+
+    var amountRenderer = function (column, row) { // eslint-disable-line no-unused-vars
+      var elementToReturn =
+        '<div style="text-align: right;display: flex;justify-content: flex-end;"> <div style="margin-top: 8px;">$&nbsp;</div> <oe-info class="amount-info" precision=[[row.precision]] type="decimal" value=[[row.amount]]></oe-info> </span> </div>';
+
+
+      return elementToReturn;
+    };
+    dataTable.set('columns', [{
+      key: 'account',
+      label: 'Account',
+      type: 'number'
+    }, {
+      key: 'checknumber',
+      label: 'Check Number',
+      type: 'number'
+    }, {
+      key: 'amount',
+      label: 'Amount',
+      type: 'number',
+      renderer: amountRenderer
+    }, {
+      key: 'exception_reason',
+      label: 'Exception Reason',
+      type: 'string'
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      type: 'string'
+    },
+    {
+      key: 'action',
+      label: 'Action',
+
+      uiType: 'oe-combo',
+      type: 'combo',
+      showCell: showCell,
+      editorAttributes: {
+        listdata: ['Accept', 'Reject'],
+        label: 'Select'
+      }
+
+    }]);
+
+    var data = [{
+      account: 861363459,
+      checknumber: 223457,
+      amount: 470631.71,
+      status: 'Approved',
+      exception_reason: 'Paid No Issue',
+      action: 'Select'
+    },
+    {
+      account: 794659139,
+      checknumber: 23456,
+      amount: 4763.28,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    },
+    {
+      account: 479677228,
+      checknumber: 223431,
+      amount: 41170631.11,
+      status: 'Pending Decision',
+      exception_reason: 'Payee Missmatch',
+      action: 'Select'
+    },
+    {
+      account: 334547856,
+      checknumber: 2234567,
+      amount: 731.71,
+      status: 'Rejected',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    },
+    {
+      account: 452135542,
+      checknumber: 123564,
+      amount: 520631.51,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    },
+    {
+      account: 542412943,
+      checknumber: 342352,
+      amount: 41170631.71,
+      status: 'Pending Decision',
+      exception_reason: 'Paid No Issue',
+      action: 'Select'
+    },
+    {
+      account: 135322523,
+      checknumber: 3341234,
+      amount: 420631.16,
+      status: 'Pending Decision',
+      exception_reason: 'Payee Missmatch',
+      action: 'Select'
+    },
+    {
+      account: 432356742,
+      checknumber: 223456,
+      amount: 631.71,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    }
+
+    ];
+    dataTable.set('items', data);
+
+
+  }
+});
+window.customElements.define('inline-filtering', class extends DemoMixin(PolymerElement) {
+  static get template() {
+    return html` 
+    <style include="demo-pages-shared-styles">
+        
+    </style>
+    <div>
+    <h1> Inline Filtering </h1>
+           
+            <p>Inline filter and oe-data-table-filter can be toggled. Only one will work at a time.</p>
+            <p>Inline filter is enabled by default.</p>
+            <p>uiType: 'oe-combo'</p>
+            <p>type: 'combo'</p>
+            <p>editorAttributes</p>
+    
+    <custom-demo-snippet>
+    <div>
+    <oe-data-table  disabled disable-config-editor disable-edit disable-delete disable-add id="inlinefilter-table" label="Inline Filter"></oe-data-table>
+    <script>
+    var dataTable = this.shadowRoot.querySelector('#inlinefilter-table');
+    
+
+   
+    dataTable.set('columns', [{
+      key: 'account',
+      label: 'Account',
+      type: 'number',
+      width: 20
+    }, {
+      key: 'checknumber',
+      label: 'Check Number',
+      type: 'number',
+      width: 20
+    }
+    ]);
+
+    var data = [{
+      account: 861363459,
+      checknumber: 223457
+      
+      },
+      {
+        account: 794659139,
+        checknumber: 23456
+      },
+      {
+        account: 479677228,
+        checknumber: 223431
+      },
+      {
+        account: 334547856,
+        checknumber: 2234567
+      },
+      {
+        account: 452135542,
+        checknumber: 123564
+      }
+
+    ];
+    dataTable.set('items', data);
+    
+    
+
+  </script>
+     </div>
+      </custom-demo-snippet>
+      
+      <h3>oe-data-table Filter</h3>
+      <custom-demo-snippet>
+      <div>
+                
+      <oe-data-table disabled disable-config-editor disable-edit disable-delete disable-add  id="oefilter-table" label="Inline Filter"></oe-data-table>
+      <script>
+        var dataTable = this.shadowRoot.querySelector('#oefilter-table');
+        
+        
        
-        return elementToReturn;
-    };
+        dataTable.set('columns', [{
+          key: 'account',
+          label: 'Account',
+          type: 'number',
+          width: 20,
+          alignment: 'right'
+        },{
+          key: 'name',
+          label: 'Name',
+          type: 'string',
+          width: 20,
+          alignment: 'center'
+          
+        }, {
+          key: 'checknumber',
+          label: 'Check Number',
+          type: 'number',
+          width: 20,
+          hideSearch: true
+        }
+        ]);
 
-    var amountRenderer= function (column, row) { // eslint-disable-line no-unused-vars
-        var elementToReturn =
-            '<div style="text-align: right;display: flex;justify-content: flex-end;"> <div style="margin-top: 8px;">$&nbsp;</div> <oe-info class="amount-info" precision=[[row.precision]] type="decimal" value=[[row.amount]]></oe-info> </span> </div>';
-
-
-        return elementToReturn;
-    };
-          dataTable.set('columns', [{
-            key: 'account',
-            label: 'Account',
-            type: 'number'
-          }, {
-            key: 'checknumber',
-            label: 'Check Number',
-            type: 'number',
-            cellClass: 'blue-color'
-          }, {
-            key: 'amount',
-            label: 'Amount',
-            type: 'number',
-            renderer: amountRenderer
-          }, {
-            key: 'exception_reason',
-            label: 'Exception Reason',
-            type: 'string'
-          },
-          {
-            key: 'status',
-            label: 'Status',
-            type: 'string'
-          },
-          {
-            key: 'action',
-            label: 'Action',
-
-
-            type: 'string',
-            renderer: dropDownRenderer
-
-          }]);
-
-          var data = [{
-            account: 861363459,
-            checknumber: 223457,
-            amount: 470631.71,
-            status: 'Approved',
-            exception_reason: 'Paid No Issue',
-            action: 'Select'
+        var data = [{
+          account: 861363459,
+          checknumber: 223457,
+          name: "Mark"
+          
           },
           {
             account: 794659139,
-            checknumber: 23456,
-            amount: 4763.28,
-            status: 'Pending Decision',
-            exception_reason: 'Paid Fraud',
-            action: 'Select'
+            name: "Rob",
+            checknumber: 23456
           },
           {
             account: 479677228,
-            checknumber: 223431,
-            amount: 41170631.11,
-            status: 'Pending Decision',
-            exception_reason: 'Payee Missmatch',
-            action: 'Select'
+            name: "Sansa",
+            checknumber: 223431
           },
           {
             account: 334547856,
-            checknumber: 2234567,
-            amount: 731.71,
-            status: 'Rejected',
-            exception_reason: 'Paid Fraud',
-            action: 'Select'
-          },
-          {
-            account: 452135542,
-            checknumber: 123564,
-            amount: 520631.51,
-            status: 'Pending Decision',
-            exception_reason: 'Paid Fraud',
-            action: 'Select'
-          },
-          {
-            account: 542412943,
-            checknumber: 342352,
-            amount: 41170631.71,
-            status: 'Pending Decision',
-            exception_reason: 'Paid No Issue',
-            action: 'Select'
-          },
-          {
-            account: 135322523,
-            checknumber: 3341234,
-            amount: 420631.16,
-            status: 'Pending Decision',
-            exception_reason: 'Payee Missmatch',
-            action: 'Select'
+            name: "Arya",
+            checknumber: 2234567
           },
           {
             account: 432356742,
-            checknumber: 223456,
-            amount: 631.71,
-            status: 'Pending Decision',
-            exception_reason: 'Paid Fraud',
-            action: 'Select'
+            name: "Cersie",
+            checknumber: 223456
           }
 
           ];
           dataTable.set('items', data);
           
-
-         
-          dataTable.set('accordianElement', "demo-accordian");
-          dataTable.set('showAccordian', true);
+        ];
+        dataTable.set('items', data);
+        dataTable.set('enableInlineFilter', true);
         }
+      </script>
+    </div>
+    </custom-demo-snippet>
+  </div>
+  `;
+  }
+  _onPageVisible() {
+    var dataTable = this.shadowRoot.querySelector('#inlinefilter-table');
+    dataTable.set('columns', [{
+      key: 'account',
+      label: 'Account',
+      type: 'number',
+      width: 20
+    }, {
+      key: 'checknumber',
+      label: 'Check Number',
+      type: 'number',
+      width: 20
+    }
+    ]);
+
+    var data = [{
+      account: 861363459,
+      checknumber: 223457
+
+    },
+    {
+      account: 794659139,
+      checknumber: 23456
+    },
+    {
+      account: 479677228,
+      checknumber: 223431
+    },
+    {
+      account: 334547856,
+      checknumber: 2234567
+    },
+    {
+      account: 452135542,
+      checknumber: 123564
+    }
+
+    ];
+    dataTable.set('items', data);
+    var dataTable2 = this.shadowRoot.querySelector('#oefilter-table');
+
+
+
+    dataTable2.set('columns', [{
+      key: 'account',
+      label: 'Account',
+      type: 'number',
+      width: 20,
+      alignment: 'right'
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      type: 'string',
+      width: 20,
+      alignment: 'center'
+
+    },
+    {
+      key: 'checknumber',
+      label: 'Check Number',
+      type: 'number',
+      width: 20,
+      hideSearch: true,
+      alignment: 'center'
+    }
+    ]);
+
+    var data2 = [{
+      account: 861363459,
+      checknumber: 223457,
+      name: "Mark"
+
+    },
+    {
+      account: 794659139,
+      name: "Rob",
+      checknumber: 23456
+    },
+    {
+      account: 479677228,
+      name: "Sansa",
+      checknumber: 223431
+    },
+    {
+      account: 334547856,
+      name: "Arya",
+      checknumber: 2234567
+    },
+    {
+      account: 432356742,
+      name: "Cersie",
+      checknumber: 223456
+    }
+
+    ];
+    dataTable2.set('items', data2);
+    dataTable2.set('enableInlineFilter', true);
+
+  }
+});
+window.customElements.define("oe-data-table-styling", class extends DemoMixin(PolymerElement) {
+  static get template() {
+    return html`
+        <style include="demo-pages-shared-styles">
+        .style-applied {
+          --oe-data-table-data: {
+            min-height: 36px;
+          }
+          --oe-data-table-column-header:{
+            height: 40px;
+          }
+          --edit-control: {
+            height: 36px;
+          }
+          --oe-data-table-row-action:{
+            height: 36px;
+          }
+          }
+        </style>
+        <div>
+        <h1> Default table styling </h1>
+        <custom-demo-snippet>
+        
+          <div>
+            <dom-bind id="myapp">
+              <template>
+                <oe-data-table label="User" disable-selection id="table" items=[[items]] columns=[[columns]] row-actions=[[rowActions]] on-oe-data-table-row-action="handleRowActions">
+                </oe-data-table>
+                <template is="dom-if" if=[[eventString]]>
+                  <h3>Event Data</h3>
+                  <pre style="padding:8px;">
+                      [[eventString]]
+                  </pre>                   
+                </template>
+              </template>
+            </dom-bind>
+            <script>
+              var myapp = this.shadowRoot.querySelector('#myapp');
+              
+              myapp.set('columns', [{
+                key: 'key',
+                label: 'Key',
+                type: 'string'
+              }, {
+                key: 'value',
+                label: 'Value',
+                type: 'string'
+              }]);
+
+              myapp.set('items', [{
+                id: 1,
+                key: 'Mike',
+                value: 'mike@ev.com'
+              }, {
+                id: 2,
+                key: 'John',
+                value: 'john@ev.com'
+              }, {
+                id: 3,
+                key: 'Stella',
+                value: 'stella@ev.com'
+              }, {
+                id: 4,
+                key: 'Francis',
+                value: 'francis@ev.com'
+              }]);
+
+              myapp.set('rowActions', [{
+                icon: 'info',
+                action: 'info',
+                title: 'details',
+                formUrl:'../oe-data-table/demo/templates/literal-view.js'
+              }, {
+                icon: 'editor:mode-edit',
+                title: 'edit',
+                action: 'edit',
+                formUrl:'../oe-data-table/demo/templates/literal-default.js'
+              },{
+                icon: 'star',
+                action: 'bookmark',
+                title: 'bookmark'
+              }]);
+
+              myapp.handleRowActions = function (event) {
+                myapp.set('eventString',JSON.stringify(event.detail,null,2));
+              }
+
+              myapp.rowUpdated = function (event) {
+                event.stopPropagation();
+                if (myapp.userEdit) {
+                  var index = myapp.items.indexOf(myapp.userEdit);
+                  var newRecord = event.detail;
+                  (index >= 0) && myapp.splice('items', index, 1, newRecord);
+                  myapp.set('userEdit', null);
+                }
+              }</script>
+          </div>
+        </custom-demo-snippet>
+        <h1>Table styling Applied</h1>
+        <p>
+        These are mixins that can be used to set the height of the rows, header, editable data height and row-actions.
+        --oe-data-table-data, 
+        --oe-data-table-column-header, 
+        --edit-control, 
+        --oe-data-table-row-action, been used in the table below.
+        </p>
+      <custom-demo-snippet>
+      <div>
+          <dom-bind id="myappRowActionCompute">
+          <template>
+          <style include="demo-pages-shared-styles">
+          .style-applied {
+            --oe-data-table-data: {
+              min-height: 36px;
+            }
+            --oe-data-table-column-header:{
+              height: 40px;
+            }
+            --edit-control: {
+              height: 36px;
+            }
+            --oe-data-table-row-action:{
+              height: 36px;
+            }
+            }
+          </style>
+            <oe-data-table label="User" class="style-applied" disable-selection id="table" items=[[items]] columns=[[columns]] row-actions=[[rowActions]] on-oe-data-table-row-action="handleRowActions">
+            </oe-data-table>
+            <template is="dom-if" if=[[eventString]]>
+              <h3>Event Data</h3>
+              <pre style="padding:8px;">
+                  [[eventString]]
+              </pre>                   
+            </template>
+            </template>
+          </dom-bind>
+          <script>
+          var myapp = this.shadowRoot.querySelector('#myappRowActionCompute');
+            
+            myapp.set('columns', [{
+              key: 'key',
+              label: 'Key',
+              type: 'string'
+            }, {
+              key: 'value',
+              label: 'Value',
+              type: 'string'
+            }]);
+
+            myapp.set('items', [{
+              id: 1,
+              key: 'Mike',
+              value: 'mike@ev.com',
+              isHiddenView: true
+            }, {
+              id: 2,
+              key: 'John',
+              value: 'john@ev.com',
+              isHiddenEdit: true
+            }, {
+              id: 3,
+              key: 'Stella',
+              value: 'stella@ev.com',
+              isHiddenBookMark: true,
+              isHiddenEdit: true
+
+            }, {
+              id: 4,
+              key: 'Francis',
+              value: 'francis@ev.com',
+              isHiddenView: true,
+              isHiddenEdit: true
+            }]);
+
+            var isHiddenEdit = function (row) {
+                return row.isHiddenEdit;
+            }
+
+            var isHiddenView = function (row) {
+                return row.isHiddenView;
+            }
+
+            var isHiddenBookMark = function (row) {
+                return row.isHiddenBookMark;
+            }
+
+            myapp.set('rowActions', [{
+              icon: 'info',
+              action: 'info',
+              title: 'details',
+              formUrl:'templates/literal-view.js',
+              isHiddenFunction: isHiddenView
+            }, {
+              icon: 'editor:mode-edit',
+              title: 'edit',
+              action: 'edit',
+              formUrl:'templates/literal-default.js',
+              isHiddenFunction: isHiddenEdit
+            },{
+              icon: 'star',
+              action: 'bookmark',
+              title: 'bookmark',
+              isHiddenFunction: isHiddenBookMark
+            }]);
+
+            myapp.handleRowActions = function (event) {
+              myapp.set('eventString',JSON.stringify(event.detail,null,2));
+            }
+
+            myapp.rowUpdated = function (event) {
+              event.stopPropagation();
+              if (myapp.userEdit) {
+                var index = myapp.items.indexOf(myapp.userEdit);
+                var newRecord = event.detail;
+                (index >= 0) && myapp.splice('items', index, 1, newRecord);
+                myapp.set('userEdit', null);
+              }
+            }</script>
+        </div>
+        </custom-demo-snippet>
+        <style include="demo-pages-shared-styles iron-flex iron-flex-alignment">
+        .phone-pagination{
+        --oe-data-table-data: {
+          min-height: 36px;
+        }
+        --oe-data-table-column-header: {
+          height: 40px;
+        }
+        --edit-control: {
+          height: 36px;
+        }
+        }
+        </style>
+        <div>
+      <h1> Default without styling Pagination </h1>
+        <p>
+        These are mixins that can be used to set the height of the rows, header, editable data height.
+        --oe-data-table-data, 
+        --oe-data-table-column-header, 
+        --edit-control been used in the table below.
+        </p>
+        <custom-demo-snippet>
+        <style include="demo-pages-shared-styles iron-flex iron-flex-alignment">
+        .phone-pagination{
+        --oe-data-table-data: {
+          min-height: 36px;
+        }
+        --oe-data-table-column-header: {
+          height: 40px;
+        }
+        --edit-control: {
+          height: 36px;
+        }
+        }
+        </style>
+          <div>
+            <dom-bind id="pagination-table">
+              <template>
+                <h3> Default Virtual Pagination </h3>
+                <oe-data-table id="table" label="Phone" columns=[[columns]] items=[[defaultItems]]></oe-data-table>
+                <h3> Client Pagination with Styling </h3>
+                <oe-data-table id="table" class="phone-pagination" label="Phone Pagination" columns=[[columns]] items=[[defaultItems2]] pagination-type="page"></oe-data-table>
+              </template>
+            </dom-bind>
+            <script>
+              var paginationTable = this.shadowRoot.querySelector('#pagination-table');
+
+              var defaultItems = [{
+                user: 'Mike',
+                phone: 1242109098,
+                serialNumber: 2,
+                userType: 'Developer',
+                userName: 'Matthews',
+                account: 861363459,
+                checknumber: 223457,
+                status: 'Approved',
+                exception_reason: 'Paid No Issue'
+              }, {
+                user: 'John',
+                phone: 7812901028,
+                serialNumber: 1,
+                userType: 'Admin',
+                userName: 'John',
+                account: 794659139,
+                checknumber: 23456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud'
+              }, {
+                user: 'Stella',
+                phone: 1234522221,
+                serialNumber: 3,
+                userType: 'Designer',
+                userName: 'Sarah',
+                account: 479677228,
+                checknumber: 223431,
+                status: 'Pending Decision',
+                exception_reason: 'Payee Missmatch',
+                action: 'Select'
+              }, {
+                user: 'Francis',
+                phone: 1232323121,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 334547856,
+                checknumber: 2234567,        
+                status: 'Rejected',
+                exception_reason: 'Paid Fraud',
+              }, {
+                user: 'Kevin',
+                phone: 21209921001,
+                serialNumber: 4,
+                userType: 'Designer',
+                userName: 'Tom',
+                account: 452135542,
+                checknumber: 123564,          
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
+                user: 'Andrew',
+                phone: 12372819212,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 135322523,
+                checknumber: 3341234,
+                status: 'Pending Decision',
+                exception_reason: 'Payee Missmatch',
+              }, {
+                user: 'Catherine',
+                phone: 8762731212,
+                serialNumber: 4,
+                userType: 'Developer',
+                userName: 'Tom',
+                account: 542412943,
+                checknumber: 342352,      
+                status: 'Pending Decision',
+                exception_reason: 'Paid No Issue',
+              }, {
+                user: 'David',
+                phone: 12989978012,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 135322523,
+                checknumber: 3341234,
+                status: 'Pending Decision',
+                exception_reason: 'Payee Missmatch',
+              }, {
+                user: 'Henry',
+                phone: 123412123322,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
+                user: 'Ivan',
+                phone: 9867823231,
+                serialNumber: 4,
+                userType: 'Developer',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
+                user: 'Oliver',
+                phone: 8776767666,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
+                user: 'Bruce',
+                phone: 8772367666,
+                serialNumber: 4,
+                userType: 'Designer',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
+                user: 'Clark',
+                phone: 8773467666,
+                serialNumber: 4,
+                userType: 'Designer',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
+                user: 'Diana',
+                phone: 8246767666,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
+                user: 'Barry',
+                phone: 8776767876,
+                serialNumber: 4,
+                userType: 'Designer',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
+                user: 'Hal',
+                phone: 8776760366,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
+                user: 'Carter',
+                phone: 8776517666,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }, {
+                user: 'Victor',
+                phone: 9076767666,
+                serialNumber: 4,
+                userType: 'Tester',
+                userName: 'Tom',
+                account: 432356742,
+                checknumber: 223456,
+                status: 'Pending Decision',
+                exception_reason: 'Paid Fraud',
+              }];
+          
+              var columns = [{
+                key: 'user',
+                label: 'User',
+                type: 'string'
+              }, {
+                key: 'phone',
+                label: 'Phone Number',
+                type: 'phone'
+              },{
+                key: 'serialNumber',
+                label: 'Sr. Number',
+                uitype: 'number'
+              }, {
+                key: 'userType',
+                label: 'User Type',
+                uitype: 'string'
+              }, {
+                key: 'userName',
+                label: 'User',
+                uitype: 'string'
+              },
+              {
+                key: 'account',
+                label: 'Account',
+                type: 'number'
+              }, {
+                key: 'checknumber',
+                label: 'Check Number',
+                type: 'number',
+                cellClass: 'blue-color'
+              }, {
+                key: 'status',
+                label: 'Status',
+                type: 'string'
+              }, {
+                key: 'exception_reason',
+                label: 'Exception Reason',
+                type: 'string'
+              }];
+              paginationTable.set('columns', columns);
+          
+              paginationTable.set('literalColumns', [{
+                key: 'key',
+                label: 'Key',
+                type: 'string'
+              }, {
+                key: 'value',
+                label: 'Value',
+                type: 'string'
+              },]);
+          
+
+              paginationTable.set('defaultItems', defaultItems);
+              paginationTable.set('defaultItems2', defaultItems.slice());
+            </script>
+          </div>
+        </custom-demo-snippet>
+
+      </div>      
+        `;
+  }
+
+  _onPageVisible() {
+    var paginationTable = this.shadowRoot.querySelector('#pagination-table');
+    var myapp = this.shadowRoot.querySelector('#myapp');
+    var defaultItems = [{
+      user: 'Mike',
+      phone: 1242109098,
+      serialNumber: 2,
+      userType: 'Developer',
+      userName: 'Matthews',
+      account: 861363459,
+      checknumber: 223457,
+      status: 'Approved',
+      exception_reason: 'Paid No Issue'
+    }, {
+      user: 'John',
+      phone: 7812901028,
+      serialNumber: 1,
+      userType: 'Admin',
+      userName: 'John',
+      account: 794659139,
+      checknumber: 23456,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud'
+    }, {
+      user: 'Stella',
+      phone: 1234522221,
+      serialNumber: 3,
+      userType: 'Designer',
+      userName: 'Sarah',
+      account: 479677228,
+      checknumber: 223431,
+      status: 'Pending Decision',
+      exception_reason: 'Payee Missmatch',
+      action: 'Select'
+    }, {
+      user: 'Francis',
+      phone: 1232323121,
+      serialNumber: 4,
+      userType: 'Tester',
+      userName: 'Tom',
+      account: 334547856,
+      checknumber: 2234567,
+      status: 'Rejected',
+      exception_reason: 'Paid Fraud',
+    }, {
+      user: 'Kevin',
+      phone: 21209921001,
+      serialNumber: 4,
+      userType: 'Designer',
+      userName: 'Tom',
+      account: 452135542,
+      checknumber: 123564,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud',
+    }, {
+      user: 'Andrew',
+      phone: 12372819212,
+      serialNumber: 4,
+      userType: 'Tester',
+      userName: 'Tom',
+      account: 135322523,
+      checknumber: 3341234,
+      status: 'Pending Decision',
+      exception_reason: 'Payee Missmatch',
+    }, {
+      user: 'Catherine',
+      phone: 8762731212,
+      serialNumber: 4,
+      userType: 'Developer',
+      userName: 'Tom',
+      account: 542412943,
+      checknumber: 342352,
+      status: 'Pending Decision',
+      exception_reason: 'Paid No Issue',
+    }];
+
+    var columns = [{
+      key: 'user',
+      label: 'User',
+      type: 'string'
+    }, {
+      key: 'phone',
+      label: 'Phone Number',
+      type: 'phone'
+    }, {
+      key: 'serialNumber',
+      label: 'Sr. Number',
+      uitype: 'number'
+    }, {
+      key: 'userType',
+      label: 'User Type',
+      uitype: 'string'
+    }, {
+      key: 'userName',
+      label: 'User',
+      uitype: 'string'
+    },
+    {
+      key: 'account',
+      label: 'Account',
+      type: 'number'
+    }, {
+      key: 'checknumber',
+      label: 'Check Number',
+      type: 'number',
+      cellClass: 'blue-color'
+    }, {
+      key: 'status',
+      label: 'Status',
+      type: 'string'
+    }, {
+      key: 'exception_reason',
+      label: 'Exception Reason',
+      type: 'string'
+    }];
+    paginationTable.set('columns', columns);
+
+    paginationTable.set('literalColumns', [{
+      key: 'key',
+      label: 'Key',
+      type: 'string'
+    }, {
+      key: 'value',
+      label: 'Value',
+      type: 'string'
+    },]);
+
+
+    paginationTable.set('defaultItems', defaultItems);
+    paginationTable.set('defaultItems2', defaultItems.slice());
+
+    myapp.set('columns', [{
+      key: 'key',
+      label: 'Key',
+      type: 'string'
+    }, {
+      key: 'value',
+      label: 'Value',
+      type: 'string'
+    }]);
+
+    myapp.set('items', [{
+      id: 1,
+      key: 'Mike',
+      value: 'mike@ev.com'
+    }, {
+      id: 2,
+      key: 'John',
+      value: 'john@ev.com'
+    }, {
+      id: 3,
+      key: 'Stella',
+      value: 'stella@ev.com'
+    }, {
+      id: 4,
+      key: 'Francis',
+      value: 'francis@ev.com'
+    }]);
+
+    myapp.set('rowActions', [{
+      icon: 'info',
+      action: 'info',
+      title: 'details',
+      formUrl: '../oe-data-table/demo/templates/literal-view.js'
+    }, {
+      icon: 'editor:mode-edit',
+      title: 'edit',
+      action: 'edit',
+      formUrl: '../oe-data-table/demo/templates/literal-default.js'
+    }, {
+      icon: 'star',
+      action: 'bookmark',
+      title: 'bookmark'
+    }]);
+
+    myapp.handleRowActions = function (event) {
+      myapp.set('eventString', JSON.stringify(event.detail, null, 2));
+    };
+
+    myapp.rowUpdated = function (event) {
+      event.stopPropagation();
+      if (myapp.userEdit) {
+        var index = myapp.items.indexOf(myapp.userEdit);
+        var newRecord = event.detail;
+        (index >= 0) && myapp.splice('items', index, 1, newRecord);
+        myapp.set('userEdit', null);
+      }
+    };
+    var myapp = this.shadowRoot.querySelector('#myappRowActionCompute');
+
+    myapp.set('columns', [{
+      key: 'key',
+      label: 'Key',
+      type: 'string'
+    }, {
+      key: 'value',
+      label: 'Value',
+      type: 'string'
+    }]);
+
+    myapp.set('items', [{
+      id: 1,
+      key: 'Mike',
+      value: 'mike@ev.com',
+      isHiddenView: true
+    }, {
+      id: 2,
+      key: 'John',
+      value: 'john@ev.com',
+      isHiddenEdit: true
+    }, {
+      id: 3,
+      key: 'Stella',
+      value: 'stella@ev.com',
+      isHiddenBookMark: true,
+      isHiddenEdit: true
+
+    }, {
+      id: 4,
+      key: 'Francis',
+      value: 'francis@ev.com',
+      isHiddenView: true,
+      isHiddenEdit: true
+    }]);
+
+    var isHiddenEdit = function (row) {
+      return row.isHiddenEdit;
+    };
+
+    var isHiddenView = function (row) {
+      return row.isHiddenView;
+    };
+
+    var isHiddenBookMark = function (row) {
+      return row.isHiddenBookMark;
+    };
+
+    myapp.set('rowActions', [{
+      icon: 'info',
+      action: 'info',
+      title: 'details',
+      formUrl: '../oe-data-table/demo/templates/literal-view.js',
+      isHiddenFunction: isHiddenView
+    }, {
+      icon: 'editor:mode-edit',
+      title: 'edit',
+      action: 'edit',
+      formUrl: '../oe-data-table/demo/templates/literal-default.js',
+      isHiddenFunction: isHiddenEdit
+    }, {
+      icon: 'star',
+      action: 'bookmark',
+      title: 'bookmark',
+      isHiddenFunction: isHiddenBookMark
+    }]);
+
+    myapp.handleRowActions = function (event) {
+      myapp.set('eventString', JSON.stringify(event.detail, null, 2));
+    };
+
+    myapp.rowUpdated = function (event) {
+      event.stopPropagation();
+      if (myapp.userEdit) {
+        var index = myapp.items.indexOf(myapp.userEdit);
+        var newRecord = event.detail;
+        (index >= 0) && myapp.splice('items', index, 1, newRecord);
+        myapp.set('userEdit', null);
+      }
+    };
+  }
+
 });
 
 window.customElements.define('table-demo-pages', class extends PolymerElement {
@@ -3841,6 +5444,24 @@ window.customElements.define('table-demo-pages', class extends PolymerElement {
       "type": "elem",
       "path": "accordian-view",
       "name": "accordian-view"
+    },
+    {
+      "title": "OeCombo-Showcell",
+      "type": "elem",
+      "path": "oecombo-showcell",
+      "name": "oecombo-showcell"
+    },
+    {
+      "title": "Inline-filtering",
+      "type": "elem",
+      "path": "inline-filtering",
+      "name": "inline-filtering"
+    },
+    {
+      "title": "Oe-data-table Styling",
+      "type": "elem",
+      "path": "oe-data-table-styling",
+      "name": "oe-data-table-styling"
     }];
     this.set('RouteList', demoList);
     this.set('dropDownList', demoList.map(function (d) {

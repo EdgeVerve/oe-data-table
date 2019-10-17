@@ -32,10 +32,18 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
+        display: inline-block;
+        width: 100%;
+      }
+      .edit-ctrl {
+        @apply --edit-control;
+      }
+      .cell-container {
         width: 100%;
       }
 
     </style>
+    <div class="cell-container" hidden$="{{!_computeHidden(row,column)}}">
     <template is="dom-if" if="[[_hideDefaultValue(_inEdit,_hasCustomRenderer)]]">
       <template is="dom-if" if="[[column.href]]" restamp="true">
         <a href="[[_buildHref(column.href, row.*)]]" style$="[[_computeCellAlignment(column)]]"> [[_displayValue]] </a>
@@ -47,10 +55,11 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
     <template is="dom-if" if="[[_hasCustomRenderer]]" restamp="true">
       <span class="cell-content" id="custom-container">  </span>
     </template>
-    <div hidden$="{{!_inEdit}}" id="injectionPoint"></div>
+    <div hidden$="{{!_inEdit}}" id="injectionPoint" class="edit-ctrl"></div>
     <template is="dom-if" if="[[column.valueAsTooltip]]" restamp="true">
       <paper-tooltip  offset$="[[_getOffset(isFirstRow)]]" position="top" id="[[column.label]]">  [[_displayValue]]  </paper-tooltip>  
     </template>
+    </div>
     `;
   }
 
@@ -155,7 +164,7 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
   static get observers() {
     return ['_buildCustomRenderer(row.*, column)',
       '_buildCustomRenderer(columnTemplate)',
-      '_computeCellData(row.*, column)'
+      '_computeCellData(row.*, column)' 
     ];
   }
 
@@ -264,6 +273,7 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
     }
     var cellValue = this._deepValue(this.row, key);
     var options = column.editorAttributes;
+   
     var formatterFn;
     if (column.formatter) {
       formatterFn = column.formatter;
@@ -317,7 +327,7 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
     }
 
     if (!this._element) {
-      this._createElement();
+      this._createElement(true);
     }
     if (this._element && this._element.set) {
       this.set('_inEdit', true);
@@ -354,7 +364,6 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
     this.set('_inEdit', false);
   }
 
-
   _extractDropdownAndAddToBody(elem) {
     // Due to stacking context, the iron-list content always keeps its position at top, results in incorrect positioning of iron-dropdown content
     // [https://github.com/PolymerElements/iron-list/issues/158]
@@ -366,6 +375,17 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
       document.body.appendChild(dropdown);
       } 
   }
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener('combo-dropdown-attached', function (event) {
+    var  dropdown  =  event.detail;
+    if  (dropdown) {
+      this._dropDown  =  dropdown;
+      document.body.appendChild(dropdown);
+    }
+    });
+  }
+
   disconnectedCallback(){
     super.disconnectedCallback();
     if(this._dropDown){
@@ -378,7 +398,7 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
    * Sets the editorAttributes on the element and appends it inside the cell.
    * Attaches event listener for change and keydown
    */
-  _createElement() {
+  _createElement(isInEditMode) {
     var column = this.column;
     var typeMapping = OEUtils.TypeMappings[column.type || column.uitype];
     var uitype = column.uiType || (typeMapping && typeMapping.uiType);
@@ -411,6 +431,22 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
     this.async(function () {
       this._extractDropdownAndAddToBody(elem);
     });
+
+  }
+
+  _computeHidden(row,column){
+      var show = true;
+      if (this.column.showCell != undefined) {
+
+        if (typeof this.column.showCell === 'function') {
+          show = this.column.showCell.call(this, this.column, this.row);
+        }
+
+        if (typeof this.column.showCell === 'boolean') {
+          show = this.column.showCell;
+        }
+      }
+    return show;
   }
 
   /**
@@ -483,6 +519,10 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
    */
   _computeCellAlignment(column) {
     var style = null;
+    var rowHeight = this.computedStyleMap().get('min-height').value;
+    if(rowHeight != 48){
+      this.fire('row-height-changed',rowHeight+1);
+    }
     if (column.alignment) {
       style = 'text-align:' + column.alignment;
     } else {

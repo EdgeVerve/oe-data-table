@@ -1,7 +1,7 @@
 {
   "name": "oe-data-table",
   "description": "A template element , used to create oe-ui Polymer 3 elements",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "main": "oe-data-table.js",
   "scripts": {
     "test": "polymer test --module-resolution node --skip-selenium-install",
@@ -9,18 +9,18 @@
     "doc": "polymer analyze *.js > analysis.json"
   },
   "dependencies": {
-    "@polymer/iron-collapse": "3.0.1",
-    "@polymer/iron-list": "3.0.1",
-    "@polymer/paper-checkbox": "3.1.0",
-    "@polymer/paper-dialog": "3.0.1",
-    "@polymer/paper-dialog-scrollable": "3.0.1",
-    "@polymer/paper-dropdown-menu": "3.0.1",
-    "@polymer/paper-listbox": "3.0.1",
-    "@polymer/paper-menu-button": "3.0.1",
-    "@polymer/paper-progress": "3.0.1",
-    "@polymer/paper-toast": "3.0.1",
-    "@polymer/paper-tooltip": "3.0.1",
-    "@polymer/polymer": "3.1.0",
+    "@polymer/iron-collapse": "^3.0.1",
+    "@polymer/iron-list": "^3.0.1",
+    "@polymer/paper-checkbox": "^3.1.0",
+    "@polymer/paper-dialog": "^3.0.1",
+    "@polymer/paper-dialog-scrollable": "^3.0.1",
+    "@polymer/paper-dropdown-menu": "^3.0.1",
+    "@polymer/paper-listbox": "^3.0.1",
+    "@polymer/paper-menu-button": "^3.0.1",
+    "@polymer/paper-progress": "^3.0.1",
+    "@polymer/paper-toast": "^3.0.1",
+    "@polymer/paper-tooltip": "^3.0.1",
+    "@polymer/polymer": "^3.1.0",
     "oe-ajax": "git+http://evgit/oecloud.io/oe-ajax.git#master",
     "oe-combo": "git+http://evgit/oecloud.io/oe-combo.git#master",
     "oe-i18n-msg": "git+http://evgit/oecloud.io/oe-i18n-msg.git#master",
@@ -32,18 +32,23 @@
     "sortablejs": "1.8.3"
   },
   "devDependencies": {
-    "@polymer/gold-phone-input": "3.0.1",
-    "@polymer/iron-component-page": "4.0.1",
-    "@polymer/iron-demo-helpers": "3.0.2",
-    "@polymer/iron-pages": "3.0.1",
-    "@polymer/iron-test-helpers": "3.0.1",
-    "@polymer/test-fixture": "4.0.2",
-    "@webcomponents/webcomponentsjs": "2.2.7",
+    "@polymer/gold-phone-input": "^3.0.1",
+    "@polymer/iron-component-page": "^4.0.1",
+    "@polymer/iron-demo-helpers": "^3.0.2",
+    "@polymer/iron-pages": "^3.0.1",
+    "@polymer/iron-test-helpers": "^3.0.1",
+    "@polymer/test-fixture": "^4.0.2",
+    "@webcomponents/webcomponentsjs": "^2.2.7",
     "axe-core": "3.1.2",
     "chai": "4.2.0",
     "mocha": "5.2.0",
     "oe-app-route": "git+http://evgit/oecloud.io/oe-app-route.git#master",
     "sinon": "7.2.3",
     "wct-mocha": "1.0.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EdgeVerve/oe-data-table.git"
   }
 }
