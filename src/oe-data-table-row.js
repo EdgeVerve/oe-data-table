@@ -192,8 +192,8 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
                 type: Number
             },
             isAccordianOpen: {
-                type:Boolean,
-                value:false
+                type: Boolean,
+                value: false
             },
             /**
              * List of templates passed from oe-data-table
@@ -203,16 +203,16 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             },
 
 
-            tableHost:{
-                type:Object
+            tableHost: {
+                type: Object
             },
             expandedRow: {
-              type: Number,
-              notify: true
+                type: Number,
+                notify: true
             },
-            accordianEle:{
+            accordianEle: {
                 type: Object
-                
+
             }
         };
         /**
@@ -241,7 +241,7 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
         super();
         this.addEventListener('tap', this._rowClicked.bind(this));
     }
-  
+
     /**
      * Computes the class for table row
      * @param {boolean} selected selected flag
@@ -257,7 +257,9 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
      */
     _rowClicked(event) {
         this.fire('oe-data-table-row-clicked', event);
-        this.fire('toggle-row-selection', this.row);
+        if (!this.disableSelection) {
+            this.fire('toggle-row-selection', this.row);
+        }
     }
 
     /**
@@ -315,8 +317,8 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
                 }
             });
             var itemNode = new tempClass({
-                row:this.row,
-                column:this.column
+                row: this.row,
+                column: this.column
             });
             return itemNode;
         }
@@ -334,10 +336,10 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
         style += "min-width : " + (minWidth ? (minWidth + "px") : "initial") + ";";
         return style;
     }
-    _computeDivHidden(action,row) {
-        return (typeof action.isHiddenFunction)=="function" ? action.isHiddenFunction(row): false;
-      }
-  
+    _computeDivHidden(action, row) {
+        return (typeof action.isHiddenFunction) == "function" ? action.isHiddenFunction(row) : false;
+    }
+
     /**
      * Handles row action clicked event.
      * @param {Event} event click event
@@ -368,29 +370,29 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             });
         }
     }
-   
+
     _getVisibleColumns(column) {
         return !(column.hidden === true || column.hidden === 'true');
     }
     _toggleAccordian(e) {
-    
+
         var self = this;
 
         if (!this.accordianEle) {
-          this.accordianEle = document.createElement(self.accordianElement);
-          self.$.accordianContainer.appendChild(this.accordianEle);
-         
+            this.accordianEle = document.createElement(self.accordianElement);
+            self.$.accordianContainer.appendChild(this.accordianEle);
+
         }
         this.isAccordianOpen = !this.isAccordianOpen;
-            if(this.isAccordianOpen && typeof this.accordianEle.set === 'function'){
-                    this.accordianEle.set('data', self.row);
-                }
-        
+        if (this.isAccordianOpen && typeof this.accordianEle.set === 'function') {
+            this.accordianEle.set('data', self.row);
+        }
+
         this.fire('expanded-view');
-      }
-      getIcon(){
-          return !this.isAccordianOpen ? "expand-more": "expand-less";
-      }
+    }
+    getIcon() {
+        return !this.isAccordianOpen ? "expand-more" : "expand-less";
+    }
 }
 
 window.customElements.define(OeDataTableRow.is, OeDataTableRow);
