@@ -119,8 +119,12 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             <template is="dom-if" if=[[rowActions.length]]>
                 <div class="row-actions" style$="flex: [[rowActionWidth]]">
                     <template is="dom-repeat" items=[[rowActions]] as="action">
-                      <paper-icon-button hidden$="[[_computeDivHidden(action,row)]]" class="row-action" row$=[[row]] rowIndex$=[[rowIndex]] icon="[[action.icon]]" on-tap="_rowActionClicked"></paper-icon-button>
-<paper-tooltip position="left"> [[action.title]] </paper-tooltip>
+                        <div>
+                            <paper-icon-button hidden$="[[_computeDivHidden(action,row)]]" class="row-action" row=[[row]] rowIndex$=[[rowIndex]] icon="[[action.icon]]" on-tap="_rowActionClicked"></paper-icon-button>
+                            <paper-tooltip position="left">
+                                <oe-i18n-msg msgid="[[action.title]]"></oe-i18n-msg>
+                            </paper-tooltip>
+                        </div>
                     </template>
                 </div>
             </template>           
