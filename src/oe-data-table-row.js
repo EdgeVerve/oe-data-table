@@ -82,28 +82,41 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             .table-row:hover .row-action {
                 display: inline-block;
             }
+            .row {
+                cursor:pointer;
+            }
+              .margin-right-45 {
+                margin-right: 20px;
+              }
         
         </style>
-        <div class$="table-row [[_computeClassforRow(selected)]]" tabindex$="[[tabIndex]]">
+        <div class$="table-row [[_computeClassforRow(selected)]]" tabindex$="[[tabIndex]]">      
             <template is="dom-if" if="[[!disableSelection]]">
                 <div class="selection-cell">
                     <oe-data-table-selection-cell selection-cell-content=[[selectionCellContent]] row=[[row]] selected=[[selected]]></oe-data-table-selection-cell>
                 </div>
             </template>
             <template is="dom-repeat" items="[[columns]]" as="column" filter="_getVisibleColumns" observe="hidden">
-                <oe-data-table-cell is-first-row=[[_isFirstRow(rowIndex)]] read-only=[[readOnly]] key=[[key]] row={{row}} column=[[column]] class$="table-data [[_computeCellClass(row.*,column)]]" column-template=[[_getValidTemplate(row.*,row,column)]] style$="[[_computeCellWidth(column.*,column)]]"></oe-data-table-cell>
+                <oe-data-table-cell is-first-row=[[_isFirstRow(rowIndex)]] read-only=[[readOnly]] key=[[key]] row={{row}} column=[[column]] class$="table-data [[_computeCellClass(row.*,column)]]" column-template=[[_getValidTemplate(row.*,row,column)]] style$="[[_computeCellWidth(column.*,column)]]"></oe-data-table-cell> 
             </template>
+            <template is="dom-if" if=[[showAccordian]]>
+            <div class="row-actions row" style="flex: 0 0 48px">
+              <iron-icon id="paperExpand" icon$="{{getIcon(isAccordianOpen)}}" row$="[[row]]" rowIndex$="[[rowIndex]]" on-tap="_toggleAccordian"></iron-icon>
+            </div>
+          </template>
             <template is="dom-if" if=[[rowActions.length]]>
                 <div class="row-actions" style$="flex: [[rowActionWidth]]">
                     <template is="dom-repeat" items=[[rowActions]] as="action">
-                        <div>
-                            <paper-icon-button class="row-action" row$=[[row]] rowIndex$=[[rowIndex]]  icon="[[action.icon]]" on-tap="_rowActionClicked"></paper-icon-button>
+                    <div hidden$="[[_computeDivHidden(action,row)]]">
+                    <paper-icon-button class="row-action" row$=[[row]] rowIndex$=[[rowIndex]] icon="[[action.icon]]" on-tap="_rowActionClicked"></paper-icon-button>
                             <paper-tooltip position="left"> [[action.title]] </paper-tooltip>
                         </div>
                     </template>
                 </div>
-            </template>
-        </div>
+            </template>           
+        </div>       
+      <div id="accordianContainer" hidden$="[[!isAccordianOpen]]">
+      </div>       
     `;
     }
 
@@ -178,6 +191,10 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             minColWidth: {
                 type: Number
             },
+            isAccordianOpen: {
+                type:Boolean,
+                value:false
+            },
             /**
              * List of templates passed from oe-data-table
              */
@@ -188,6 +205,14 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
 
             tableHost:{
                 type:Object
+            },
+            expandedRow: {
+              type: Number,
+              notify: true
+            },
+            accordianEle:{
+                type: Object
+                
             }
         };
         /**
@@ -216,7 +241,7 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
         super();
         this.addEventListener('tap', this._rowClicked.bind(this));
     }
-
+  
     /**
      * Computes the class for table row
      * @param {boolean} selected selected flag
@@ -309,7 +334,10 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
         style += "min-width : " + (minWidth ? (minWidth + "px") : "initial") + ";";
         return style;
     }
-
+    _computeDivHidden(action,row) {
+        return (typeof action.isHiddenFunction)=="function" ? action.isHiddenFunction(row): false;
+      }
+  
     /**
      * Handles row action clicked event.
      * @param {Event} event click event
@@ -340,10 +368,29 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             });
         }
     }
-
+   
     _getVisibleColumns(column) {
         return !(column.hidden === true || column.hidden === 'true');
     }
+    _toggleAccordian(e) {
+    
+        var self = this;
+
+        if (!this.accordianEle) {
+          this.accordianEle = document.createElement(self.accordianElement);
+          self.$.accordianContainer.appendChild(this.accordianEle);
+         
+        }
+        this.isAccordianOpen = !this.isAccordianOpen;
+            if(this.isAccordianOpen && typeof this.accordianEle.set === 'function'){
+                    this.accordianEle.set('data', self.row);
+                }
+        
+        this.fire('expanded-view');
+      }
+      getIcon(){
+          return !this.isAccordianOpen ? "expand-more": "expand-less";
+      }
 }
 
 window.customElements.define(OeDataTableRow.is, OeDataTableRow);

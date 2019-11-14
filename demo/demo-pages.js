@@ -6,6 +6,8 @@
 import { html, PolymerElement } from '@polymer/polymer/polymer-element.js';
 import '@polymer/polymer/lib/elements/dom-bind';
 import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
+import "@polymer/iron-flex-layout/iron-flex-layout.js";
+import "@polymer/iron-flex-layout/iron-flex-layout-classes.js";
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
@@ -14,7 +16,9 @@ import '@polymer/paper-toast/paper-toast.js';
 import '@polymer/gold-phone-input/gold-phone-input.js';
 import 'oe-app-route/oe-app-route.js';
 import './custom-demo-snippet';
+import 'oe-combo/oe-typeahead.js';
 import '../oe-data-table';
+import './templates/demo-accordian.js';
 var OEUtils = window.OEUtils || {};
 
 var DemoMixin = function (base) {
@@ -1549,6 +1553,107 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
               }</script>
           </div>
 				</custom-demo-snippet>
+        <p>
+        Check out the below example, where we row-action icon will be displayed based on some condition for each record.
+      </p>
+      <custom-demo-snippet>
+      <div>
+          <dom-bind id="myappRowActionCompute">
+          <template>
+            <oe-data-table label="User" disable-selection id="table" items=[[items]] columns=[[columns]] row-actions=[[rowActions]] on-oe-data-table-row-action="handleRowActions">
+            </oe-data-table>
+            <template is="dom-if" if=[[eventString]]>
+              <h3>Event Data</h3>
+              <pre style="padding:8px;">
+                  [[eventString]]
+              </pre>                   
+            </template>
+            </template>
+          </dom-bind>
+          <script>
+          var myapp = this.shadowRoot.querySelector('#myappRowActionCompute');
+            
+            myapp.set('columns', [{
+              key: 'key',
+              label: 'Key',
+              type: 'string'
+            }, {
+              key: 'value',
+              label: 'Value',
+              type: 'string'
+            }]);
+
+            myapp.set('items', [{
+              id: 1,
+              key: 'Mike',
+              value: 'mike@ev.com',
+              isHiddenView: true
+            }, {
+              id: 2,
+              key: 'John',
+              value: 'john@ev.com',
+              isHiddenEdit: true
+            }, {
+              id: 3,
+              key: 'Stella',
+              value: 'stella@ev.com',
+              isHiddenBookMark: true,
+              isHiddenEdit: true
+
+            }, {
+              id: 4,
+              key: 'Francis',
+              value: 'francis@ev.com',
+              isHiddenView: true,
+              isHiddenEdit: true
+            }]);
+
+            var isHiddenEdit = function (row) {
+                return row.isHiddenEdit;
+            }
+
+            var isHiddenView = function (row) {
+                return row.isHiddenView;
+            }
+
+            var isHiddenBookMark = function (row) {
+                return row.isHiddenBookMark;
+            }
+
+            myapp.set('rowActions', [{
+              icon: 'info',
+              action: 'info',
+              title: 'details',
+              formUrl:'templates/literal-view.js',
+              isHiddenFunction: isHiddenView
+            }, {
+              icon: 'editor:mode-edit',
+              title: 'edit',
+              action: 'edit',
+              formUrl:'templates/literal-default.js',
+              isHiddenFunction: isHiddenEdit
+            },{
+              icon: 'star',
+              action: 'bookmark',
+              title: 'bookmark',
+              isHiddenFunction: isHiddenBookMark
+            }]);
+
+            myapp.handleRowActions = function (event) {
+              myapp.set('eventString',JSON.stringify(event.detail,null,2));
+            }
+
+            myapp.rowUpdated = function (event) {
+              event.stopPropagation();
+              if (myapp.userEdit) {
+                var index = myapp.items.indexOf(myapp.userEdit);
+                var newRecord = event.detail;
+                (index >= 0) && myapp.splice('items', index, 1, newRecord);
+                myapp.set('userEdit', null);
+              }
+            }</script>
+        </div>
+        </custom-demo-snippet>
 
       </div>      
         `;
@@ -1556,7 +1661,6 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
 
   _onPageVisible() {
     var myapp = this.shadowRoot.querySelector('#myapp');
-
     myapp.set('columns', [{
       key: 'key',
       label: 'Key',
@@ -1614,6 +1718,87 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
         myapp.set('userEdit', null);
       }
     };
+    var myapp = this.shadowRoot.querySelector('#myappRowActionCompute');
+            
+            myapp.set('columns', [{
+              key: 'key',
+              label: 'Key',
+              type: 'string'
+            }, {
+              key: 'value',
+              label: 'Value',
+              type: 'string'
+            }]);
+
+            myapp.set('items', [{
+              id: 1,
+              key: 'Mike',
+              value: 'mike@ev.com',
+              isHiddenView: true
+            }, {
+              id: 2,
+              key: 'John',
+              value: 'john@ev.com',
+              isHiddenEdit: true
+            }, {
+              id: 3,
+              key: 'Stella',
+              value: 'stella@ev.com',
+              isHiddenBookMark: true,
+              isHiddenEdit: true
+
+            }, {
+              id: 4,
+              key: 'Francis',
+              value: 'francis@ev.com',
+              isHiddenView: true,
+              isHiddenEdit: true
+            }]);
+
+            var isHiddenEdit = function (row) {
+                return row.isHiddenEdit;
+            }
+
+            var isHiddenView = function (row) {
+                return row.isHiddenView;
+            }
+
+            var isHiddenBookMark = function (row) {
+                return row.isHiddenBookMark;
+            }
+
+            myapp.set('rowActions', [{
+              icon: 'info',
+              action: 'info',
+              title: 'details',
+              formUrl:'../oe-data-table/demo/templates/literal-view.js',
+              isHiddenFunction: isHiddenView
+            }, {
+              icon: 'editor:mode-edit',
+              title: 'edit',
+              action: 'edit',
+              formUrl:'../oe-data-table/demo/templates/literal-default.js',
+              isHiddenFunction: isHiddenEdit
+            },{
+              icon: 'star',
+              action: 'bookmark',
+              title: 'bookmark',
+              isHiddenFunction: isHiddenBookMark
+            }]);
+
+            myapp.handleRowActions = function (event) {
+              myapp.set('eventString',JSON.stringify(event.detail,null,2));
+            }
+
+            myapp.rowUpdated = function (event) {
+              event.stopPropagation();
+              if (myapp.userEdit) {
+                var index = myapp.items.indexOf(myapp.userEdit);
+                var newRecord = event.detail;
+                (index >= 0) && myapp.splice('items', index, 1, newRecord);
+                myapp.set('userEdit', null);
+              }
+            }
   }
 
 });
@@ -1621,7 +1806,7 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
 window.customElements.define("pagination-setting", class extends DemoMixin(PolymerElement) {
   static get template() {
     return html`
-        <style include="demo-pages-shared-styles">
+        <style include="demo-pages-shared-styles iron-flex iron-flex-alignment">
         
         </style>
         <div>
@@ -1740,13 +1925,61 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
               paginationTable.set('defaultItems2', defaultItems.slice());
             </script>
           </div>
-				</custom-demo-snippet>
+        </custom-demo-snippet>
+        <p>
+            When page-size property is set to "-1" the oe-data-table fills the entire height of the container and displays available number of records.
+            When the height of the container varies the data-table adjests itself to display within the container.
+        </p>
+        <custom-demo-snippet>
+          <div>
+            <dom-bind id="dynamic-table">
+              <template>
+               <style include="iron-flex iron-flex-alignment">
+                  .parent-block{
+                    height:500px;  
+                    overflow:auto;
+                  }
+                  .container{
+                    padding:8px;
+                  }
+                  oe-data-table{
+                    height:100%;
+                  }
+                  .table-container{
+                    height: -webkit-fill-available;
+                  }
+                </style>
+                <div class="layout vertical parent-block">
+                  <div class="container layout horizontal center">
+                    <label class="flex"> Demo </label>
+                    <button on-tap="_toggle">Toggle collapse</button>
+                    <button on-tap="_toggleHeadingPage">Toggle Heading Pane</button>
+                  </div>
+                  <iron-collapse opened=[[opened]]>
+                    <div class="container heading-content">
+                      <h3 class="title">
+                      As the parent container is set with CSS to "height: -webkit-fill-available", it adjusts its height automatically, allowing the oe-data-table to fill 100% of its height.</h3>
+                    </div>
+                  </iron-collapse>
+                  <div class="table-container container">
+                    <oe-data-table id="simple-table" 
+                    hide-header=[[_hideHeading]] 
+                    columns=[[columns]] 
+                    items=[[defaultItems]] 
+                    page-size="-1" label="Dynamic Table"></oe-data-table>
+                  </div>
+                </div> 
+              </template>
+            </dom-bind>
+          </div>
+        </custom-demo-snippet>
       </div>      
         `;
   }
 
   _onPageVisible() {
     var paginationTable = this.shadowRoot.querySelector('#pagination-table');
+    var dynamicTable = this.shadowRoot.querySelector('#dynamic-table');
 
     var defaultItems = [{
       user: 'Mike',
@@ -1804,7 +2037,7 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
       phone: 9076767666
     }];
 
-    paginationTable.set('columns', [{
+    var columns = [{
       key: 'user',
       label: 'User',
       type: 'string'
@@ -1812,7 +2045,8 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
       key: 'phone',
       label: 'Phone Number',
       type: 'phone'
-    }]);
+    }]
+    paginationTable.set('columns',columns );
 
     paginationTable.set('literalColumns', [{
       key: 'key',
@@ -1828,7 +2062,21 @@ window.customElements.define("pagination-setting", class extends DemoMixin(Polym
     paginationTable.set('defaultItems', defaultItems);
     paginationTable.set('defaultItems2', defaultItems.slice());
 
+    dynamicTable.set('columns',columns );
+    dynamicTable.set('defaultItems', defaultItems);
+    dynamicTable._toggle = this._toggle;
+    dynamicTable._toggleHeadingPage = this._toggleHeadingPage;
   }
+
+  _toggle(){
+    this.set("opened",!this.opened);
+  }
+
+  _toggleHeadingPage(){
+    this.set('_hideHeading',!this._hideHeading);
+  }
+
+
 
 });
 
@@ -3139,6 +3387,304 @@ window.customElements.define("other-options", class extends DemoMixin(PolymerEle
   }
 
 });
+window.customElements.define('accordian-view',class extends DemoMixin(PolymerElement) {
+  static get template(){
+    return html` 
+    <style include="demo-pages-shared-styles">
+        
+    </style>
+    <div>
+    <h1> Accordion View </h1>
+    <p> Accordion View is supported by the oe-data-table. Any external component can be imported into the accordion.
+    </p>
+    <p> Three data level properties need to be defined. </p>
+    <p> 2. <strong>accordianElement:</strong> Name of the element to be shown inside accodion view. </p>
+    <p> 3. <strong>showAccordian:</strong> true/false to show/hide the accordion </p>
+    
+    <custom-demo-snippet>
+    <div>
+        <oe-data-table disabled disable-config-editor disable-edit disable-delete disable-add id="accordian-table" label="Simple Table"></oe-data-table>
+        <script>
+          var dataTable = this.shadowRoot.querySelector('#accordian-table');
+
+
+        var dropDownRenderer= function (column, row) { // eslint-disable-line no-unused-vars
+        
+
+        // var elementToReturn =
+        // '<paper-dropdown-menu label="Dinosaurs"><paper-listbox slot="dropdown-content" selected="1"><paper-item>allosaurus</paper-item><paper-item>brontosaurus</paper-item><paper-item>carcharodontosaurus</paper-item><paper-item>diplodocus</paper-item></paper-listbox></paper-dropdown-menu>';
+        
+        var elementToReturn = "";
+        if(row.status === 'Pending Decision'){
+             elementToReturn = 
+        '<select style=" background-color: transparent; border: 1px solid #d1d2d3;"><option value="" disabled selected>Select</option><option value="accept">Accept</option><option value="reject">Reject</option></select>';
+        }
+        else{
+            elementToReturn = 
+        '<select style="display: none; background-color: transparent; border: 1px solid #d1d2d3;"><option value="volvo">Volvo</option><option value="saab">Saab</option><option value="mercedes">Mercedes</option><option value="audi">Audi</option></select>';
+        }
+       
+        return elementToReturn;
+    };
+
+    var amountRenderer= function (column, row) { // eslint-disable-line no-unused-vars
+        var elementToReturn =
+            '<div style="text-align: right;display: flex;justify-content: flex-end;"> <div style="margin-top: 8px;">$&nbsp;</div> <oe-info class="amount-info" precision=[[row.precision]] type="decimal" value=[[row.amount]]></oe-info> </span> </div>';
+
+
+        return elementToReturn;
+    };
+          dataTable.set('columns', [{
+            key: 'account',
+            label: 'Account',
+            type: 'number'
+          }, {
+            key: 'checknumber',
+            label: 'Check Number',
+            type: 'number',
+            cellClass: 'blue-color'
+          }, {
+            key: 'amount',
+            label: 'Amount',
+            type: 'number',
+            renderer: amountRenderer
+          }, {
+            key: 'exception_reason',
+            label: 'Exception Reason',
+            type: 'string'
+          },
+          {
+            key: 'status',
+            label: 'Status',
+            type: 'string'
+          },
+          {
+            key: 'action',
+            label: 'Action',
+
+
+            type: 'string',
+            renderer: dropDownRenderer
+
+          }]);
+
+          var data = [{
+            account: 861363459,
+            checknumber: 223457,
+            amount: 470631.71,
+            status: 'Approved',
+            exception_reason: 'Paid No Issue',
+            action: 'Select'
+          },
+          {
+            account: 794659139,
+            checknumber: 23456,
+            amount: 4763.28,
+            status: 'Pending Decision',
+            exception_reason: 'Paid Fraud',
+            action: 'Select'
+          },
+          {
+            account: 479677228,
+            checknumber: 223431,
+            amount: 41170631.11,
+            status: 'Pending Decision',
+            exception_reason: 'Payee Missmatch',
+            action: 'Select'
+          },
+          {
+            account: 334547856,
+            checknumber: 2234567,
+            amount: 731.71,
+            status: 'Rejected',
+            exception_reason: 'Paid Fraud',
+            action: 'Select'
+          },
+          {
+            account: 452135542,
+            checknumber: 123564,
+            amount: 520631.51,
+            status: 'Pending Decision',
+            exception_reason: 'Paid Fraud',
+            action: 'Select'
+          },
+          {
+            account: 542412943,
+            checknumber: 342352,
+            amount: 41170631.71,
+            status: 'Pending Decision',
+            exception_reason: 'Paid No Issue',
+            action: 'Select'
+          },
+          {
+            account: 135322523,
+            checknumber: 3341234,
+            amount: 420631.16,
+            status: 'Pending Decision',
+            exception_reason: 'Payee Missmatch',
+            action: 'Select'
+          },
+          {
+            account: 432356742,
+            checknumber: 223456,
+            amount: 631.71,
+            status: 'Pending Decision',
+            exception_reason: 'Paid Fraud',
+            action: 'Select'
+          }
+
+          ];
+          dataTable.set('items', data);
+          
+
+          
+          dataTable.set('accordianElement', "demo-accordian");
+          dataTable.set('showAccordian', true);
+
+        </script>
+     </div>
+    	</custom-demo-snippet>
+  </div>
+  `
+  }
+  _onPageVisible() {
+    var dataTable = this.shadowRoot.querySelector('#accordian-table');
+
+
+        var dropDownRenderer= function (column, row) { // eslint-disable-line no-unused-vars
+        
+
+        // var elementToReturn =
+        // '<paper-dropdown-menu label="Dinosaurs"><paper-listbox slot="dropdown-content" selected="1"><paper-item>allosaurus</paper-item><paper-item>brontosaurus</paper-item><paper-item>carcharodontosaurus</paper-item><paper-item>diplodocus</paper-item></paper-listbox></paper-dropdown-menu>';
+        
+        var elementToReturn = "";
+        if(row.status === 'Pending Decision'){
+             elementToReturn = 
+        '<select style=" background-color: transparent; border: 1px solid #d1d2d3;"><option value="" disabled selected>Select</option><option value="accept">Accept</option><option value="reject">Reject</option></select>';
+        }
+        else{
+            elementToReturn = 
+        '<select style="display: none; background-color: transparent; border: 1px solid #d1d2d3;"><option value="volvo">Volvo</option><option value="saab">Saab</option><option value="mercedes">Mercedes</option><option value="audi">Audi</option></select>';
+        }
+       
+        return elementToReturn;
+    };
+
+    var amountRenderer= function (column, row) { // eslint-disable-line no-unused-vars
+        var elementToReturn =
+            '<div style="text-align: right;display: flex;justify-content: flex-end;"> <div style="margin-top: 8px;">$&nbsp;</div> <oe-info class="amount-info" precision=[[row.precision]] type="decimal" value=[[row.amount]]></oe-info> </span> </div>';
+
+
+        return elementToReturn;
+    };
+          dataTable.set('columns', [{
+            key: 'account',
+            label: 'Account',
+            type: 'number'
+          }, {
+            key: 'checknumber',
+            label: 'Check Number',
+            type: 'number',
+            cellClass: 'blue-color'
+          }, {
+            key: 'amount',
+            label: 'Amount',
+            type: 'number',
+            renderer: amountRenderer
+          }, {
+            key: 'exception_reason',
+            label: 'Exception Reason',
+            type: 'string'
+          },
+          {
+            key: 'status',
+            label: 'Status',
+            type: 'string'
+          },
+          {
+            key: 'action',
+            label: 'Action',
+
+
+            type: 'string',
+            renderer: dropDownRenderer
+
+          }]);
+
+          var data = [{
+            account: 861363459,
+            checknumber: 223457,
+            amount: 470631.71,
+            status: 'Approved',
+            exception_reason: 'Paid No Issue',
+            action: 'Select'
+          },
+          {
+            account: 794659139,
+            checknumber: 23456,
+            amount: 4763.28,
+            status: 'Pending Decision',
+            exception_reason: 'Paid Fraud',
+            action: 'Select'
+          },
+          {
+            account: 479677228,
+            checknumber: 223431,
+            amount: 41170631.11,
+            status: 'Pending Decision',
+            exception_reason: 'Payee Missmatch',
+            action: 'Select'
+          },
+          {
+            account: 334547856,
+            checknumber: 2234567,
+            amount: 731.71,
+            status: 'Rejected',
+            exception_reason: 'Paid Fraud',
+            action: 'Select'
+          },
+          {
+            account: 452135542,
+            checknumber: 123564,
+            amount: 520631.51,
+            status: 'Pending Decision',
+            exception_reason: 'Paid Fraud',
+            action: 'Select'
+          },
+          {
+            account: 542412943,
+            checknumber: 342352,
+            amount: 41170631.71,
+            status: 'Pending Decision',
+            exception_reason: 'Paid No Issue',
+            action: 'Select'
+          },
+          {
+            account: 135322523,
+            checknumber: 3341234,
+            amount: 420631.16,
+            status: 'Pending Decision',
+            exception_reason: 'Payee Missmatch',
+            action: 'Select'
+          },
+          {
+            account: 432356742,
+            checknumber: 223456,
+            amount: 631.71,
+            status: 'Pending Decision',
+            exception_reason: 'Paid Fraud',
+            action: 'Select'
+          }
+
+          ];
+          dataTable.set('items', data);
+          
+
+         
+          dataTable.set('accordianElement', "demo-accordian");
+          dataTable.set('showAccordian', true);
+        }
+});
 
 window.customElements.define('table-demo-pages', class extends PolymerElement {
   static get template() {
@@ -3289,6 +3835,12 @@ window.customElements.define('table-demo-pages', class extends PolymerElement {
       "type": "elem",
       "path": "other-options",
       "name": "other-options"
+    },
+    {
+      "title": "Accordian-view",
+      "type": "elem",
+      "path": "accordian-view",
+      "name": "accordian-view"
     }];
     this.set('RouteList', demoList);
     this.set('dropDownList', demoList.map(function (d) {
