@@ -240,7 +240,12 @@ const DataTableMixin = function (BaseClass) {
         form.addEventListener('oe-formdata-deleted', this._formHandleRemoteDelete.bind(this));
 
         //listens for click event in document.
-        document.addEventListener('tap', this._resetActiveCell.bind(this));
+        document.addEventListener('tap', function clickHandler(event){
+          var eventPath = typeof event.getComposedPath === "function" ? event.getComposedPath() : (event.path || []);
+          if(this._activeCell && eventPath.indexOf(this._activeCell) === -1){
+            this._resetActiveCell();
+          }
+        }.bind(this));
         this._updateRowWidth();
       });
     }

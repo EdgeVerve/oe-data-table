@@ -306,9 +306,11 @@ class OeDataTableCell extends OECommonMixin(PolymerElement) {
   _handleCellTap(event) {
     if (!this.column.readOnly && !this.readOnly) {
       event.stopPropagation();
-      this.fire('set-active-cell', {
-        element: this
-      });
+      if(!this._inEdit){
+        this.fire('set-active-cell', {
+          element: this
+        });
+      }
     }
   }
 
