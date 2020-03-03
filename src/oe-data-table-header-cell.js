@@ -355,6 +355,7 @@ class OeDataTableHeaderCell extends OECommonMixin(PolymerElement) {
   openFilter(evt) { // eslint-disable-line no-unused-vars
     this.root.querySelector('#filterEl')._updateListSize();
     this.root.querySelector('#dialog').open();
+    this.root.querySelector('#dialog')._renderOpened();
   }
 
   /**
