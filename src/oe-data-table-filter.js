@@ -40,7 +40,9 @@ class OeDataTableFilter extends OECommonMixin(PolymerElement) {
         width: 100%;
         min-width: 100px;
       }
-
+      iron-list {
+        max-height: 400px;
+      }
       .input-container {
         padding: 16px;
         border-bottom: 1px solid #ededed;

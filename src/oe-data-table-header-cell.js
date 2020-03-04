@@ -355,6 +355,7 @@ class OeDataTableHeaderCell extends OECommonMixin(PolymerElement) {
   openFilter(evt) { // eslint-disable-line no-unused-vars
     this.root.querySelector('#filterEl')._updateListSize();
     this.root.querySelector('#dialog').open();
+    this.root.querySelector('#dialog')._renderOpened();
   }
 
   /**
@@ -384,7 +385,12 @@ class OeDataTableHeaderCell extends OECommonMixin(PolymerElement) {
    * @return {boolean} flag denoting to disable filter
    */
   _disableFilter(column) {
-    return column.disableFilter;
+    if(column.type === 'object'){
+      return true;
+    }
+    else{
+      return column.disableFilter;
+    }
   }
 
   /**
