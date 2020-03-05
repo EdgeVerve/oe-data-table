@@ -13,6 +13,8 @@ import "@polymer/iron-icons/iron-icons.js";
 import "@polymer/iron-icons/editor-icons.js";
 import "@polymer/paper-material/paper-material.js";
 import "@polymer/paper-checkbox/paper-checkbox.js";
+import "@polymer/paper-dialog/paper-dialog.js";
+import "@polymer/paper-listbox/paper-listbox.js";
 import "@polymer/paper-progress/paper-progress.js";
 import "@polymer/paper-icon-button/paper-icon-button.js";
 import "@polymer/iron-flex-layout/iron-flex-layout.js";
@@ -33,6 +35,52 @@ import "./src/oe-data-table-row.js";
 import "./src/oe-data-table-row-style.js";
 
 var OEUtils = window.OEUtils || {};
+var IronList = window.customElements.get('iron-list');
+
+class CustomIronList extends IronList {
+  static get is() { return 'custom-iron-list'; }
+
+  static get template(){
+    return html`
+    ${super.template}
+    `;
+  }
+  connectedCallback(){
+    super.connectedCallback();
+    this.addEventListener('iron-overlay-opened', this._menuOpened.bind(this));
+    this.addEventListener('iron-overlay-closed', this._menuClosed.bind(this));
+  }
+  disconnectedCallback(){
+    super.disconnectedCallback();
+    this.removeEventListener('iron-overlay-opened', this._menuOpened.bind(this));
+    this.removeEventListener('iron-overlay-closed', this._menuClosed.bind(this));
+  }
+   /**
+     * Start - fix for iron menu or other dropdowns going behind te ironlist
+    **/
+   _menuOpened(e) {
+    var row = this.getParentById(e.target, 'row-list');
+    row.style.zIndex = 102;
+  }
+  _menuClosed(e) {
+    var row = this.getParentById(e.target, 'row-list');
+    row.style.zIndex = '';
+  }
+  getParentById(element, id) {
+    var me = this;
+    if (!id) {
+      return element.parentElement;
+    }
+    if (element.parentElement.id === id || element.parentElement.tagName.toLowerCase() === 'custom-iron-list') {
+      return element;
+    } else {
+      return me.getParentById(element.parentElement, id);
+    }
+  }
+
+}
+window.customElements.define(CustomIronList.is, CustomIronList);
+
 /**
  * ### oe-data-table
  * 
@@ -146,7 +194,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
           @apply --layout-vertical-reverse;
         }
 
-        iron-list {
+        custom-iron-list {
           height: 100%;
           overflow: auto;
           --iron-list-items-container: {
@@ -212,7 +260,14 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
           height: 100%;
           min-height:48px;
         }
+        #action-dialog {
+          margin: 0;
+          min-block-size: fit-content;
+          min-width: 150px;
+          border-radius: 2px;
+          box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.12), 0 2px 2px 0 rgba(0, 0, 0, 0.24);
         
+        }
       </style>
       <paper-material class="data-table">
         <iron-selector selected="[[_mainView]]" class="data-table" attr-for-selected="view">
@@ -234,11 +289,16 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
                 </div>
               </template>
               <template is="dom-repeat" items="{{columns}}" as="column" filter="_getVisibleColumns" observe="hidden">
-                <oe-data-table-header-cell enable-inline-filter="[[enableInlineFilter]]" col-index=[[index]] class="table-data" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]]
+                <oe-data-table-header-cell table-height="[[__tableHeight]]" enable-inline-filter="[[enableInlineFilter]]" col-index=[[index]] class="table-data" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]]
                 style$="[[_computeCellWidth(column.*,column)]]"></oe-data-table-header-cell>
               </template>
-              <template is="dom-if" if=[[rowActions.length]]>
-                <div class="table-data" style$="flex: [[__rowActionWidth]]"></div>
+                <template is="dom-if" if=[[rowActions.length]]>
+                <template is="dom-if" if=[[!rowActionAsMenu]]>
+                  <div class="table-data" style$="flex: [[__rowActionWidth]]"></div>
+                </template>
+                <template is="dom-if" if=[[rowActionAsMenu]]>
+                <div class="table-data" style="flex: 0 0 48px"></div>
+              </template>
               </template>
             </div>
 
@@ -250,14 +310,14 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
 
               <template is="dom-if" if=[[_items.length]] restamp=true>
                
-                  <iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key">
+                  <custom-iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key">
                     <template>
-                      <oe-data-table-row on-dblclick="_handleDblClick" is-accordian-open=[[_visibleAccordian(rowIndex)]] accordian-element=[[accordianElement]] show-accordian=[[showAccordian]] 
+                      <oe-data-table-row on-dblclick="_handleDblClick" is-accordian-open=[[_visibleAccordian(rowIndex)]] row-action-as-menu=[[rowActionAsMenu]] accordian-element=[[accordianElement]] show-accordian=[[showAccordian]] 
                       columns=[[columns]] selection-cell-content=[[selectionCellContent]] row=[[row]] row-index=[[rowIndex]] table-host=[[tableHost]]
                       tab-index="0" selected=[[_getSelectionState(row,_computeSelection)]] disable-selection=[[disableSelection]] row-actions=[[rowActions]]
                       row-action-width=[[__rowActionWidth]] read-only=[[__isCellReadOnly]] min-col-width=[[minColWidth]] column-templates=[[columnTemplates]] auto-fit=[[autoFit]]></oe-data-table-row>
                     </template>
-                  </iron-list>
+                  </custom-iron-list>
                
               </template>
              
@@ -302,6 +362,13 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
             </div>
           </iron-collapse>
         </iron-selector> 
+        <paper-dialog id="action-dialog" on-iron-overlay-opened="_positionMenuDialog">
+        <paper-listbox style="padding:0px;margin: 5px 0px;">
+        <template is="dom-repeat" items=[[rowMenuActions]] as="action">
+            <paper-item hidden$="[[_computeDivMenuHidden(action,selectedRow)]]" on-tap="_rowMenuActionClicked">[[action.title]]</paper-item>
+        </template>
+       </paper-listbox>
+        </paper-dialog>
       </paper-material>
       <slot></slot>
       `;
@@ -309,7 +376,6 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
 
   static get properties() {
     return {
-
       /**
        * Setting to `true` hides the header
        */
@@ -324,7 +390,12 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
         type: Boolean,
         value: false
       },
-
+      rowMenuActions: {
+        type:Array,
+        value: function () {
+          return [];
+        }
+      },
       /**
        * Setting to true hides the column headers
        */
@@ -502,7 +573,11 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       aggregatorAlignTop: {
         type: Boolean
       },
-
+      rowActionAsMenu: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
       /**
        *  Array of action objects that to be shown in each row.
        */
@@ -646,6 +721,12 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
         type:Boolean,
         value:false
       },
+      actionOffset:{
+        type: Object
+      },
+      selectedRow: {
+        type: Object
+      },
       /**
      *  Setting to `true` shows the inline filter, otherwise oe-data-table-filter is used
      */
@@ -737,6 +818,14 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
     this.refCodeMap = {};
     this.listDataMap = {};
     this.maxRowHeight = 49;  //iron-list height for row 48px + 1px for border bottom
+    this.addEventListener('row-menu-action-clicked',function(event){
+      this.root.querySelector('#action-dialog').positionTarget = event.detail.target;
+      this.root.querySelector('#action-dialog').open();
+      //this.root.querySelector('#action-dialog')._renderOpened();
+      this.set('rowMenuActions',event.detail.data);
+      this.set('selectedRow',event.detail.currentRow);
+      this.set('actionOffset',event.detail.target.getBoundingClientRect());
+    })
     this.addEventListener('row-height-changed',function(event){
       this.maxRowHeight = event.detail;
       this._computeGridHeight(this.pageSize,this._items.length,this.autoFit);
@@ -902,7 +991,19 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
     return this._selectionState.get(item) ? !this.showAccordian : false;
   }
 
-
+  _positionMenuDialog(event) { // eslint-disable-line no-unused-vars
+    this.async(function () {
+      var filterDialog = this.root.querySelector('#action-dialog');
+      var offset = this.actionOffset;
+      filterDialog.set('horizontalAlign', ((offset.left + filterDialog.offsetWidth) < window.innerWidth) ?
+        'left' : 'right');
+      filterDialog.position();
+    });
+  }
+  _rowMenuActionClicked(event){
+    this.selectedRow._rowActionClicked(event);
+    this.root.querySelector('#action-dialog').close();
+  }
   /* ROW-SELECTION METHODS END */
 
   /* MAIN-DISPLAY METHODS START */
@@ -1357,7 +1458,10 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
     return ['number', 'decimal'].indexOf(column.type || column.uitype) > -1 ? 'text-align: right' :
       null;
   }
-
+  _computeDivMenuHidden(action, rowEle) {
+    var row = rowEle.row;
+    return (typeof action.isHiddenFunction) == "function" ? action.isHiddenFunction(row) : false;
+}
   /**
    * Observer on 'items' to notify '_items' on data changed.
    * 

@@ -34,15 +34,6 @@ class OeDataTableFilter extends OECommonMixin(PolymerElement) {
         margin: 0 !important;
         padding: 0 !important;
       }
-
-      #list {
-        height: 192px;
-        width: 100%;
-        min-width: 100px;
-      }
-      iron-list {
-        max-height: 400px;
-      }
       .input-container {
         padding: 16px;
         border-bottom: 1px solid #ededed;
@@ -147,6 +138,10 @@ class OeDataTableFilter extends OECommonMixin(PolymerElement) {
        */
       isServerData: {
         type: Boolean
+      },
+      height: {
+        type:String,
+        observer: '_updateListSize'
       }
     };
     /**
@@ -325,8 +320,10 @@ class OeDataTableFilter extends OECommonMixin(PolymerElement) {
   _updateListSize(event) { // eslint-disable-line no-unused-vars
     var lists = this.shadowRoot.querySelectorAll('iron-list');
     for (var i = 0, l = lists.length; i < l; i++) {
+      if(this.height){
+        lists[i].style['max-height'] = (this.height.match(/\d+/)[0] - 115) + 'px';
+      }
       lists[i]._render();
-      //lists[i].notifyResize();
     }
   }
 
