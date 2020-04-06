@@ -28,6 +28,7 @@ import "./oe-data-table-row-style.js";
  * `--oe-data-table-row-selected` | Mixiin to be applied to the table row when selected | {}
  * `--oe-data-table-row-hover` | Mixin to be applied to the table row on hover | {}
  * `--oe-data-table-data` | Mixin to be applied to the table cell | {}
+ * `--oe-data-table-row-focus` | Mixin to be applied to the row on focus | {}
  * `--oe-data-table-column-first` | Mixin to be applied to the first column | {}
  * `--oe-data-table-column-last` | Mixin to be applied to the last column | {}
  * `--oe-data-table-row-action` | Mixin applied to the row action icon buttons | {}
@@ -50,7 +51,9 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
                 @apply --layout;
                 @apply --layout-center;
             }
-
+            .table-row:focus {
+                @apply --oe-data-table-row-focus;
+            }
             .table-row {
                 border-bottom: 1px solid #ededed;
                 background: #FFF;
