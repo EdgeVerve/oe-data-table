@@ -51,7 +51,7 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
                 @apply --layout;
                 @apply --layout-center;
             }
-            .table-rowfocus {
+            .table-row:focus {
                 @apply --oe-data-table-row-focus;
             }
             .table-row {
