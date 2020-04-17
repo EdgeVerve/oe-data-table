@@ -289,7 +289,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
                 </div>
               </template>
               <template is="dom-repeat" items="{{columns}}" as="column" filter="_getVisibleColumns" observe="hidden">
-                <oe-data-table-header-cell table-height="[[__tableHeight]]" enable-inline-filter="[[enableInlineFilter]]" col-index=[[index]] class="table-data" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]]
+                <oe-data-table-header-cell table-height="[[_computeHeightFilter(__tableHeight)]]" enable-inline-filter="[[enableInlineFilter]]" col-index=[[index]] class="table-data" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]]
                 style$="[[_computeCellWidth(column.*,column)]]"></oe-data-table-header-cell>
               </template>
                 <template is="dom-if" if=[[rowActions.length]]>
@@ -1743,7 +1743,9 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       this.updateRowHeight();
     }, 0);
   }
-
+  _computeHeightFilter(height){
+    return this.autoFit ? "0px" : height;
+  }
   /**
    * Fetches refcode from server.
    * @param {string} url url to fetch data

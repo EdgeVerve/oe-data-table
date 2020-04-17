@@ -381,7 +381,9 @@ class OeDataTableHeaderCell extends OECommonMixin(PolymerElement) {
       filterDialog.set('horizontalAlign', ((offset.left + filterDialog.offsetWidth) < window.innerWidth) ?
         'left' : 'right');
       filterDialog.set('verticalAlign','top');
-      filterDialog.style['max-height'] = (parseInt(this.tableHeight.match(/\d+/)[0]) + this.getBoundingClientRect().height) + 'px';
+      if(this.tableHeight !== "0px"){
+        filterDialog.style['max-height'] = (parseInt(this.tableHeight.match(/\d+/)[0]) + this.getBoundingClientRect().height) + 'px';
+      }
       this.set('dialogHeight',filterDialog.style['max-height']);
       filterDialog.position();
     });
