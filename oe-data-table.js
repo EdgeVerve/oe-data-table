@@ -219,14 +219,16 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
           --paper-checkbox-checked-color: var(--secondary-color);
         }
 
-        oe-data-table-row:first-of-type {
+        oe-data-table-row.first-of-type {
           @apply --oe-data-table-row-first;
         }
 
-        oe-data-table-row:last-of-type {
+        oe-data-table-row.last-of-type {
           @apply --oe-data-table-row-last;
         }
-
+        oe-data-table-row {
+          border-bottom: 1px solid #ededed;
+        }
         .form-content {
           height: 100%;
         }
@@ -312,7 +314,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
                
                   <custom-iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key">
                     <template>
-                      <oe-data-table-row on-dblclick="_handleDblClick" is-accordian-open=[[_visibleAccordian(rowIndex)]] row-action-as-menu=[[rowActionAsMenu]] accordian-element=[[accordianElement]] show-accordian=[[showAccordian]] 
+                      <oe-data-table-row class$="level-[[row.level]] [[computePosition(row.level,_items)]]" on-dblclick="_handleDblClick" is-accordian-open=[[_visibleAccordian(rowIndex)]] row-action-as-menu=[[rowActionAsMenu]] accordian-element=[[accordianElement]] show-accordian=[[showAccordian]] 
                       columns=[[columns]] selection-cell-content=[[selectionCellContent]] row=[[row]] row-index=[[rowIndex]] table-host=[[tableHost]]
                       tab-index="0" selected=[[_getSelectionState(row,_computeSelection)]] disable-selection=[[disableSelection]] row-actions=[[rowActions]]
                       row-action-width=[[__rowActionWidth]] read-only=[[__isCellReadOnly]] min-col-width=[[minColWidth]] column-templates=[[columnTemplates]] auto-fit=[[autoFit]]></oe-data-table-row>
@@ -888,7 +890,15 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       iron._render();
     }.bind(this));
   }
-
+  computePosition(level,rows){
+    if(level === (rows.length-1)){
+      return 'last-of-type';
+    }
+    else if(!level){
+      return 'first-of-type';
+    }
+    return '';
+  }
   disconnectedCallback() {
     super.disconnectedCallback();
     document.removeEventListener('tap', this._resetActiveCell.bind(this));
@@ -1492,6 +1502,11 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       if (this.items == this._items) {
         this.notifyPath('_' + change.path, change.value);
       }
+    }
+    if(this.items){
+      this.items.forEach(function (item,index) {
+        item.level = index;
+      })
     }
 
   }

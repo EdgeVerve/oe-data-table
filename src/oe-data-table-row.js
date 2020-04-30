@@ -55,12 +55,11 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
                 @apply --oe-data-table-row-focus;
             }
             .table-row {
-                border-bottom: 1px solid #ededed;
+                
                 background: #FFF;
                 @apply --layout;
                 @apply --oe-data-table-row;
             }
-        
             .table-row.selected {
                 background: #f5f5f5;
                 @apply --oe-data-table-row-selected;
