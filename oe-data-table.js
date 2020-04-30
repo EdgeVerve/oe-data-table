@@ -47,8 +47,8 @@ var OEUtils = window.OEUtils || {};
  * The column(s) to show in the table can be configured using the `columns` property.
  * The `columns` property takes an array of objects which can have the following properties.
  * 
- * Column property | Description
- * ----------------|-------------
+ * Column | property | Description
+ * -------|---------|-------------
  * `key` | The key of the row to get data from.
  * `label` | The string to be shown in column header.
  * `tooltip` | The string to be shown in column header as a tooltip.
@@ -69,6 +69,7 @@ var OEUtils = window.OEUtils || {};
  * `cellClassRules` | Object having class name to be applied as key and an expression to evaluate as value.
  * `valueGetter` | A custom getter function which returns a value for the property specified in the `key`.
  * `hidden` | Column will be hidden if it is set to true.
+ * `autoFit` | table height should be set by user when this property is true.
  * 
  * ### Styling
  * 
@@ -82,7 +83,9 @@ var OEUtils = window.OEUtils || {};
  * `--oe-data-table-row-first` | Mixin to be applied to the first row of the table | {}
  * `--oe-data-table-row-last` | Mixin to be applied to the last row of the table | {}
  * `--oe-data-table-selection-cell-content` | Mixiin to be applied to the selection cell content if provided | {}
- * 
+ * `--oe-data-table-data` | Mixin to be applied to table-data class to set min-height | {}
+ * `--oe-data-table-selection-checkbox` | Mixin to be applied to table selection checkbox | {}
+ * `--edit-control` | Mixin applied to set the height of edit cell | {}
  * 
  * @customElement
  * @polymer
@@ -160,6 +163,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
 
         .selection-checkbox {
           padding: 0 24px;
+          @apply --oe-data-table-selection-checkbox;
         }
 
         paper-checkbox.selection-checkbox {
@@ -208,11 +212,12 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
           height: 100%;
           min-height:48px;
         }
+        
       </style>
       <paper-material class="data-table">
         <iron-selector selected="[[_mainView]]" class="data-table" attr-for-selected="view">
 
-          <iron-collapse view="grid" class="data-table" opened=[[_showPanel(_mainView,'grid')]]>
+        <iron-collapse view="grid" class="data-table" opened=[[_showPanel(_mainView,'grid')]]>
             <div class="data-table layout vertical">
             <template is="dom-if" if="[[!hideHeader]]">
               <oe-data-table-header selected-length="[[selectedItems.length]]" 
@@ -229,7 +234,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
                 </div>
               </template>
               <template is="dom-repeat" items="{{columns}}" as="column" filter="_getVisibleColumns" observe="hidden">
-                <oe-data-table-header-cell col-index=[[index]] class="table-data" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]]
+                <oe-data-table-header-cell enable-inline-filter="[[enableInlineFilter]]" col-index=[[index]] class="table-data" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]]
                 style$="[[_computeCellWidth(column.*,column)]]"></oe-data-table-header-cell>
               </template>
               <template is="dom-if" if=[[rowActions.length]]>
@@ -244,24 +249,16 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
               </template>
 
               <template is="dom-if" if=[[_items.length]] restamp=true>
-                <template is="dom-if" if=[[_showInfinteScroll(paginationType)]] restamp=true>
+               
                   <iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key">
                     <template>
-                      <oe-data-table-row on-dblclick="_handleDblClick" accordian-element=[[accordianElement]] show-accordian=[[showAccordian]] columns=[[columns]] selection-cell-content=[[selectionCellContent]] row=[[row]] row-index=[[rowIndex]] table-host=[[tableHost]]
-                      tab-index=[[tabIndex]] selected=[[_getSelectionState(row,_computeSelection)]] disable-selection=[[disableSelection]] row-actions=[[rowActions]]
-                      row-action-width=[[__rowActionWidth]] read-only=[[__isCellReadOnly]] min-col-width=[[minColWidth]] column-templates=[[columnTemplates]]></oe-data-table-row>
+                      <oe-data-table-row on-dblclick="_handleDblClick" is-accordian-open=[[_visibleAccordian(rowIndex)]] accordian-element=[[accordianElement]] show-accordian=[[showAccordian]] 
+                      columns=[[columns]] selection-cell-content=[[selectionCellContent]] row=[[row]] row-index=[[rowIndex]] table-host=[[tableHost]]
+                      tab-index="0" selected=[[_getSelectionState(row,_computeSelection)]] disable-selection=[[disableSelection]] row-actions=[[rowActions]]
+                      row-action-width=[[__rowActionWidth]] read-only=[[__isCellReadOnly]] min-col-width=[[minColWidth]] column-templates=[[columnTemplates]] auto-fit=[[autoFit]]></oe-data-table-row>
                     </template>
                   </iron-list>
-                </template>
-                <template is="dom-if" if=[[!_showInfinteScroll(paginationType)]] restamp=true>
-                  <div id="pagination-table-body">
-                    <template is="dom-repeat" id="pagination-repeater" index-as="rowIndex" items="{{_items}}" as="row" max="[[_maxDomElement]]" index-as="key">
-                      <oe-data-table-row columns=[[columns]] selection-cell-content=[[selectionCellContent]] row=[[row]] row-index=[[rowIndex]] table-host=[[tableHost]]
-                      tab-index=[[tabIndex]] selected=[[_getSelectionState(row,_computeSelection)]] disable-selection=[[disableSelection]] row-actions=[[rowActions]]
-                      row-action-width=[[__rowActionWidth]] read-only=[[__isCellReadOnly]] min-col-width=[[minColWidth]] column-templates=[[columnTemplates]]></oe-data-table-row>
-                    </template>
-                  </div>
-                </template>
+               
               </template>
              
               <template is="dom-if" if=[[!_items.length]] restamp=true>
@@ -317,6 +314,13 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
        * Setting to `true` hides the header
        */
       hideHeader: {
+        type: Boolean,
+        value: false
+      },
+      /**
+       * Setting to true enable user to set height of table
+       */
+      autoFit: {
         type: Boolean,
         value: false
       },
@@ -641,7 +645,16 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       showAccordian:{
         type:Boolean,
         value:false
-      }
+      },
+      /**
+     *  Setting to `true` shows the inline filter, otherwise oe-data-table-filter is used
+     */
+    enableInlineFilter: {
+      type: Boolean,
+      value: false,
+      notify: true,
+      observer: 'onUpdateInlineFilter'
+    }
     };
   }
 
@@ -651,7 +664,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       '_keyHandlers(disabled,_items.length)',
       '_showPagination(dataController)',
       '_showPagination(paginationType)',
-      '_computeGridHeight(pageSize,_items.length)',
+      '_computeGridHeight(pageSize,_items.length,autofit)',
 
       '_itemsChanged(items.*)',
       '_organizeData(currentPage)',
@@ -675,7 +688,8 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       'show-column-customizer': '_showCustomizeView',
       'toggle-row-selection': '_toggleRowSelection',
       'apply-criteria': '_refreshRender',
-      'oe-data-table-cell-value-changed': '_organizeData'
+      'oe-data-table-cell-value-changed': '_organizeData',
+      'expanded-view': '_rowAccoridianclicked'
     };
 
     Object.keys(listenersList).forEach(function (eventName) {
@@ -717,11 +731,17 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
   connectedCallback() {
     super.connectedCallback();
     //Initialize default values
+    this.__visibleAccordians = {};  //Object map of rowIndex -> Should the accordion element be shown  
     this._showGridView();
     this.set('_selectionState', new WeakMap()); // eslint-disable-line no-undef
     this.refCodeMap = {};
     this.listDataMap = {};
-    this.maxRowHeight = 49; //iron-list height for row 48px + 1px for border bottom
+    this.maxRowHeight = 49;  //iron-list height for row 48px + 1px for border bottom
+    this.addEventListener('row-height-changed',function(event){
+      this.maxRowHeight = event.detail;
+      this._computeGridHeight(this.pageSize,this._items.length,this.autoFit);
+
+    });
     this.set('tableHost',this.getRootNode().host);
     if(!this.paginationType){
       this.set('paginationType',(this.restUrl || this.dataController)?"page":"scroll");
@@ -783,6 +803,20 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
   disconnectedCallback() {
     super.disconnectedCallback();
     document.removeEventListener('tap', this._resetActiveCell.bind(this));
+  }
+  _rowAccoridianclicked(event){
+    var rowInd = event.detail;
+    var isAccordianVisible = this.__visibleAccordians[rowInd];
+    this.set('__visibleAccordians.' + rowInd, !isAccordianVisible);
+
+  }
+  _visibleAccordian(rowIndex){
+    return !!this.__visibleAccordians[rowIndex];
+  }
+  onUpdateInlineFilter() {
+    if (this.enableInlineFilter) {
+      this.$["table-header"].classList.add("table-header-style");
+    }
   }
 
   /* LIFE-CYCLE METHODS END */
@@ -1006,6 +1040,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
    * @param {function} done callback function
    */
   _filter(items, done) {
+    var self = this;
     var filters = {},
       filterExists = false,
       filteredData;
@@ -1013,14 +1048,15 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       filters[col.key || col.field] = {
         selectedItems: col.selectedItems
       };
-      if (col.selectedItems && col.selectedItems.length) filterExists = true;
+      if (col.selectedItems && col.selectedItems.length && !self.enableInlineFilter) filterExists = true;
+      if (col.selectedItems && self.enableInlineFilter) filterExists = true;
     });
 
     filteredData = filterExists ? items.filter(function (d) {
       var isValid = true;
       filters && Object.keys(filters).forEach(function (key) {
         var filter = filters[key];
-        if (filter.selectedItems && filter.selectedItems.length) {
+        if (filter.selectedItems && ((!self.enableInlineFilter && filter.selectedItems.length) || (self.enableInlineFilter) )) {
           isValid = isValid && filter.selectedItems.indexOf(d[key]) != -1;
         }
       });
@@ -1230,15 +1266,6 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
     });
   }
 
-  get _RepeaterElement(){
-    var containerId = this.paginationType == "page" ? "pagination-repeater" : "row-list";
-    return this.shadowRoot.querySelector('#' + containerId);
-  }
-
-  get __repeatContainer(){
-    var containerId = this.paginationType == "page" ? "pagination-table-body" : "row-list";
-    return this.shadowRoot.querySelector('#' + containerId);
-  }  
   /**
    * Attaches/Detaches event listeners based on 'disabled' flag and '_items' array length
    */
@@ -1247,9 +1274,8 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       return;
     }
     this.async(function () {
-      var container = this.__repeatContainer;
+      var container = this.shadowRoot.querySelector('#row-list');
       if (!container) {
-        console.log('__repeatContainer is not present');
         return;
       }
       if (this.disabled) {
@@ -1295,9 +1321,10 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
    * @param {number} rowActions length of row actions
    */
   _computeRowActionWidth(rowActions) {
+    
     this.set('__rowActionWidth', '0 0 ' + (rowActions * 48) + 'px');
-  }
 
+  }
   /**
    * Computes `__isCellReadOnly` property to send to each cell
    * @param {boolean} disabled flag to disable data-table
@@ -1481,7 +1508,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
     if (e.detail > this.maxRowHeight) {
       this.maxRowHeight = e.detail;
       this.debounce('rowHeight', function(){
-        this._computeGridHeight(this.pageSize,this._items.length);
+        this._computeGridHeight(this.pageSize,this._items.length,this.autoFit);
       }.bind(this), 300);
     }
   }
@@ -1579,24 +1606,30 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
    * Computes and sets the table height
    * @param {number} pageSize page size of data-table
    * @param {number} itemsToShow length of items to display
+   *  @param {boolean} autoFit to check height set by user or not.
    */
-  _computeGridHeight(pageSize, itemsToShow) {
+  _computeGridHeight(pageSize, itemsToShow, autoFit) {
     if(this.pageSize < 0){
       this.set('__tableHeight', "auto");
       this.updateRowHeight();
       return;
     }
     this.async(function () {
-      
+      var size,height;
       //this.maxRowHeight = 48;
-      var size = ((itemsToShow > 5 && itemsToShow < pageSize) ? itemsToShow : pageSize);
+     
       this.set('_maxDomElement', size * 2);
       var rowList = this.shadowRoot.querySelector("#row-list");
       var hasScroll = false;
       if (rowList) {
         hasScroll = this.shadowRoot.querySelector("#row-list").scrollWidth > this.shadowRoot.querySelector("#row-list").clientWidth;
       }
-      var height = size * this.maxRowHeight + (hasScroll ? 16 : 0);
+      height = this.maxRowHeight + (hasScroll ? 16 : 0);
+      if(!this.autoFit){
+        size = ((itemsToShow > 5 && itemsToShow < pageSize) ? itemsToShow : pageSize);
+        height = size * this.maxRowHeight + (hasScroll ? 16 : 0);
+     }
+      
       this.set('__tableHeight', height+"px");
       this.updateRowHeight();
     }, 0);

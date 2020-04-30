@@ -5,17 +5,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-  <title>oe-toggle demo</title>
+  <title>oe-data-table demo</title>
 
   <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
   <script src="../node_modules/sinon/pkg/sinon.js"></script>
   <script type="module" src="./demo-pages.js"></script>
   <script type="module">
-  import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
-  import '@polymer/iron-demo-helpers/demo-snippet';
+    import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
+    import '@polymer/iron-demo-helpers/demo-snippet';
   </script>
   <style>
-    body{
+    body {
       font-family: 'Roboto';
       font-size: 14px;
       margin: 0;
@@ -23,172 +23,174 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <table-demo-pages></table-demo-pages>
   </div>
   <script>
-  
-var server = sinon.fakeServer.create();
-server.autoRespond = true;
-server.respondImmediately = true;
 
-var moviesData = [{
-  key: 1001,
-  value: 'Avengers',
-  id: 1
-}, {
-  key: 1002,
-  value: 'The Dark Knight',
-  id: 2
-}, {
-  key: 1003,
-  value: 'Gladiator',
-  id: 3
-}, {
-  key: 1004,
-  value: 'The Mask',
-  id: 4
-}, {
-  key: 1005,
-  value: 'Terminator',
-  id: 5
-}, {
-  key: 1006,
-  value: 'Rush',
-  id: 6
-}, {
-  key: 1007,
-  value: 'The Walk',
-  id: 7
-}]
-var literalData = [{
-  'key': 'Line1',
-  'value': 'Line1',
-  'placeholder': []
-}, {
-  'key': 'Line2',
-  'value': 'Line2',
-  'placeholder': []
-}, {
-  'key': 'City',
-  'value': 'City',
-  'placeholder': []
-}, {
-  'key': 'Province',
-  'value': 'Province',
-  'placeholder': []
-}, {
-  'key': 'Country',
-  'value': 'Country',
-  'placeholder': []
-}, {
-  'key': 'Zip Code',
-  'value': 'Zip Code',
-  'placeholder': []
-}, {
-  'key': 'Profile',
-  'value': 'Profile',
-  'placeholder': []
-}, {
-  'key': 'Line1',
-  'value': 'Line1',
-  'placeholder': []
-}, {
-  'key': 'Line2',
-  'value': 'Line2',
-  'placeholder': []
-}, {
-  'key': 'City',
-  'value': 'City',
-  'placeholder': []
-}, {
-  'key': 'Province',
-  'value': 'Province',
-  'placeholder': []
-}, {
-  'key': 'Country',
-  'value': 'Country',
-  'placeholder': []
-}, {
-  'key': 'Zip Code',
-  'value': 'Zip Code',
-  'placeholder': []
-}, {
-  'key': 'Profile',
-  'value': 'Profile',
-  'placeholder': []
-}, {
-  'key': 'Line1',
-  'value': 'Line1',
-  'placeholder': []
-}, {
-  'key': 'Line2',
-  'value': 'Line2',
-  'placeholder': []
-}, {
-  'key': 'City',
-  'value': 'City',
-  'placeholder': []
-}, {
-  'key': 'Province',
-  'value': 'Province',
-  'placeholder': []
-}, {
-  'key': 'Country',
-  'value': 'Country',
-  'placeholder': []
-}, {
-  'key': 'Zip Code',
-  'value': 'Zip Code',
-  'placeholder': []
-}, {
-  'key': 'Profile',
-  'value': 'Profile',
-  'placeholder': []
-}]
+    var server = sinon.fakeServer.create();
+    server.autoRespond = true;
+    server.respondImmediately = true;
 
-server.respondWith('get', /api\/Movies/, function (req) {
-  var queryString = req.url.split('/^')[1].split('/')[0];
-  var data = moviesData.filter(function (d) {
-    return encodeURI(d.value).toLowerCase().indexOf(queryString.toLowerCase()) !== -1 || encodeURI(d.key).toLowerCase()
-      .indexOf(queryString.toLowerCase()) !== -1
-  });
-  if (req.url.toLowerCase().indexOf('findone') !== -1 && data.length > 0) {
-    data = data[0];
-  }
-  req.respond(200, {
-    'Content-Type': 'application/json'
-  }, JSON.stringify(data));
+    var moviesData = [{
+      key: 1001,
+      value: 'Avengers',
+      id: 1
+    }, {
+      key: 1002,
+      value: 'The Dark Knight',
+      id: 2
+    }, {
+      key: 1003,
+      value: 'Gladiator',
+      id: 3
+    }, {
+      key: 1004,
+      value: 'The Mask',
+      id: 4
+    }, {
+      key: 1005,
+      value: 'Terminator',
+      id: 5
+    }, {
+      key: 1006,
+      value: 'Rush',
+      id: 6
+    }, {
+      key: 1007,
+      value: 'The Walk',
+      id: 7
+    }]
+    var literalData = [{
+      'key': 'Line1',
+      'value': 'Line1',
+      'placeholder': []
+    }, {
+      'key': 'Line2',
+      'value': 'Line2',
+      'placeholder': []
+    }, {
+      'key': 'City',
+      'value': 'City',
+      'placeholder': []
+    }, {
+      'key': 'Province',
+      'value': 'Province',
+      'placeholder': []
+    }, {
+      'key': 'Country',
+      'value': 'Country',
+      'placeholder': []
+    }, {
+      'key': 'Zip Code',
+      'value': 'Zip Code',
+      'placeholder': []
+    }, {
+      'key': 'Profile',
+      'value': 'Profile',
+      'placeholder': []
+    }, {
+      'key': 'Line1',
+      'value': 'Line1',
+      'placeholder': []
+    }, {
+      'key': 'Line2',
+      'value': 'Line2',
+      'placeholder': []
+    }, {
+      'key': 'City',
+      'value': 'City',
+      'placeholder': []
+    }, {
+      'key': 'Province',
+      'value': 'Province',
+      'placeholder': []
+    }, {
+      'key': 'Country',
+      'value': 'Country',
+      'placeholder': []
+    }, {
+      'key': 'Zip Code',
+      'value': 'Zip Code',
+      'placeholder': []
+    }, {
+      'key': 'Profile',
+      'value': 'Profile',
+      'placeholder': []
+    }, {
+      'key': 'Line1',
+      'value': 'Line1',
+      'placeholder': []
+    }, {
+      'key': 'Line2',
+      'value': 'Line2',
+      'placeholder': []
+    }, {
+      'key': 'City',
+      'value': 'City',
+      'placeholder': []
+    }, {
+      'key': 'Province',
+      'value': 'Province',
+      'placeholder': []
+    }, {
+      'key': 'Country',
+      'value': 'Country',
+      'placeholder': []
+    }, {
+      'key': 'Zip Code',
+      'value': 'Zip Code',
+      'placeholder': []
+    }, {
+      'key': 'Profile',
+      'value': 'Profile',
+      'placeholder': []
+    }]
 
-});
+    server.respondWith('get', /api\/Movies/, function (req) {
+      var queryString = req.url.split('/^')[1].split('/')[0];
+      var data = moviesData.filter(function (d) {
+        return encodeURI(d.value).toLowerCase().indexOf(queryString.toLowerCase()) !== -1 || encodeURI(d.key).toLowerCase()
+          .indexOf(queryString.toLowerCase()) !== -1
+      });
+      if (req.url.toLowerCase().indexOf('findone') !== -1 && data.length > 0) {
+        data = data[0];
+      }
+      req.respond(200, {
+        'Content-Type': 'application/json'
+      }, JSON.stringify(data));
 
-server.respondWith('get', /api\/Literals/, function (req) {
-  //var queryString = req.url.split('/^')[1].split('/')[0];
-  var url = decodeURIComponent(req.url);
-  var data = literalData
-  var filter;
-  if (url.indexOf('?') !== -1) {
-    filter = url.split('?')[1].split('=')[1].split('}')[0] + '}';
-    filter = JSON.parse(filter);
-    data = literalData.slice(filter.skip);
-  }
-  // console.log(filter.skip)
+    });
+
+    server.respondWith('get', /api\/Literals/, function (req) {
+      //var queryString = req.url.split('/^')[1].split('/')[0];
+      var url = decodeURIComponent(req.url);
+      var data = literalData
+      var filter;
+      if (url.indexOf('?') !== -1) {
+        filter = url.split('?')[1].split('=')[1].split('}')[0] + '}';
+        filter = JSON.parse(filter);
+        data = literalData.slice(filter.skip);
+      }
+      // console.log(filter.skip)
 
 
-  if (req.url.toLowerCase().indexOf('findone') !== -1 && data.length > 0) {
-    data = data[0];
-  }
-  if (req.url.toLowerCase().indexOf('count') !== -1 && data.length > 0) {
-    data = {
-      count: data.length
-    }
-  }
-  req.respond(200, {
-    'Content-Type': 'application/json'
-  }, JSON.stringify(data));
+      if (req.url.toLowerCase().indexOf('findone') !== -1 && data.length > 0) {
+        data = data[0];
+      }
+      if (req.url.toLowerCase().indexOf('count') !== -1 && data.length > 0) {
+        data = {
+          count: data.length
+        }
+      }
+      req.respond(200, {
+        'Content-Type': 'application/json'
+      }, JSON.stringify(data));
 
-});
+    });
   </script>
 </body>
+
 </html>

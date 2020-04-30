@@ -94,36 +94,205 @@
       ],
       "methods": [
         {
-          "name": "_computeCellData",
-          "description": "Fetches the row value for this column.",
+          "name": "_deepValue",
+          "description": "Get the value from the 'obj' based on the 'path'.",
           "privacy": "protected",
           "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
             "start": {
-              "line": 180,
-              "column": 2
+              "line": 37,
+              "column": 4
             },
             "end": {
-              "line": 183,
-              "column": 3
+              "line": 43,
+              "column": 5
             }
           },
           "metadata": {},
           "params": [
             {
-              "name": "row",
+              "name": "obj",
               "type": "Object",
-              "description": "row data"
+              "description": "object to navigate"
             },
             {
-              "name": "column",
-              "type": "Object",
-              "description": "column configuration"
+              "name": "path",
+              "type": "string",
+              "description": "path for navigation"
             }
           ],
           "return": {
             "type": "Any",
-            "desc": "value of row for this column"
-          }
+            "desc": "value present in the given path of the obj."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "_deepSet",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 45,
+              "column": 4
+            },
+            "end": {
+              "line": 62,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj"
+            },
+            {
+              "name": "path"
+            },
+            {
+              "name": "value"
+            }
+          ],
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "debounce",
+          "description": "Call `debounce` to collapse multiple requests for a named task into\none invocation which is made after the wait time has elapsed with\nno new request.  If no wait time is given, the callback will be called\nat microtask timing (guaranteed before paint).\n\n    debouncedClickAction(e) {\n      // will not call `processClick` more than once per 100ms\n      this.debounce('click', function() {\n       this.processClick();\n      } 100);\n    }",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 88,
+              "column": 4
+            },
+            "end": {
+              "line": 92,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "jobName",
+              "type": "string",
+              "description": "String to identify the debounce job."
+            },
+            {
+              "name": "callback",
+              "type": "function (): void",
+              "description": "Function that is called (with `this`\n  context) when the wait time elapses."
+            },
+            {
+              "name": "wait",
+              "type": "number",
+              "description": "Optional wait time in milliseconds (ms) after the\n  last signal that must elapse before invoking `callback`"
+            }
+          ],
+          "return": {
+            "type": "!Object",
+            "desc": "Returns a debouncer object on which exists the\nfollowing methods: `isActive()` returns true if the debouncer is\nactive; `cancel()` cancels the debouncer if it is active;\n`flush()` immediately invokes the debounced callback if the debouncer\nis active."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "async",
+          "description": "Runs a callback function asynchronously.\n\nBy default (if no waitTime is specified), async callbacks are run at\nmicrotask timing, which will occur before paint.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 106,
+              "column": 4
+            },
+            "end": {
+              "line": 109,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "callback",
+              "type": "!Function",
+              "description": "The callback function to run, bound to `this`."
+            },
+            {
+              "name": "waitTime",
+              "type": "number=",
+              "description": "Time to wait before calling the\n  `callback`.  If unspecified or 0, the callback will be run at microtask\n  timing (before paint)."
+            }
+          ],
+          "return": {
+            "type": "number",
+            "desc": "Handle that may be used to cancel the async job."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "cancelAsync",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 120,
+              "column": 4
+            },
+            "end": {
+              "line": 122,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "handle"
+            }
+          ],
+          "return": {
+            "type": "void"
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "fire",
+          "description": "Polymer fire function used to dispatch custom events",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 131,
+              "column": 4
+            },
+            "end": {
+              "line": 143,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "type",
+              "type": "string",
+              "description": "event name"
+            },
+            {
+              "name": "detail",
+              "type": "Object",
+              "description": "data to be sent in the event"
+            },
+            {
+              "name": "options",
+              "type": "Object",
+              "description": "optionals options for the event {bubbles:Boolean,cancelable:Boolean,composed:Boolean,node:HTML Element}"
+            }
+          ],
+          "return": {
+            "type": "Event",
+            "desc": "Custom event created based on the parameters"
+          },
+          "inheritedFrom": "OECommonMixin"
         },
         {
           "name": "_applyFilter",
@@ -131,11 +300,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 189,
+              "line": 178,
               "column": 2
             },
             "end": {
-              "line": 201,
+              "line": 190,
               "column": 3
             }
           },
@@ -157,11 +326,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 207,
+              "line": 196,
               "column": 2
             },
             "end": {
-              "line": 225,
+              "line": 214,
               "column": 3
             }
           },
@@ -183,11 +352,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 231,
+              "line": 220,
               "column": 2
             },
             "end": {
-              "line": 235,
+              "line": 222,
               "column": 3
             }
           },
@@ -209,11 +378,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 242,
+              "line": 229,
               "column": 2
             },
             "end": {
-              "line": 251,
+              "line": 238,
               "column": 3
             }
           },
@@ -236,11 +405,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 257,
+              "line": 244,
               "column": 2
             },
             "end": {
-              "line": 270,
+              "line": 257,
               "column": 3
             }
           },
@@ -262,11 +431,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 278,
+              "line": 265,
               "column": 2
             },
             "end": {
-              "line": 283,
+              "line": 270,
               "column": 3
             }
           },
@@ -294,11 +463,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 290,
+              "line": 277,
               "column": 2
             },
             "end": {
-              "line": 292,
+              "line": 279,
               "column": 3
             }
           },
@@ -321,11 +490,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 298,
+              "line": 285,
               "column": 2
             },
             "end": {
-              "line": 305,
+              "line": 292,
               "column": 3
             }
           },
@@ -347,11 +516,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 311,
+              "line": 298,
               "column": 2
             },
             "end": {
-              "line": 321,
+              "line": 308,
               "column": 3
             }
           },
@@ -373,11 +542,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 327,
+              "line": 314,
               "column": 2
             },
             "end": {
-              "line": 329,
+              "line": 316,
               "column": 3
             }
           },
@@ -399,11 +568,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 335,
+              "line": 322,
               "column": 2
             },
             "end": {
-              "line": 342,
+              "line": 328,
               "column": 3
             }
           },
@@ -429,7 +598,7 @@
           "column": 0
         },
         "end": {
-          "line": 344,
+          "line": 330,
           "column": 1
         }
       },
@@ -522,11 +691,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 129,
+              "line": 172,
               "column": 6
             },
             "end": {
-              "line": 132,
+              "line": 175,
               "column": 7
             }
           },
@@ -544,11 +713,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 134,
+              "line": 177,
               "column": 6
             },
             "end": {
-              "line": 136,
+              "line": 179,
               "column": 7
             }
           },
@@ -565,11 +734,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 138,
+              "line": 181,
               "column": 6
             },
             "end": {
-              "line": 140,
+              "line": 183,
               "column": 7
             }
           },
@@ -586,11 +755,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 141,
+              "line": 184,
               "column": 6
             },
             "end": {
-              "line": 143,
+              "line": 186,
               "column": 7
             }
           },
@@ -599,20 +768,244 @@
               "attributeType": "Boolean"
             }
           }
+        },
+        {
+          "name": "filterValue",
+          "type": "string | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 187,
+              "column": 6
+            },
+            "end": {
+              "line": 191,
+              "column": 4
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "observer": "\"inlineSearchCriteria\"",
+              "attributeType": "String"
+            }
+          }
         }
       ],
       "methods": [
+        {
+          "name": "_deepValue",
+          "description": "Get the value from the 'obj' based on the 'path'.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 37,
+              "column": 4
+            },
+            "end": {
+              "line": 43,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj",
+              "type": "Object",
+              "description": "object to navigate"
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "description": "path for navigation"
+            }
+          ],
+          "return": {
+            "type": "Any",
+            "desc": "value present in the given path of the obj."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "_deepSet",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 45,
+              "column": 4
+            },
+            "end": {
+              "line": 62,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj"
+            },
+            {
+              "name": "path"
+            },
+            {
+              "name": "value"
+            }
+          ],
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "debounce",
+          "description": "Call `debounce` to collapse multiple requests for a named task into\none invocation which is made after the wait time has elapsed with\nno new request.  If no wait time is given, the callback will be called\nat microtask timing (guaranteed before paint).\n\n    debouncedClickAction(e) {\n      // will not call `processClick` more than once per 100ms\n      this.debounce('click', function() {\n       this.processClick();\n      } 100);\n    }",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 88,
+              "column": 4
+            },
+            "end": {
+              "line": 92,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "jobName",
+              "type": "string",
+              "description": "String to identify the debounce job."
+            },
+            {
+              "name": "callback",
+              "type": "function (): void",
+              "description": "Function that is called (with `this`\n  context) when the wait time elapses."
+            },
+            {
+              "name": "wait",
+              "type": "number",
+              "description": "Optional wait time in milliseconds (ms) after the\n  last signal that must elapse before invoking `callback`"
+            }
+          ],
+          "return": {
+            "type": "!Object",
+            "desc": "Returns a debouncer object on which exists the\nfollowing methods: `isActive()` returns true if the debouncer is\nactive; `cancel()` cancels the debouncer if it is active;\n`flush()` immediately invokes the debounced callback if the debouncer\nis active."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "async",
+          "description": "Runs a callback function asynchronously.\n\nBy default (if no waitTime is specified), async callbacks are run at\nmicrotask timing, which will occur before paint.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 106,
+              "column": 4
+            },
+            "end": {
+              "line": 109,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "callback",
+              "type": "!Function",
+              "description": "The callback function to run, bound to `this`."
+            },
+            {
+              "name": "waitTime",
+              "type": "number=",
+              "description": "Time to wait before calling the\n  `callback`.  If unspecified or 0, the callback will be run at microtask\n  timing (before paint)."
+            }
+          ],
+          "return": {
+            "type": "number",
+            "desc": "Handle that may be used to cancel the async job."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "cancelAsync",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 120,
+              "column": 4
+            },
+            "end": {
+              "line": 122,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "handle"
+            }
+          ],
+          "return": {
+            "type": "void"
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "fire",
+          "description": "Polymer fire function used to dispatch custom events",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 131,
+              "column": 4
+            },
+            "end": {
+              "line": 143,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "type",
+              "type": "string",
+              "description": "event name"
+            },
+            {
+              "name": "detail",
+              "type": "Object",
+              "description": "data to be sent in the event"
+            },
+            {
+              "name": "options",
+              "type": "Object",
+              "description": "optionals options for the event {bubbles:Boolean,cancelable:Boolean,composed:Boolean,node:HTML Element}"
+            }
+          ],
+          "return": {
+            "type": "Event",
+            "desc": "Custom event created based on the parameters"
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
         {
           "name": "connectedCallback",
           "description": "",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 164,
+              "line": 213,
               "column": 2
             },
             "end": {
-              "line": 167,
+              "line": 218,
               "column": 3
             }
           },
@@ -623,16 +1016,126 @@
           }
         },
         {
+          "name": "_computelayout",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 219,
+              "column": 2
+            },
+            "end": {
+              "line": 225,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "inlineSearchCriteria",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 226,
+              "column": 2
+            },
+            "end": {
+              "line": 232,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "value"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_itemsChanged",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 233,
+              "column": 2
+            },
+            "end": {
+              "line": 248,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "change"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_filterItems",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 250,
+              "column": 2
+            },
+            "end": {
+              "line": 255,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "items"
+            },
+            {
+              "name": "searchText"
+            }
+          ]
+        },
+        {
+          "name": "showColumnSearch",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 256,
+              "column": 2
+            },
+            "end": {
+              "line": 260,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "column"
+            }
+          ]
+        },
+        {
           "name": "_computeColumnLabel",
           "description": "Computes label based on 'label' or 'key' property of column",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 175,
+              "line": 268,
               "column": 2
             },
             "end": {
-              "line": 177,
+              "line": 270,
               "column": 3
             }
           },
@@ -650,16 +1153,16 @@
           }
         },
         {
-          "name": "_changeSortOrder",
+          "name": "_updateSortOrder",
           "description": "Handles updating the sort",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 183,
+              "line": 276,
               "column": 2
             },
             "end": {
-              "line": 217,
+              "line": 293,
               "column": 3
             }
           },
@@ -676,16 +1179,36 @@
           }
         },
         {
+          "name": "__setSortDetails",
+          "description": "Updates _sortIcon , _sortClass and _hasSort based on column.sort value.",
+          "privacy": "private",
+          "sourceRange": {
+            "start": {
+              "line": 298,
+              "column": 2
+            },
+            "end": {
+              "line": 315,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
           "name": "_handleResize",
           "description": "Handles resizing the column width",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 223,
+              "line": 321,
               "column": 2
             },
             "end": {
-              "line": 250,
+              "line": 348,
               "column": 3
             }
           },
@@ -707,11 +1230,37 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 256,
+              "line": 354,
               "column": 2
             },
             "end": {
-              "line": 258,
+              "line": 357,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "evt",
+              "type": "Event",
+              "description": "tap event"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "closeFilter",
+          "description": "Closes the filter dialog",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 363,
+              "column": 2
+            },
+            "end": {
+              "line": 365,
               "column": 3
             }
           },
@@ -733,11 +1282,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 264,
+              "line": 370,
               "column": 2
             },
             "end": {
-              "line": 272,
+              "line": 378,
               "column": 3
             }
           },
@@ -759,11 +1308,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 279,
+              "line": 385,
               "column": 2
             },
             "end": {
-              "line": 281,
+              "line": 387,
               "column": 3
             }
           },
@@ -786,11 +1335,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 288,
+              "line": 394,
               "column": 2
             },
             "end": {
-              "line": 296,
+              "line": 402,
               "column": 3
             }
           },
@@ -806,6 +1355,27 @@
             "type": "string",
             "desc": "class name based on column type"
           }
+        },
+        {
+          "name": "_computeCellStyle",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 403,
+              "column": 2
+            },
+            "end": {
+              "line": 407,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "column"
+            }
+          ]
         }
       ],
       "staticMethods": [],
@@ -817,7 +1387,7 @@
           "column": 0
         },
         "end": {
-          "line": 298,
+          "line": 409,
           "column": 1
         }
       },
@@ -830,11 +1400,11 @@
           "description": "The definition of the column of the current cell.",
           "sourceRange": {
             "start": {
-              "line": 129,
+              "line": 172,
               "column": 6
             },
             "end": {
-              "line": 132,
+              "line": 175,
               "column": 7
             }
           },
@@ -846,11 +1416,11 @@
           "description": "",
           "sourceRange": {
             "start": {
-              "line": 134,
+              "line": 177,
               "column": 6
             },
             "end": {
-              "line": 136,
+              "line": 179,
               "column": 7
             }
           },
@@ -862,11 +1432,11 @@
           "description": "",
           "sourceRange": {
             "start": {
-              "line": 138,
+              "line": 181,
               "column": 6
             },
             "end": {
-              "line": 140,
+              "line": 183,
               "column": 7
             }
           },
@@ -878,16 +1448,32 @@
           "description": "",
           "sourceRange": {
             "start": {
-              "line": 141,
+              "line": 184,
               "column": 6
             },
             "end": {
-              "line": 143,
+              "line": 186,
               "column": 7
             }
           },
           "metadata": {},
           "type": "boolean | null | undefined"
+        },
+        {
+          "name": "filter-value",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 187,
+              "column": 6
+            },
+            "end": {
+              "line": 191,
+              "column": 4
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
         }
       ],
       "events": [
@@ -913,6 +1499,12 @@
           "type": "CustomEvent",
           "name": "column-changed",
           "description": "Fired when the `column` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "filter-value-changed",
+          "description": "Fired when the `filterValue` property changes.",
           "metadata": {}
         }
       ],
@@ -1000,6 +1592,207 @@
         }
       ],
       "methods": [
+        {
+          "name": "_deepValue",
+          "description": "Get the value from the 'obj' based on the 'path'.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 37,
+              "column": 4
+            },
+            "end": {
+              "line": 43,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj",
+              "type": "Object",
+              "description": "object to navigate"
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "description": "path for navigation"
+            }
+          ],
+          "return": {
+            "type": "Any",
+            "desc": "value present in the given path of the obj."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "_deepSet",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 45,
+              "column": 4
+            },
+            "end": {
+              "line": 62,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj"
+            },
+            {
+              "name": "path"
+            },
+            {
+              "name": "value"
+            }
+          ],
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "debounce",
+          "description": "Call `debounce` to collapse multiple requests for a named task into\none invocation which is made after the wait time has elapsed with\nno new request.  If no wait time is given, the callback will be called\nat microtask timing (guaranteed before paint).\n\n    debouncedClickAction(e) {\n      // will not call `processClick` more than once per 100ms\n      this.debounce('click', function() {\n       this.processClick();\n      } 100);\n    }",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 88,
+              "column": 4
+            },
+            "end": {
+              "line": 92,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "jobName",
+              "type": "string",
+              "description": "String to identify the debounce job."
+            },
+            {
+              "name": "callback",
+              "type": "function (): void",
+              "description": "Function that is called (with `this`\n  context) when the wait time elapses."
+            },
+            {
+              "name": "wait",
+              "type": "number",
+              "description": "Optional wait time in milliseconds (ms) after the\n  last signal that must elapse before invoking `callback`"
+            }
+          ],
+          "return": {
+            "type": "!Object",
+            "desc": "Returns a debouncer object on which exists the\nfollowing methods: `isActive()` returns true if the debouncer is\nactive; `cancel()` cancels the debouncer if it is active;\n`flush()` immediately invokes the debounced callback if the debouncer\nis active."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "async",
+          "description": "Runs a callback function asynchronously.\n\nBy default (if no waitTime is specified), async callbacks are run at\nmicrotask timing, which will occur before paint.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 106,
+              "column": 4
+            },
+            "end": {
+              "line": 109,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "callback",
+              "type": "!Function",
+              "description": "The callback function to run, bound to `this`."
+            },
+            {
+              "name": "waitTime",
+              "type": "number=",
+              "description": "Time to wait before calling the\n  `callback`.  If unspecified or 0, the callback will be run at microtask\n  timing (before paint)."
+            }
+          ],
+          "return": {
+            "type": "number",
+            "desc": "Handle that may be used to cancel the async job."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "cancelAsync",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 120,
+              "column": 4
+            },
+            "end": {
+              "line": 122,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "handle"
+            }
+          ],
+          "return": {
+            "type": "void"
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "fire",
+          "description": "Polymer fire function used to dispatch custom events",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 131,
+              "column": 4
+            },
+            "end": {
+              "line": 143,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "type",
+              "type": "string",
+              "description": "event name"
+            },
+            {
+              "name": "detail",
+              "type": "Object",
+              "description": "data to be sent in the event"
+            },
+            {
+              "name": "options",
+              "type": "Object",
+              "description": "optionals options for the event {bubbles:Boolean,cancelable:Boolean,composed:Boolean,node:HTML Element}"
+            }
+          ],
+          "return": {
+            "type": "Event",
+            "desc": "Custom event created based on the parameters"
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
         {
           "name": "columnsChanged",
           "description": "Observer on columns",
@@ -1196,11 +1989,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 105,
+              "line": 104,
               "column": 6
             },
             "end": {
-              "line": 108,
+              "line": 107,
               "column": 7
             }
           },
@@ -1218,11 +2011,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 112,
+              "line": 111,
               "column": 6
             },
             "end": {
-              "line": 114,
+              "line": 113,
               "column": 7
             }
           },
@@ -1239,11 +2032,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 119,
+              "line": 118,
               "column": 6
             },
             "end": {
-              "line": 122,
+              "line": 121,
               "column": 7
             }
           },
@@ -1261,11 +2054,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 127,
+              "line": 126,
               "column": 6
             },
             "end": {
-              "line": 129,
+              "line": 128,
               "column": 7
             }
           },
@@ -1282,11 +2075,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 134,
+              "line": 133,
               "column": 6
             },
             "end": {
-              "line": 136,
+              "line": 135,
               "column": 7
             }
           },
@@ -1298,6 +2091,207 @@
         }
       ],
       "methods": [
+        {
+          "name": "_deepValue",
+          "description": "Get the value from the 'obj' based on the 'path'.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 37,
+              "column": 4
+            },
+            "end": {
+              "line": 43,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj",
+              "type": "Object",
+              "description": "object to navigate"
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "description": "path for navigation"
+            }
+          ],
+          "return": {
+            "type": "Any",
+            "desc": "value present in the given path of the obj."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "_deepSet",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 45,
+              "column": 4
+            },
+            "end": {
+              "line": 62,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj"
+            },
+            {
+              "name": "path"
+            },
+            {
+              "name": "value"
+            }
+          ],
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "debounce",
+          "description": "Call `debounce` to collapse multiple requests for a named task into\none invocation which is made after the wait time has elapsed with\nno new request.  If no wait time is given, the callback will be called\nat microtask timing (guaranteed before paint).\n\n    debouncedClickAction(e) {\n      // will not call `processClick` more than once per 100ms\n      this.debounce('click', function() {\n       this.processClick();\n      } 100);\n    }",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 88,
+              "column": 4
+            },
+            "end": {
+              "line": 92,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "jobName",
+              "type": "string",
+              "description": "String to identify the debounce job."
+            },
+            {
+              "name": "callback",
+              "type": "function (): void",
+              "description": "Function that is called (with `this`\n  context) when the wait time elapses."
+            },
+            {
+              "name": "wait",
+              "type": "number",
+              "description": "Optional wait time in milliseconds (ms) after the\n  last signal that must elapse before invoking `callback`"
+            }
+          ],
+          "return": {
+            "type": "!Object",
+            "desc": "Returns a debouncer object on which exists the\nfollowing methods: `isActive()` returns true if the debouncer is\nactive; `cancel()` cancels the debouncer if it is active;\n`flush()` immediately invokes the debounced callback if the debouncer\nis active."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "async",
+          "description": "Runs a callback function asynchronously.\n\nBy default (if no waitTime is specified), async callbacks are run at\nmicrotask timing, which will occur before paint.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 106,
+              "column": 4
+            },
+            "end": {
+              "line": 109,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "callback",
+              "type": "!Function",
+              "description": "The callback function to run, bound to `this`."
+            },
+            {
+              "name": "waitTime",
+              "type": "number=",
+              "description": "Time to wait before calling the\n  `callback`.  If unspecified or 0, the callback will be run at microtask\n  timing (before paint)."
+            }
+          ],
+          "return": {
+            "type": "number",
+            "desc": "Handle that may be used to cancel the async job."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "cancelAsync",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 120,
+              "column": 4
+            },
+            "end": {
+              "line": 122,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "handle"
+            }
+          ],
+          "return": {
+            "type": "void"
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "fire",
+          "description": "Polymer fire function used to dispatch custom events",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 131,
+              "column": 4
+            },
+            "end": {
+              "line": 143,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "type",
+              "type": "string",
+              "description": "event name"
+            },
+            {
+              "name": "detail",
+              "type": "Object",
+              "description": "data to be sent in the event"
+            },
+            {
+              "name": "options",
+              "type": "Object",
+              "description": "optionals options for the event {bubbles:Boolean,cancelable:Boolean,composed:Boolean,node:HTML Element}"
+            }
+          ],
+          "return": {
+            "type": "Event",
+            "desc": "Custom event created based on the parameters"
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
         {
           "name": "_computeRowIndex",
           "description": "Computes the value for '_startRow' and '_endRow'",
@@ -1328,6 +2322,11 @@
               "name": "itemsLength",
               "type": "number",
               "description": "length of items displayed"
+            },
+            {
+              "name": "rowCount",
+              "type": "number",
+              "description": "total number of rows in data."
             }
           ],
           "return": {
@@ -1463,11 +2462,11 @@
           "description": "page size value",
           "sourceRange": {
             "start": {
-              "line": 105,
+              "line": 104,
               "column": 6
             },
             "end": {
-              "line": 108,
+              "line": 107,
               "column": 7
             }
           },
@@ -1479,11 +2478,11 @@
           "description": "Array containing different page sizes",
           "sourceRange": {
             "start": {
-              "line": 112,
+              "line": 111,
               "column": 6
             },
             "end": {
-              "line": 114,
+              "line": 113,
               "column": 7
             }
           },
@@ -1495,11 +2494,11 @@
           "description": "Current page index",
           "sourceRange": {
             "start": {
-              "line": 119,
+              "line": 118,
               "column": 6
             },
             "end": {
-              "line": 122,
+              "line": 121,
               "column": 7
             }
           },
@@ -1511,11 +2510,11 @@
           "description": "Length of items in this page",
           "sourceRange": {
             "start": {
-              "line": 127,
+              "line": 126,
               "column": 6
             },
             "end": {
-              "line": 129,
+              "line": 128,
               "column": 7
             }
           },
@@ -1527,11 +2526,11 @@
           "description": "Total count of items",
           "sourceRange": {
             "start": {
-              "line": 134,
+              "line": 133,
               "column": 6
             },
             "end": {
-              "line": 136,
+              "line": 135,
               "column": 7
             }
           },
@@ -1575,17 +2574,16 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 180,
+              "line": 183,
               "column": 12
             },
             "end": {
-              "line": 184,
+              "line": 186,
               "column": 13
             }
           },
           "metadata": {
             "polymer": {
-              "readOnly": true,
               "attributeType": "Number"
             }
           },
@@ -1598,11 +2596,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 189,
+              "line": 191,
               "column": 12
             },
             "end": {
-              "line": 191,
+              "line": 193,
               "column": 13
             }
           },
@@ -1619,17 +2617,16 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 196,
+              "line": 198,
               "column": 12
             },
             "end": {
-              "line": 200,
+              "line": 201,
               "column": 13
             }
           },
           "metadata": {
             "polymer": {
-              "readOnly": true,
               "attributeType": "Boolean"
             }
           },
@@ -1642,7 +2639,7 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 205,
+              "line": 206,
               "column": 12
             },
             "end": {
@@ -1652,7 +2649,6 @@
           },
           "metadata": {
             "polymer": {
-              "readOnly": true,
               "attributeType": "Boolean"
             }
           },
@@ -1669,13 +2665,12 @@
               "column": 12
             },
             "end": {
-              "line": 218,
+              "line": 217,
               "column": 13
             }
           },
           "metadata": {
             "polymer": {
-              "readOnly": true,
               "attributeType": "Boolean"
             }
           },
@@ -1688,17 +2683,16 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 223,
+              "line": 222,
               "column": 12
             },
             "end": {
-              "line": 227,
+              "line": 225,
               "column": 13
             }
           },
           "metadata": {
             "polymer": {
-              "readOnly": true,
               "attributeType": "Boolean"
             }
           },
@@ -1711,17 +2705,16 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 232,
+              "line": 230,
               "column": 12
             },
             "end": {
-              "line": 236,
+              "line": 233,
               "column": 13
             }
           },
           "metadata": {
             "polymer": {
-              "readOnly": true,
               "attributeType": "Boolean"
             }
           },
@@ -1734,17 +2727,16 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 241,
+              "line": 238,
               "column": 12
             },
             "end": {
-              "line": 244,
+              "line": 240,
               "column": 13
             }
           },
           "metadata": {
             "polymer": {
-              "readOnly": true,
               "attributeType": "String"
             }
           }
@@ -1756,11 +2748,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 259,
+              "line": 255,
               "column": 12
             },
             "end": {
-              "line": 264,
+              "line": 260,
               "column": 13
             }
           },
@@ -1778,11 +2770,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 271,
+              "line": 267,
               "column": 12
             },
             "end": {
-              "line": 276,
+              "line": 272,
               "column": 13
             }
           },
@@ -1796,16 +2788,217 @@
       ],
       "methods": [
         {
+          "name": "_deepValue",
+          "description": "Get the value from the 'obj' based on the 'path'.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 37,
+              "column": 4
+            },
+            "end": {
+              "line": 43,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj",
+              "type": "Object",
+              "description": "object to navigate"
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "description": "path for navigation"
+            }
+          ],
+          "return": {
+            "type": "Any",
+            "desc": "value present in the given path of the obj."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "_deepSet",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 45,
+              "column": 4
+            },
+            "end": {
+              "line": 62,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj"
+            },
+            {
+              "name": "path"
+            },
+            {
+              "name": "value"
+            }
+          ],
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "debounce",
+          "description": "Call `debounce` to collapse multiple requests for a named task into\none invocation which is made after the wait time has elapsed with\nno new request.  If no wait time is given, the callback will be called\nat microtask timing (guaranteed before paint).\n\n    debouncedClickAction(e) {\n      // will not call `processClick` more than once per 100ms\n      this.debounce('click', function() {\n       this.processClick();\n      } 100);\n    }",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 88,
+              "column": 4
+            },
+            "end": {
+              "line": 92,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "jobName",
+              "type": "string",
+              "description": "String to identify the debounce job."
+            },
+            {
+              "name": "callback",
+              "type": "function (): void",
+              "description": "Function that is called (with `this`\n  context) when the wait time elapses."
+            },
+            {
+              "name": "wait",
+              "type": "number",
+              "description": "Optional wait time in milliseconds (ms) after the\n  last signal that must elapse before invoking `callback`"
+            }
+          ],
+          "return": {
+            "type": "!Object",
+            "desc": "Returns a debouncer object on which exists the\nfollowing methods: `isActive()` returns true if the debouncer is\nactive; `cancel()` cancels the debouncer if it is active;\n`flush()` immediately invokes the debounced callback if the debouncer\nis active."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "async",
+          "description": "Runs a callback function asynchronously.\n\nBy default (if no waitTime is specified), async callbacks are run at\nmicrotask timing, which will occur before paint.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 106,
+              "column": 4
+            },
+            "end": {
+              "line": 109,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "callback",
+              "type": "!Function",
+              "description": "The callback function to run, bound to `this`."
+            },
+            {
+              "name": "waitTime",
+              "type": "number=",
+              "description": "Time to wait before calling the\n  `callback`.  If unspecified or 0, the callback will be run at microtask\n  timing (before paint)."
+            }
+          ],
+          "return": {
+            "type": "number",
+            "desc": "Handle that may be used to cancel the async job."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "cancelAsync",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 120,
+              "column": 4
+            },
+            "end": {
+              "line": 122,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "handle"
+            }
+          ],
+          "return": {
+            "type": "void"
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "fire",
+          "description": "Polymer fire function used to dispatch custom events",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 131,
+              "column": 4
+            },
+            "end": {
+              "line": 143,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "type",
+              "type": "string",
+              "description": "event name"
+            },
+            {
+              "name": "detail",
+              "type": "Object",
+              "description": "data to be sent in the event"
+            },
+            {
+              "name": "options",
+              "type": "Object",
+              "description": "optionals options for the event {bubbles:Boolean,cancelable:Boolean,composed:Boolean,node:HTML Element}"
+            }
+          ],
+          "return": {
+            "type": "Event",
+            "desc": "Custom event created based on the parameters"
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
           "name": "_isMultiSelected",
           "description": "Checks if multiple items are selected.",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 324,
+              "line": 320,
               "column": 4
             },
             "end": {
-              "line": 326,
+              "line": 322,
               "column": 5
             }
           },
@@ -1828,11 +3021,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 327,
+              "line": 323,
               "column": 4
             },
             "end": {
-              "line": 329,
+              "line": 325,
               "column": 5
             }
           },
@@ -1848,11 +3041,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 330,
+              "line": 326,
               "column": 4
             },
             "end": {
-              "line": 332,
+              "line": 328,
               "column": 5
             }
           },
@@ -1868,11 +3061,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 333,
+              "line": 329,
               "column": 4
             },
             "end": {
-              "line": 335,
+              "line": 331,
               "column": 5
             }
           },
@@ -1888,11 +3081,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 336,
+              "line": 332,
               "column": 4
             },
             "end": {
-              "line": 338,
+              "line": 334,
               "column": 5
             }
           },
@@ -1908,11 +3101,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 339,
+              "line": 335,
               "column": 4
             },
             "end": {
-              "line": 341,
+              "line": 337,
               "column": 5
             }
           },
@@ -1928,11 +3121,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 342,
+              "line": 338,
               "column": 4
             },
             "end": {
-              "line": 344,
+              "line": 340,
               "column": 5
             }
           },
@@ -1948,11 +3141,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 345,
+              "line": 341,
               "column": 4
             },
             "end": {
-              "line": 351,
+              "line": 347,
               "column": 5
             }
           },
@@ -1972,11 +3165,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 352,
+              "line": 348,
               "column": 4
             },
             "end": {
-              "line": 354,
+              "line": 350,
               "column": 5
             }
           },
@@ -1992,11 +3185,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 356,
+              "line": 352,
               "column": 4
             },
             "end": {
-              "line": 358,
+              "line": 354,
               "column": 5
             }
           },
@@ -2016,11 +3209,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 360,
+              "line": 356,
               "column": 4
             },
             "end": {
-              "line": 362,
+              "line": 358,
               "column": 5
             }
           },
@@ -2037,11 +3230,11 @@
       "metadata": {},
       "sourceRange": {
         "start": {
-          "line": 32,
+          "line": 34,
           "column": 0
         },
         "end": {
-          "line": 363,
+          "line": 359,
           "column": 1
         }
       },
@@ -2054,11 +3247,11 @@
           "description": "Length of items selected in the table",
           "sourceRange": {
             "start": {
-              "line": 180,
+              "line": 183,
               "column": 12
             },
             "end": {
-              "line": 184,
+              "line": 186,
               "column": 13
             }
           },
@@ -2070,11 +3263,11 @@
           "description": "Title for the data-table header",
           "sourceRange": {
             "start": {
-              "line": 189,
+              "line": 191,
               "column": 12
             },
             "end": {
-              "line": 191,
+              "line": 193,
               "column": 13
             }
           },
@@ -2086,11 +3279,11 @@
           "description": "Flag to disable all opertaions",
           "sourceRange": {
             "start": {
-              "line": 196,
+              "line": 198,
               "column": 12
             },
             "end": {
-              "line": 200,
+              "line": 201,
               "column": 13
             }
           },
@@ -2102,7 +3295,7 @@
           "description": "Flag to disable add icon",
           "sourceRange": {
             "start": {
-              "line": 205,
+              "line": 206,
               "column": 12
             },
             "end": {
@@ -2122,7 +3315,7 @@
               "column": 12
             },
             "end": {
-              "line": 218,
+              "line": 217,
               "column": 13
             }
           },
@@ -2134,11 +3327,11 @@
           "description": "Flag to disable config editor",
           "sourceRange": {
             "start": {
-              "line": 223,
+              "line": 222,
               "column": 12
             },
             "end": {
-              "line": 227,
+              "line": 225,
               "column": 13
             }
           },
@@ -2150,11 +3343,11 @@
           "description": "Flag to disabled delete icon",
           "sourceRange": {
             "start": {
-              "line": 232,
+              "line": 230,
               "column": 12
             },
             "end": {
-              "line": 236,
+              "line": 233,
               "column": 13
             }
           },
@@ -2166,11 +3359,11 @@
           "description": "Config code passed to oe-data-table",
           "sourceRange": {
             "start": {
-              "line": 241,
+              "line": 238,
               "column": 12
             },
             "end": {
-              "line": 244,
+              "line": 240,
               "column": 13
             }
           },
@@ -2182,11 +3375,11 @@
           "description": "Array of actions to be displayed as icons on the header\nActions should be of format\n{\n   icon: 'icons:alarm',\n   title: 'Notify Users',\n   action: 'alarm'\n}\nThese will appear as icons on the header with a tooltip specified by 'title'\nOn clicking on the icon an event will be raised with 'oe-data-table-action-' + the action provided.\nIn the case of example 'oe-data-table-action-alarm'",
           "sourceRange": {
             "start": {
-              "line": 259,
+              "line": 255,
               "column": 12
             },
             "end": {
-              "line": 264,
+              "line": 260,
               "column": 13
             }
           },
@@ -2198,11 +3391,11 @@
           "description": "Array of actions to be displayed on menu of the header\nThe format and working is similar to toolbarActions , The difference being that these will appear\nWhen the Menu icons is clicked and displays with icon and title.",
           "sourceRange": {
             "start": {
-              "line": 271,
+              "line": 267,
               "column": 12
             },
             "end": {
-              "line": 276,
+              "line": 272,
               "column": 13
             }
           },
@@ -2276,11 +3469,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 63,
+              "line": 72,
               "column": 6
             },
             "end": {
-              "line": 65,
+              "line": 74,
               "column": 7
             }
           },
@@ -2297,11 +3490,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 69,
+              "line": 78,
               "column": 6
             },
             "end": {
-              "line": 72,
+              "line": 81,
               "column": 7
             }
           },
@@ -2319,11 +3512,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 76,
+              "line": 85,
               "column": 6
             },
             "end": {
-              "line": 79,
+              "line": 88,
               "column": 7
             }
           },
@@ -2341,11 +3534,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 84,
+              "line": 93,
               "column": 6
             },
             "end": {
-              "line": 86,
+              "line": 95,
               "column": 7
             }
           },
@@ -2357,49 +3550,6 @@
         },
         {
           "name": "_inEdit",
-          "type": "boolean | null | undefined",
-          "description": "",
-          "privacy": "protected",
-          "sourceRange": {
-            "start": {
-              "line": 88,
-              "column": 6
-            },
-            "end": {
-              "line": 91,
-              "column": 7
-            }
-          },
-          "metadata": {
-            "polymer": {
-              "attributeType": "Boolean"
-            }
-          },
-          "defaultValue": "false"
-        },
-        {
-          "name": "_element",
-          "type": "Object | null | undefined",
-          "description": "",
-          "privacy": "protected",
-          "sourceRange": {
-            "start": {
-              "line": 93,
-              "column": 6
-            },
-            "end": {
-              "line": 95,
-              "column": 7
-            }
-          },
-          "metadata": {
-            "polymer": {
-              "attributeType": "Object"
-            }
-          }
-        },
-        {
-          "name": "_hasCustomRenderer",
           "type": "boolean | null | undefined",
           "description": "",
           "privacy": "protected",
@@ -2421,17 +3571,60 @@
           "defaultValue": "false"
         },
         {
+          "name": "_element",
+          "type": "Object | null | undefined",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 102,
+              "column": 6
+            },
+            "end": {
+              "line": 104,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Object"
+            }
+          }
+        },
+        {
+          "name": "_hasCustomRenderer",
+          "type": "boolean | null | undefined",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 106,
+              "column": 6
+            },
+            "end": {
+              "line": 109,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
           "name": "_notifyResizeAsyncTask",
           "type": "number | null | undefined",
           "description": "task number indicating an Async task that notify `iron-list` to update its content",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 105,
+              "line": 114,
               "column": 6
             },
             "end": {
-              "line": 107,
+              "line": 116,
               "column": 7
             }
           },
@@ -2448,11 +3641,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 112,
+              "line": 121,
               "column": 6
             },
             "end": {
-              "line": 114,
+              "line": 123,
               "column": 7
             }
           },
@@ -2469,11 +3662,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 119,
+              "line": 128,
               "column": 6
             },
             "end": {
-              "line": 121,
+              "line": 130,
               "column": 7
             }
           },
@@ -2490,11 +3683,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 123,
+              "line": 132,
               "column": 6
             },
             "end": {
-              "line": 125,
+              "line": 134,
               "column": 7
             }
           },
@@ -2511,11 +3704,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 130,
+              "line": 139,
               "column": 6
             },
             "end": {
-              "line": 133,
+              "line": 142,
               "column": 7
             }
           },
@@ -2529,16 +3722,217 @@
       ],
       "methods": [
         {
+          "name": "_deepValue",
+          "description": "Get the value from the 'obj' based on the 'path'.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 37,
+              "column": 4
+            },
+            "end": {
+              "line": 43,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj",
+              "type": "Object",
+              "description": "object to navigate"
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "description": "path for navigation"
+            }
+          ],
+          "return": {
+            "type": "Any",
+            "desc": "value present in the given path of the obj."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "_deepSet",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 45,
+              "column": 4
+            },
+            "end": {
+              "line": 62,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj"
+            },
+            {
+              "name": "path"
+            },
+            {
+              "name": "value"
+            }
+          ],
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "debounce",
+          "description": "Call `debounce` to collapse multiple requests for a named task into\none invocation which is made after the wait time has elapsed with\nno new request.  If no wait time is given, the callback will be called\nat microtask timing (guaranteed before paint).\n\n    debouncedClickAction(e) {\n      // will not call `processClick` more than once per 100ms\n      this.debounce('click', function() {\n       this.processClick();\n      } 100);\n    }",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 88,
+              "column": 4
+            },
+            "end": {
+              "line": 92,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "jobName",
+              "type": "string",
+              "description": "String to identify the debounce job."
+            },
+            {
+              "name": "callback",
+              "type": "function (): void",
+              "description": "Function that is called (with `this`\n  context) when the wait time elapses."
+            },
+            {
+              "name": "wait",
+              "type": "number",
+              "description": "Optional wait time in milliseconds (ms) after the\n  last signal that must elapse before invoking `callback`"
+            }
+          ],
+          "return": {
+            "type": "!Object",
+            "desc": "Returns a debouncer object on which exists the\nfollowing methods: `isActive()` returns true if the debouncer is\nactive; `cancel()` cancels the debouncer if it is active;\n`flush()` immediately invokes the debounced callback if the debouncer\nis active."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "async",
+          "description": "Runs a callback function asynchronously.\n\nBy default (if no waitTime is specified), async callbacks are run at\nmicrotask timing, which will occur before paint.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 106,
+              "column": 4
+            },
+            "end": {
+              "line": 109,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "callback",
+              "type": "!Function",
+              "description": "The callback function to run, bound to `this`."
+            },
+            {
+              "name": "waitTime",
+              "type": "number=",
+              "description": "Time to wait before calling the\n  `callback`.  If unspecified or 0, the callback will be run at microtask\n  timing (before paint)."
+            }
+          ],
+          "return": {
+            "type": "number",
+            "desc": "Handle that may be used to cancel the async job."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "cancelAsync",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 120,
+              "column": 4
+            },
+            "end": {
+              "line": 122,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "handle"
+            }
+          ],
+          "return": {
+            "type": "void"
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "fire",
+          "description": "Polymer fire function used to dispatch custom events",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 131,
+              "column": 4
+            },
+            "end": {
+              "line": 143,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "type",
+              "type": "string",
+              "description": "event name"
+            },
+            {
+              "name": "detail",
+              "type": "Object",
+              "description": "data to be sent in the event"
+            },
+            {
+              "name": "options",
+              "type": "Object",
+              "description": "optionals options for the event {bubbles:Boolean,cancelable:Boolean,composed:Boolean,node:HTML Element}"
+            }
+          ],
+          "return": {
+            "type": "Event",
+            "desc": "Custom event created based on the parameters"
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
           "name": "_buildCustomRenderer",
           "description": "On row data change re-renders or updates the binding of the rendered content.",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 170,
+              "line": 179,
               "column": 2
             },
             "end": {
-              "line": 246,
+              "line": 260,
               "column": 3
             }
           },
@@ -2560,11 +3954,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 254,
+              "line": 268,
               "column": 2
             },
             "end": {
-              "line": 285,
+              "line": 299,
               "column": 3
             }
           },
@@ -2592,11 +3986,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 291,
+              "line": 305,
               "column": 2
             },
             "end": {
-              "line": 298,
+              "line": 314,
               "column": 3
             }
           },
@@ -2618,11 +4012,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 303,
+              "line": 319,
               "column": 2
             },
             "end": {
-              "line": 326,
+              "line": 343,
               "column": 3
             }
           },
@@ -2638,11 +4032,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 332,
+              "line": 349,
               "column": 2
             },
             "end": {
-              "line": 344,
+              "line": 366,
               "column": 3
             }
           },
@@ -2658,11 +4052,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 347,
+              "line": 368,
               "column": 2
             },
             "end": {
-              "line": 357,
+              "line": 378,
               "column": 3
             }
           },
@@ -2677,16 +4071,16 @@
           }
         },
         {
-          "name": "_createElement",
-          "description": "Dynamically creates a element based on column.uitype.\nSets the editorAttributes on the element and appends it inside the cell.\nAttaches event listener for change and keydown",
-          "privacy": "protected",
+          "name": "connectedCallback",
+          "description": "",
+          "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 364,
+              "line": 379,
               "column": 2
             },
             "end": {
-              "line": 394,
+              "line": 388,
               "column": 3
             }
           },
@@ -2697,16 +4091,84 @@
           }
         },
         {
+          "name": "disconnectedCallback",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 390,
+              "column": 2
+            },
+            "end": {
+              "line": 395,
+              "column": 1
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_createElement",
+          "description": "Dynamically creates a element based on column.uitype.\nSets the editorAttributes on the element and appends it inside the cell.\nAttaches event listener for change and keydown",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 402,
+              "column": 2
+            },
+            "end": {
+              "line": 436,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "isInEditMode"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_computeHidden",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 438,
+              "column": 2
+            },
+            "end": {
+              "line": 451,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "row"
+            },
+            {
+              "name": "column"
+            }
+          ]
+        },
+        {
           "name": "_handleValueChange",
           "description": "On change event update row value",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 400,
+              "line": 457,
               "column": 2
             },
             "end": {
-              "line": 410,
+              "line": 467,
               "column": 3
             }
           },
@@ -2728,11 +4190,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 418,
+              "line": 475,
               "column": 2
             },
             "end": {
-              "line": 420,
+              "line": 477,
               "column": 3
             }
           },
@@ -2760,11 +4222,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 427,
+              "line": 484,
               "column": 2
             },
             "end": {
-              "line": 434,
+              "line": 491,
               "column": 3
             }
           },
@@ -2787,11 +4249,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 440,
+              "line": 497,
               "column": 2
             },
             "end": {
-              "line": 456,
+              "line": 513,
               "column": 3
             }
           },
@@ -2813,11 +4275,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 464,
+              "line": 521,
               "column": 2
             },
             "end": {
-              "line": 472,
+              "line": 533,
               "column": 3
             }
           },
@@ -2840,11 +4302,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 479,
+              "line": 540,
               "column": 2
             },
             "end": {
-              "line": 481,
+              "line": 542,
               "column": 3
             }
           },
@@ -2871,7 +4333,7 @@
           "column": 0
         },
         "end": {
-          "line": 483,
+          "line": 544,
           "column": 1
         }
       },
@@ -2884,11 +4346,11 @@
           "description": "The definition of the column of the current cell.",
           "sourceRange": {
             "start": {
-              "line": 63,
+              "line": 72,
               "column": 6
             },
             "end": {
-              "line": 65,
+              "line": 74,
               "column": 7
             }
           },
@@ -2900,11 +4362,11 @@
           "description": "Disable editing field (equivalent to column.readOnly)",
           "sourceRange": {
             "start": {
-              "line": 69,
+              "line": 78,
               "column": 6
             },
             "end": {
-              "line": 72,
+              "line": 81,
               "column": 7
             }
           },
@@ -2916,11 +4378,11 @@
           "description": "row object.",
           "sourceRange": {
             "start": {
-              "line": 76,
+              "line": 85,
               "column": 6
             },
             "end": {
-              "line": 79,
+              "line": 88,
               "column": 7
             }
           },
@@ -2932,11 +4394,11 @@
           "description": "Index of the current `row` in the `_items` array",
           "sourceRange": {
             "start": {
-              "line": 84,
+              "line": 93,
               "column": 6
             },
             "end": {
-              "line": 86,
+              "line": 95,
               "column": 7
             }
           },
@@ -2948,11 +4410,11 @@
           "description": "",
           "sourceRange": {
             "start": {
-              "line": 123,
+              "line": 132,
               "column": 6
             },
             "end": {
-              "line": 125,
+              "line": 134,
               "column": 7
             }
           },
@@ -2964,11 +4426,11 @@
           "description": "Flag denoting cell to be present in first row of the data-table",
           "sourceRange": {
             "start": {
-              "line": 130,
+              "line": 139,
               "column": 6
             },
             "end": {
-              "line": 133,
+              "line": 142,
               "column": 7
             }
           },
@@ -3070,13 +4532,12 @@
               "column": 12
             },
             "end": {
-              "line": 110,
+              "line": 109,
               "column": 13
             }
           },
           "metadata": {
             "polymer": {
-              "readOnly": true,
               "attributeType": "Boolean"
             }
           }
@@ -3084,16 +4545,217 @@
       ],
       "methods": [
         {
+          "name": "_deepValue",
+          "description": "Get the value from the 'obj' based on the 'path'.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 37,
+              "column": 4
+            },
+            "end": {
+              "line": 43,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj",
+              "type": "Object",
+              "description": "object to navigate"
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "description": "path for navigation"
+            }
+          ],
+          "return": {
+            "type": "Any",
+            "desc": "value present in the given path of the obj."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "_deepSet",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 45,
+              "column": 4
+            },
+            "end": {
+              "line": 62,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj"
+            },
+            {
+              "name": "path"
+            },
+            {
+              "name": "value"
+            }
+          ],
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "debounce",
+          "description": "Call `debounce` to collapse multiple requests for a named task into\none invocation which is made after the wait time has elapsed with\nno new request.  If no wait time is given, the callback will be called\nat microtask timing (guaranteed before paint).\n\n    debouncedClickAction(e) {\n      // will not call `processClick` more than once per 100ms\n      this.debounce('click', function() {\n       this.processClick();\n      } 100);\n    }",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 88,
+              "column": 4
+            },
+            "end": {
+              "line": 92,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "jobName",
+              "type": "string",
+              "description": "String to identify the debounce job."
+            },
+            {
+              "name": "callback",
+              "type": "function (): void",
+              "description": "Function that is called (with `this`\n  context) when the wait time elapses."
+            },
+            {
+              "name": "wait",
+              "type": "number",
+              "description": "Optional wait time in milliseconds (ms) after the\n  last signal that must elapse before invoking `callback`"
+            }
+          ],
+          "return": {
+            "type": "!Object",
+            "desc": "Returns a debouncer object on which exists the\nfollowing methods: `isActive()` returns true if the debouncer is\nactive; `cancel()` cancels the debouncer if it is active;\n`flush()` immediately invokes the debounced callback if the debouncer\nis active."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "async",
+          "description": "Runs a callback function asynchronously.\n\nBy default (if no waitTime is specified), async callbacks are run at\nmicrotask timing, which will occur before paint.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 106,
+              "column": 4
+            },
+            "end": {
+              "line": 109,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "callback",
+              "type": "!Function",
+              "description": "The callback function to run, bound to `this`."
+            },
+            {
+              "name": "waitTime",
+              "type": "number=",
+              "description": "Time to wait before calling the\n  `callback`.  If unspecified or 0, the callback will be run at microtask\n  timing (before paint)."
+            }
+          ],
+          "return": {
+            "type": "number",
+            "desc": "Handle that may be used to cancel the async job."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "cancelAsync",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 120,
+              "column": 4
+            },
+            "end": {
+              "line": 122,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "handle"
+            }
+          ],
+          "return": {
+            "type": "void"
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "fire",
+          "description": "Polymer fire function used to dispatch custom events",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 131,
+              "column": 4
+            },
+            "end": {
+              "line": 143,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "type",
+              "type": "string",
+              "description": "event name"
+            },
+            {
+              "name": "detail",
+              "type": "Object",
+              "description": "data to be sent in the event"
+            },
+            {
+              "name": "options",
+              "type": "Object",
+              "description": "optionals options for the event {bubbles:Boolean,cancelable:Boolean,composed:Boolean,node:HTML Element}"
+            }
+          ],
+          "return": {
+            "type": "Event",
+            "desc": "Custom event created based on the parameters"
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
           "name": "_getFirstLetter",
           "description": "Gets the uppercase of first letter of property value.",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 130,
+              "line": 129,
               "column": 4
             },
             "end": {
-              "line": 133,
+              "line": 132,
               "column": 5
             }
           },
@@ -3121,11 +4783,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 141,
+              "line": 140,
               "column": 4
             },
             "end": {
-              "line": 144,
+              "line": 143,
               "column": 5
             }
           },
@@ -3153,11 +4815,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 152,
+              "line": 151,
               "column": 4
             },
             "end": {
-              "line": 163,
+              "line": 162,
               "column": 5
             }
           },
@@ -3185,11 +4847,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 165,
+              "line": 164,
               "column": 4
             },
             "end": {
-              "line": 167,
+              "line": 166,
               "column": 5
             }
           },
@@ -3205,11 +4867,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 173,
+              "line": 172,
               "column": 4
             },
             "end": {
-              "line": 194,
+              "line": 195,
               "column": 5
             }
           },
@@ -3231,11 +4893,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 196,
+              "line": 197,
               "column": 4
             },
             "end": {
-              "line": 198,
+              "line": 199,
               "column": 5
             }
           },
@@ -3259,7 +4921,7 @@
           "column": 0
         },
         "end": {
-          "line": 200,
+          "line": 201,
           "column": 1
         }
       },
@@ -3308,7 +4970,7 @@
               "column": 12
             },
             "end": {
-              "line": 110,
+              "line": 109,
               "column": 13
             }
           },
@@ -3352,11 +5014,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 118,
+              "line": 148,
               "column": 12
             },
             "end": {
-              "line": 120,
+              "line": 150,
               "column": 13
             }
           },
@@ -3373,11 +5035,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 125,
+              "line": 155,
               "column": 12
             },
             "end": {
-              "line": 127,
+              "line": 157,
               "column": 13
             }
           },
@@ -3394,17 +5056,16 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 131,
+              "line": 161,
               "column": 12
             },
             "end": {
-              "line": 134,
+              "line": 163,
               "column": 13
             }
           },
           "metadata": {
             "polymer": {
-              "readOnly": true,
               "attributeType": "Number"
             }
           }
@@ -3416,11 +5077,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 135,
+              "line": 164,
               "column": 12
             },
             "end": {
-              "line": 137,
+              "line": 166,
               "column": 13
             }
           },
@@ -3437,17 +5098,16 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 141,
+              "line": 170,
               "column": 12
             },
             "end": {
-              "line": 144,
+              "line": 172,
               "column": 13
             }
           },
           "metadata": {
             "polymer": {
-              "readOnly": true,
               "attributeType": "Boolean"
             }
           }
@@ -3459,11 +5119,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 148,
+              "line": 176,
               "column": 12
             },
             "end": {
-              "line": 151,
+              "line": 179,
               "column": 13
             }
           },
@@ -3480,11 +5140,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 155,
+              "line": 183,
               "column": 12
             },
             "end": {
-              "line": 160,
+              "line": 188,
               "column": 13
             }
           },
@@ -3502,11 +5162,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 164,
+              "line": 192,
               "column": 12
             },
             "end": {
-              "line": 166,
+              "line": 194,
               "column": 13
             }
           },
@@ -3523,11 +5183,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 170,
+              "line": 198,
               "column": 12
             },
             "end": {
-              "line": 173,
+              "line": 201,
               "column": 13
             }
           },
@@ -3545,11 +5205,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 178,
+              "line": 206,
               "column": 12
             },
             "end": {
-              "line": 180,
+              "line": 208,
               "column": 13
             }
           },
@@ -3560,17 +5220,40 @@
           }
         },
         {
+          "name": "isAccordianOpen",
+          "type": "boolean | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 209,
+              "column": 12
+            },
+            "end": {
+              "line": 214,
+              "column": 13
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
           "name": "columnTemplates",
           "type": "Array | null | undefined",
           "description": "List of templates passed from oe-data-table",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 184,
+              "line": 218,
               "column": 12
             },
             "end": {
-              "line": 186,
+              "line": 220,
               "column": 13
             }
           },
@@ -3579,20 +5262,285 @@
               "attributeType": "Array"
             }
           }
+        },
+        {
+          "name": "tableHost",
+          "type": "Object | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 223,
+              "column": 12
+            },
+            "end": {
+              "line": 225,
+              "column": 13
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Object"
+            }
+          }
+        },
+        {
+          "name": "expandedRow",
+          "type": "number | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 226,
+              "column": 12
+            },
+            "end": {
+              "line": 229,
+              "column": 13
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "attributeType": "Number"
+            }
+          }
+        },
+        {
+          "name": "accordianEle",
+          "type": "Object | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 230,
+              "column": 12
+            },
+            "end": {
+              "line": 233,
+              "column": 13
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Object"
+            }
+          }
         }
       ],
       "methods": [
+        {
+          "name": "_deepValue",
+          "description": "Get the value from the 'obj' based on the 'path'.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 37,
+              "column": 4
+            },
+            "end": {
+              "line": 43,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj",
+              "type": "Object",
+              "description": "object to navigate"
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "description": "path for navigation"
+            }
+          ],
+          "return": {
+            "type": "Any",
+            "desc": "value present in the given path of the obj."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "_deepSet",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 45,
+              "column": 4
+            },
+            "end": {
+              "line": 62,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj"
+            },
+            {
+              "name": "path"
+            },
+            {
+              "name": "value"
+            }
+          ],
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "debounce",
+          "description": "Call `debounce` to collapse multiple requests for a named task into\none invocation which is made after the wait time has elapsed with\nno new request.  If no wait time is given, the callback will be called\nat microtask timing (guaranteed before paint).\n\n    debouncedClickAction(e) {\n      // will not call `processClick` more than once per 100ms\n      this.debounce('click', function() {\n       this.processClick();\n      } 100);\n    }",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 88,
+              "column": 4
+            },
+            "end": {
+              "line": 92,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "jobName",
+              "type": "string",
+              "description": "String to identify the debounce job."
+            },
+            {
+              "name": "callback",
+              "type": "function (): void",
+              "description": "Function that is called (with `this`\n  context) when the wait time elapses."
+            },
+            {
+              "name": "wait",
+              "type": "number",
+              "description": "Optional wait time in milliseconds (ms) after the\n  last signal that must elapse before invoking `callback`"
+            }
+          ],
+          "return": {
+            "type": "!Object",
+            "desc": "Returns a debouncer object on which exists the\nfollowing methods: `isActive()` returns true if the debouncer is\nactive; `cancel()` cancels the debouncer if it is active;\n`flush()` immediately invokes the debounced callback if the debouncer\nis active."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "async",
+          "description": "Runs a callback function asynchronously.\n\nBy default (if no waitTime is specified), async callbacks are run at\nmicrotask timing, which will occur before paint.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 106,
+              "column": 4
+            },
+            "end": {
+              "line": 109,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "callback",
+              "type": "!Function",
+              "description": "The callback function to run, bound to `this`."
+            },
+            {
+              "name": "waitTime",
+              "type": "number=",
+              "description": "Time to wait before calling the\n  `callback`.  If unspecified or 0, the callback will be run at microtask\n  timing (before paint)."
+            }
+          ],
+          "return": {
+            "type": "number",
+            "desc": "Handle that may be used to cancel the async job."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "cancelAsync",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 120,
+              "column": 4
+            },
+            "end": {
+              "line": 122,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "handle"
+            }
+          ],
+          "return": {
+            "type": "void"
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "fire",
+          "description": "Polymer fire function used to dispatch custom events",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 131,
+              "column": 4
+            },
+            "end": {
+              "line": 143,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "type",
+              "type": "string",
+              "description": "event name"
+            },
+            {
+              "name": "detail",
+              "type": "Object",
+              "description": "data to be sent in the event"
+            },
+            {
+              "name": "options",
+              "type": "Object",
+              "description": "optionals options for the event {bubbles:Boolean,cancelable:Boolean,composed:Boolean,node:HTML Element}"
+            }
+          ],
+          "return": {
+            "type": "Event",
+            "desc": "Custom event created based on the parameters"
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
         {
           "name": "_computeClassforRow",
           "description": "Computes the class for table row",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 215,
+              "line": 268,
               "column": 4
             },
             "end": {
-              "line": 217,
+              "line": 270,
               "column": 5
             }
           },
@@ -3615,11 +5563,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 223,
+              "line": 276,
               "column": 4
             },
             "end": {
-              "line": 226,
+              "line": 281,
               "column": 5
             }
           },
@@ -3641,11 +5589,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 233,
+              "line": 288,
               "column": 4
             },
             "end": {
-              "line": 235,
+              "line": 290,
               "column": 5
             }
           },
@@ -3668,11 +5616,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 243,
+              "line": 298,
               "column": 4
             },
             "end": {
-              "line": 258,
+              "line": 313,
               "column": 5
             }
           },
@@ -3700,11 +5648,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 267,
+              "line": 322,
               "column": 4
             },
             "end": {
-              "line": 282,
+              "line": 343,
               "column": 5
             }
           },
@@ -3737,11 +5685,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 290,
+              "line": 351,
               "column": 4
             },
             "end": {
-              "line": 295,
+              "line": 356,
               "column": 5
             }
           },
@@ -3764,16 +5712,40 @@
           }
         },
         {
+          "name": "_computeDivHidden",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 357,
+              "column": 4
+            },
+            "end": {
+              "line": 359,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "action"
+            },
+            {
+              "name": "row"
+            }
+          ]
+        },
+        {
           "name": "_rowActionClicked",
           "description": "Handles row action clicked event.",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 301,
+              "line": 365,
               "column": 4
             },
             "end": {
-              "line": 326,
+              "line": 390,
               "column": 5
             }
           },
@@ -3795,11 +5767,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 328,
+              "line": 392,
               "column": 4
             },
             "end": {
-              "line": 330,
+              "line": 394,
               "column": 5
             }
           },
@@ -3809,6 +5781,74 @@
               "name": "column"
             }
           ]
+        },
+        {
+          "name": "_toggleAccordian",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 395,
+              "column": 4
+            },
+            "end": {
+              "line": 408,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "__computeVisibleEl",
+          "description": "",
+          "privacy": "private",
+          "sourceRange": {
+            "start": {
+              "line": 409,
+              "column": 4
+            },
+            "end": {
+              "line": 422,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "rowIndex"
+            },
+            {
+              "name": "isAccordianOpen"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "getIcon",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 424,
+              "column": 4
+            },
+            "end": {
+              "line": 426,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": []
         }
       ],
       "staticMethods": [],
@@ -3816,11 +5856,11 @@
       "metadata": {},
       "sourceRange": {
         "start": {
-          "line": 37,
+          "line": 38,
           "column": 0
         },
         "end": {
-          "line": 331,
+          "line": 427,
           "column": 1
         }
       },
@@ -3833,11 +5873,11 @@
           "description": "Selection cell content customization object\n{\n   content:'The property of the row object whose first character that has to be displayed',\n   image:'The property of the row object which contains the URL of the image to be displayed'\n}\nThe object can be provided with either `content` or `image`. If both the properties are provided, image will take precedence.",
           "sourceRange": {
             "start": {
-              "line": 118,
+              "line": 148,
               "column": 12
             },
             "end": {
-              "line": 120,
+              "line": 150,
               "column": 13
             }
           },
@@ -3849,11 +5889,11 @@
           "description": "Record data",
           "sourceRange": {
             "start": {
-              "line": 125,
+              "line": 155,
               "column": 12
             },
             "end": {
-              "line": 127,
+              "line": 157,
               "column": 13
             }
           },
@@ -3865,11 +5905,11 @@
           "description": "Index of the current row.",
           "sourceRange": {
             "start": {
-              "line": 131,
+              "line": 161,
               "column": 12
             },
             "end": {
-              "line": 134,
+              "line": 163,
               "column": 13
             }
           },
@@ -3881,11 +5921,11 @@
           "description": "",
           "sourceRange": {
             "start": {
-              "line": 135,
+              "line": 164,
               "column": 12
             },
             "end": {
-              "line": 137,
+              "line": 166,
               "column": 13
             }
           },
@@ -3897,11 +5937,11 @@
           "description": "Flag denoting if the item is selected",
           "sourceRange": {
             "start": {
-              "line": 141,
+              "line": 170,
               "column": 12
             },
             "end": {
-              "line": 144,
+              "line": 172,
               "column": 13
             }
           },
@@ -3913,11 +5953,11 @@
           "description": "Flag to disable selection of records",
           "sourceRange": {
             "start": {
-              "line": 148,
+              "line": 176,
               "column": 12
             },
             "end": {
-              "line": 151,
+              "line": 179,
               "column": 13
             }
           },
@@ -3929,11 +5969,11 @@
           "description": "Array of row actions passed from data-table",
           "sourceRange": {
             "start": {
-              "line": 155,
+              "line": 183,
               "column": 12
             },
             "end": {
-              "line": 160,
+              "line": 188,
               "column": 13
             }
           },
@@ -3945,11 +5985,11 @@
           "description": "Style value passed from oe-data-table",
           "sourceRange": {
             "start": {
-              "line": 164,
+              "line": 192,
               "column": 12
             },
             "end": {
-              "line": 166,
+              "line": 194,
               "column": 13
             }
           },
@@ -3961,11 +6001,11 @@
           "description": "Flag to make the cells read-only",
           "sourceRange": {
             "start": {
-              "line": 170,
+              "line": 198,
               "column": 12
             },
             "end": {
-              "line": 173,
+              "line": 201,
               "column": 13
             }
           },
@@ -3977,11 +6017,11 @@
           "description": "Minimum column width specified by oe-data-table\nThis will be overridden if a column specifies its own min width.",
           "sourceRange": {
             "start": {
-              "line": 178,
+              "line": 206,
               "column": 12
             },
             "end": {
-              "line": 180,
+              "line": 208,
               "column": 13
             }
           },
@@ -3989,20 +6029,84 @@
           "type": "number | null | undefined"
         },
         {
+          "name": "is-accordian-open",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 209,
+              "column": 12
+            },
+            "end": {
+              "line": 214,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
           "name": "column-templates",
           "description": "List of templates passed from oe-data-table",
           "sourceRange": {
             "start": {
-              "line": 184,
+              "line": 218,
               "column": 12
             },
             "end": {
-              "line": 186,
+              "line": 220,
               "column": 13
             }
           },
           "metadata": {},
           "type": "Array | null | undefined"
+        },
+        {
+          "name": "table-host",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 223,
+              "column": 12
+            },
+            "end": {
+              "line": 225,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "type": "Object | null | undefined"
+        },
+        {
+          "name": "expanded-row",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 226,
+              "column": 12
+            },
+            "end": {
+              "line": 229,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "type": "number | null | undefined"
+        },
+        {
+          "name": "accordian-ele",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 230,
+              "column": 12
+            },
+            "end": {
+              "line": 233,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "type": "Object | null | undefined"
         }
       ],
       "events": [
@@ -4029,6 +6133,18 @@
           "name": "toggle-selection",
           "description": "Fired when the selection is changed.",
           "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "is-accordian-open-changed",
+          "description": "Fired when the `isAccordianOpen` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "expanded-row-changed",
+          "description": "Fired when the `expandedRow` property changes.",
+          "metadata": {}
         }
       ],
       "styling": {
@@ -4042,7 +6158,7 @@
       ]
     },
     {
-      "description": "### oe-data-table\n\n`<oe-data-table>` is a component for displaying data in tabular format. It is a Polymer component styled with Material Design Data Table Standards.\nIt can be used to add, edit and delete data in a model which has a `embedded`/`hasMany` relation.\nAlso to display the entries in a model\n\nThe data to be shown is set to `items` and columns to show is set to `columns`.\n\n### Defining Columns\n\nThe column(s) to show in the table can be configured using the `columns` property.\nThe `columns` property takes an array of objects which can have the following properties.\n\nColumn property | Description\n----------------|-------------\n`key` | The key of the row to get data from.\n`label` | The string to be shown in column header.\n`tooltip` | The string to be shown in column header as a tooltip.\n`valueAsTooltip`| Boolean flag to show value of a column as a tooltip on hover. Useful when the values are large and are hidden due to column width\n`type` | The type of the content that is shown in the column. For example date, timestamp, number, string.\n`uitype` | (Deprecated. use type) The type of the content that is shown in the column. For example date, timestamp.\n`uiType` | The input control that has to be used for inline editing.\n`readOnly` | Boolean flag denoting whether the column is non editable in inline mode , by default it is false.\n`width` | Width of the column in `px`.\n`minWidth` | Min Width of the column in `px`, by default grid level min width will be taken.\n`sort` |  Sort order of the current column. Takes either `asc` or `desc`.\n`alignment` | Alignment of the cell content , can have `left`,`right` or `center` .\n`firstToSort` | Whether to sort first by desc or asc, by default it is asc.\n`formatter` | A custom formatting function which returns the value to show in the cell.\n`renderer` | A custom rendering function which returns the element to show in the cell.\n`href` | Takes an express styled path and shows the cell content as a `hyperlink` with the provided path. For example, href=\"/models/customer/:id\".\n`cellClass` | Class to apply on data table cell.\n`cellClassRules` | Object having class name to be applied as key and an expression to evaluate as value.\n`valueGetter` | A custom getter function which returns a value for the property specified in the `key`.\n`hidden` | Column will be hidden if it is set to true.\n\n### Styling\n\n`<oe-data-table>` provides the following custom properties and mixins for styling:\n\nCustom property | Description | Default\n----------------|-------------|----------\n`--oe-data-table` | Mixin to be applied to whole table | {}\n`--oe-data-table-header` | Mixin to be applied to the table header  | {}\n`--oe-data-table-header-title` | Mixin to be applied to the table header title  | {}\n`--oe-data-table-row-first` | Mixin to be applied to the first row of the table | {}\n`--oe-data-table-row-last` | Mixin to be applied to the last row of the table | {}\n`--oe-data-table-selection-cell-content` | Mixiin to be applied to the selection cell content if provided | {}",
+      "description": "### oe-data-table\n\n`<oe-data-table>` is a component for displaying data in tabular format. It is a Polymer component styled with Material Design Data Table Standards.\nIt can be used to add, edit and delete data in a model which has a `embedded`/`hasMany` relation.\nAlso to display the entries in a model\n\nThe data to be shown is set to `items` and columns to show is set to `columns`.\n\n### Defining Columns\n\nThe column(s) to show in the table can be configured using the `columns` property.\nThe `columns` property takes an array of objects which can have the following properties.\n\nColumn | property | Description\n-------|---------|-------------\n`key` | The key of the row to get data from.\n`label` | The string to be shown in column header.\n`tooltip` | The string to be shown in column header as a tooltip.\n`valueAsTooltip`| Boolean flag to show value of a column as a tooltip on hover. Useful when the values are large and are hidden due to column width\n`type` | The type of the content that is shown in the column. For example date, timestamp, number, string.\n`uitype` | (Deprecated. use type) The type of the content that is shown in the column. For example date, timestamp.\n`uiType` | The input control that has to be used for inline editing.\n`readOnly` | Boolean flag denoting whether the column is non editable in inline mode , by default it is false.\n`width` | Width of the column in `px`.\n`minWidth` | Min Width of the column in `px`, by default grid level min width will be taken.\n`sort` |  Sort order of the current column. Takes either `asc` or `desc`.\n`alignment` | Alignment of the cell content , can have `left`,`right` or `center` .\n`firstToSort` | Whether to sort first by desc or asc, by default it is asc.\n`formatter` | A custom formatting function which returns the value to show in the cell.\n`renderer` | A custom rendering function which returns the element to show in the cell.\n`href` | Takes an express styled path and shows the cell content as a `hyperlink` with the provided path. For example, href=\"/models/customer/:id\".\n`cellClass` | Class to apply on data table cell.\n`cellClassRules` | Object having class name to be applied as key and an expression to evaluate as value.\n`valueGetter` | A custom getter function which returns a value for the property specified in the `key`.\n`hidden` | Column will be hidden if it is set to true.\n`autoFit` | table height should be set by user when this property is true.\n\n### Styling\n\n`<oe-data-table>` provides the following custom properties and mixins for styling:\n\nCustom property | Description | Default\n----------------|-------------|----------\n`--oe-data-table` | Mixin to be applied to whole table | {}\n`--oe-data-table-header` | Mixin to be applied to the table header  | {}\n`--oe-data-table-header-title` | Mixin to be applied to the table header title  | {}\n`--oe-data-table-row-first` | Mixin to be applied to the first row of the table | {}\n`--oe-data-table-row-last` | Mixin to be applied to the last row of the table | {}\n`--oe-data-table-selection-cell-content` | Mixiin to be applied to the selection cell content if provided | {}\n`--oe-data-table-data` | Mixin to be applied to table-data class to set min-height | {}\n`--oe-data-table-selection-checkbox` | Mixin to be applied to table selection checkbox | {}\n`--edit-control` | Mixin applied to set the height of edit cell | {}",
       "summary": "",
       "path": "oe-data-table.js",
       "properties": [
@@ -4053,11 +6169,33 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 318,
+              "line": 315,
               "column": 6
             },
             "end": {
-              "line": 321,
+              "line": 318,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "autoFit",
+          "type": "boolean | null | undefined",
+          "description": "Setting to true enable user to set height of table",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 322,
+              "column": 6
+            },
+            "end": {
+              "line": 325,
               "column": 7
             }
           },
@@ -4075,11 +6213,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 326,
+              "line": 330,
               "column": 6
             },
             "end": {
-              "line": 329,
+              "line": 333,
               "column": 7
             }
           },
@@ -4097,11 +6235,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 334,
+              "line": 338,
               "column": 6
             },
             "end": {
-              "line": 337,
+              "line": 341,
               "column": 7
             }
           },
@@ -4119,11 +6257,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 342,
+              "line": 346,
               "column": 6
             },
             "end": {
-              "line": 345,
+              "line": 349,
               "column": 7
             }
           },
@@ -4141,11 +6279,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 349,
+              "line": 353,
               "column": 6
             },
             "end": {
-              "line": 352,
+              "line": 356,
               "column": 7
             }
           },
@@ -4163,11 +6301,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 356,
+              "line": 360,
               "column": 6
             },
             "end": {
-              "line": 359,
+              "line": 363,
               "column": 7
             }
           },
@@ -4185,11 +6323,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 363,
+              "line": 367,
               "column": 6
             },
             "end": {
-              "line": 366,
+              "line": 370,
               "column": 7
             }
           },
@@ -4207,11 +6345,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 371,
+              "line": 375,
               "column": 6
             },
             "end": {
-              "line": 374,
+              "line": 378,
               "column": 7
             }
           },
@@ -4229,11 +6367,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 379,
+              "line": 383,
               "column": 6
             },
             "end": {
-              "line": 382,
+              "line": 386,
               "column": 7
             }
           },
@@ -4251,11 +6389,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 387,
+              "line": 391,
               "column": 6
             },
             "end": {
-              "line": 389,
+              "line": 393,
               "column": 7
             }
           },
@@ -4272,11 +6410,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 394,
+              "line": 398,
               "column": 6
             },
             "end": {
-              "line": 396,
+              "line": 400,
               "column": 7
             }
           },
@@ -4293,11 +6431,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 401,
+              "line": 405,
               "column": 6
             },
             "end": {
-              "line": 404,
+              "line": 408,
               "column": 7
             }
           },
@@ -4315,11 +6453,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 406,
+              "line": 410,
               "column": 6
             },
             "end": {
-              "line": 408,
+              "line": 412,
               "column": 7
             }
           },
@@ -4336,11 +6474,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 413,
+              "line": 417,
               "column": 6
             },
             "end": {
-              "line": 416,
+              "line": 420,
               "column": 7
             }
           },
@@ -4358,11 +6496,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 418,
+              "line": 422,
               "column": 6
             },
             "end": {
-              "line": 423,
+              "line": 427,
               "column": 7
             }
           },
@@ -4380,11 +6518,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 428,
+              "line": 432,
               "column": 6
             },
             "end": {
-              "line": 430,
+              "line": 434,
               "column": 7
             }
           },
@@ -4401,11 +6539,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 446,
+              "line": 450,
               "column": 6
             },
             "end": {
-              "line": 448,
+              "line": 452,
               "column": 7
             }
           },
@@ -4422,11 +6560,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 455,
+              "line": 459,
               "column": 6
             },
             "end": {
-              "line": 460,
+              "line": 464,
               "column": 7
             }
           },
@@ -4444,11 +6582,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 471,
+              "line": 475,
               "column": 6
             },
             "end": {
-              "line": 473,
+              "line": 477,
               "column": 7
             }
           },
@@ -4465,11 +6603,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 480,
+              "line": 484,
               "column": 6
             },
             "end": {
-              "line": 483,
+              "line": 487,
               "column": 7
             }
           },
@@ -4487,11 +6625,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 488,
+              "line": 492,
               "column": 6
             },
             "end": {
-              "line": 492,
+              "line": 496,
               "column": 7
             }
           },
@@ -4510,11 +6648,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 497,
+              "line": 501,
               "column": 6
             },
             "end": {
-              "line": 499,
+              "line": 503,
               "column": 7
             }
           },
@@ -4531,11 +6669,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 504,
+              "line": 508,
               "column": 6
             },
             "end": {
-              "line": 506,
+              "line": 510,
               "column": 7
             }
           },
@@ -4552,11 +6690,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 513,
+              "line": 517,
               "column": 6
             },
             "end": {
-              "line": 520,
+              "line": 524,
               "column": 7
             }
           },
@@ -4576,11 +6714,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 525,
+              "line": 529,
               "column": 6
             },
             "end": {
-              "line": 528,
+              "line": 532,
               "column": 7
             }
           },
@@ -4598,11 +6736,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 533,
+              "line": 537,
               "column": 6
             },
             "end": {
-              "line": 537,
+              "line": 541,
               "column": 7
             }
           },
@@ -4621,11 +6759,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 542,
+              "line": 546,
               "column": 6
             },
             "end": {
-              "line": 549,
+              "line": 553,
               "column": 7
             }
           },
@@ -4645,11 +6783,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 554,
+              "line": 558,
               "column": 6
             },
             "end": {
-              "line": 558,
+              "line": 562,
               "column": 7
             }
           },
@@ -4667,11 +6805,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 564,
+              "line": 568,
               "column": 6
             },
             "end": {
-              "line": 567,
+              "line": 571,
               "column": 7
             }
           },
@@ -4689,11 +6827,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 572,
+              "line": 576,
               "column": 6
             },
             "end": {
-              "line": 576,
+              "line": 580,
               "column": 7
             }
           },
@@ -4706,17 +6844,39 @@
           "defaultValue": "1"
         },
         {
-          "name": "rowCount",
-          "type": "number | null | undefined",
-          "description": "If `restUrl` is provided in `dataController`, total row count will be fetched and stored in this variable",
+          "name": "restUrl",
+          "type": "string | null | undefined",
+          "description": "REST url where data has to fetch from data",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 581,
+              "line": 585,
               "column": 6
             },
             "end": {
-              "line": 584,
+              "line": 588,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "observer": "\"_organizeData\"",
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "rowCount",
+          "type": "number | null | undefined",
+          "description": "If `restUrl` is provided , total row count will be fetched and stored in this variable",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 593,
+              "column": 6
+            },
+            "end": {
+              "line": 596,
               "column": 7
             }
           },
@@ -4734,11 +6894,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 586,
+              "line": 598,
               "column": 6
             },
             "end": {
-              "line": 588,
+              "line": 600,
               "column": 7
             }
           },
@@ -4755,11 +6915,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 593,
+              "line": 605,
               "column": 6
             },
             "end": {
-              "line": 595,
+              "line": 607,
               "column": 7
             }
           },
@@ -4776,11 +6936,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 597,
+              "line": 609,
               "column": 6
             },
             "end": {
-              "line": 599,
+              "line": 611,
               "column": 7
             }
           },
@@ -4792,23 +6952,23 @@
         },
         {
           "name": "dataController",
-          "type": "{controller: function, restUrl: string, filter: Object}",
-          "description": "`dataController` is an object which takes parameters needed for doing custom pagination. This object can have the following properties\n\n`restUrl` - REST url where data has to fetch from data , `controller` a function which does custom data processing for pagination and provide data.\n\nThe filter can take an object filter object with where clause.",
+          "type": "{Function}",
+          "description": "`dataController` is  a function which does custom data processing for pagination and provide data.",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 610,
+              "line": 617,
               "column": 6
             },
             "end": {
-              "line": 613,
+              "line": 620,
               "column": 7
             }
           },
           "metadata": {
             "polymer": {
               "observer": "\"_organizeData\"",
-              "attributeType": "Object"
+              "attributeType": "Function"
             }
           }
         },
@@ -4819,11 +6979,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 618,
+              "line": 625,
               "column": 6
             },
             "end": {
-              "line": 620,
+              "line": 627,
               "column": 7
             }
           },
@@ -4840,33 +7000,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 627,
+              "line": 634,
               "column": 6
             },
             "end": {
-              "line": 630,
-              "column": 7
-            }
-          },
-          "metadata": {
-            "polymer": {
-              "attributeType": "String"
-            }
-          },
-          "defaultValue": "\"scroll\""
-        },
-        {
-          "name": "label",
-          "type": "string | null | undefined",
-          "description": "Label to appear on heading",
-          "privacy": "public",
-          "sourceRange": {
-            "start": {
-              "line": 635,
-              "column": 6
-            },
-            "end": {
-              "line": 637,
+              "line": 636,
               "column": 7
             }
           },
@@ -4875,20 +7013,288 @@
               "attributeType": "String"
             }
           }
+        },
+        {
+          "name": "label",
+          "type": "string | null | undefined",
+          "description": "Label to appear on heading",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 641,
+              "column": 6
+            },
+            "end": {
+              "line": 643,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "showAccordian",
+          "type": "boolean | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 644,
+              "column": 6
+            },
+            "end": {
+              "line": 647,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "enableInlineFilter",
+          "type": "boolean | null | undefined",
+          "description": "Setting to `true` shows the inline filter, otherwise oe-data-table-filter is used",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 651,
+              "column": 4
+            },
+            "end": {
+              "line": 656,
+              "column": 5
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "observer": "\"onUpdateInlineFilter\"",
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
         }
       ],
       "methods": [
+        {
+          "name": "_deepValue",
+          "description": "Get the value from the 'obj' based on the 'path'.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 37,
+              "column": 4
+            },
+            "end": {
+              "line": 43,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj",
+              "type": "Object",
+              "description": "object to navigate"
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "description": "path for navigation"
+            }
+          ],
+          "return": {
+            "type": "Any",
+            "desc": "value present in the given path of the obj."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "_deepSet",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 45,
+              "column": 4
+            },
+            "end": {
+              "line": 62,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj"
+            },
+            {
+              "name": "path"
+            },
+            {
+              "name": "value"
+            }
+          ],
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "debounce",
+          "description": "Call `debounce` to collapse multiple requests for a named task into\none invocation which is made after the wait time has elapsed with\nno new request.  If no wait time is given, the callback will be called\nat microtask timing (guaranteed before paint).\n\n    debouncedClickAction(e) {\n      // will not call `processClick` more than once per 100ms\n      this.debounce('click', function() {\n       this.processClick();\n      } 100);\n    }",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 88,
+              "column": 4
+            },
+            "end": {
+              "line": 92,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "jobName",
+              "type": "string",
+              "description": "String to identify the debounce job."
+            },
+            {
+              "name": "callback",
+              "type": "function (): void",
+              "description": "Function that is called (with `this`\n  context) when the wait time elapses."
+            },
+            {
+              "name": "wait",
+              "type": "number",
+              "description": "Optional wait time in milliseconds (ms) after the\n  last signal that must elapse before invoking `callback`"
+            }
+          ],
+          "return": {
+            "type": "!Object",
+            "desc": "Returns a debouncer object on which exists the\nfollowing methods: `isActive()` returns true if the debouncer is\nactive; `cancel()` cancels the debouncer if it is active;\n`flush()` immediately invokes the debounced callback if the debouncer\nis active."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "async",
+          "description": "Runs a callback function asynchronously.\n\nBy default (if no waitTime is specified), async callbacks are run at\nmicrotask timing, which will occur before paint.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 106,
+              "column": 4
+            },
+            "end": {
+              "line": 109,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "callback",
+              "type": "!Function",
+              "description": "The callback function to run, bound to `this`."
+            },
+            {
+              "name": "waitTime",
+              "type": "number=",
+              "description": "Time to wait before calling the\n  `callback`.  If unspecified or 0, the callback will be run at microtask\n  timing (before paint)."
+            }
+          ],
+          "return": {
+            "type": "number",
+            "desc": "Handle that may be used to cancel the async job."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "cancelAsync",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 120,
+              "column": 4
+            },
+            "end": {
+              "line": 122,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "handle"
+            }
+          ],
+          "return": {
+            "type": "void"
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "fire",
+          "description": "Polymer fire function used to dispatch custom events",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 131,
+              "column": 4
+            },
+            "end": {
+              "line": 143,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "type",
+              "type": "string",
+              "description": "event name"
+            },
+            {
+              "name": "detail",
+              "type": "Object",
+              "description": "data to be sent in the event"
+            },
+            {
+              "name": "options",
+              "type": "Object",
+              "description": "optionals options for the event {bubbles:Boolean,cancelable:Boolean,composed:Boolean,node:HTML Element}"
+            }
+          ],
+          "return": {
+            "type": "Event",
+            "desc": "Custom event created based on the parameters"
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
         {
           "name": "connectedCallback",
           "description": "",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 707,
+              "line": 730,
               "column": 2
             },
             "end": {
-              "line": 762,
+              "line": 800,
               "column": 3
             }
           },
@@ -4904,11 +7310,76 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 764,
+              "line": 802,
               "column": 2
             },
             "end": {
-              "line": 767,
+              "line": 805,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_rowAccoridianclicked",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 806,
+              "column": 2
+            },
+            "end": {
+              "line": 811,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_visibleAccordian",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 812,
+              "column": 2
+            },
+            "end": {
+              "line": 814,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "rowIndex"
+            }
+          ]
+        },
+        {
+          "name": "onUpdateInlineFilter",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 815,
+              "column": 2
+            },
+            "end": {
+              "line": 819,
               "column": 3
             }
           },
@@ -4924,11 +7395,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 778,
+              "line": 830,
               "column": 2
             },
             "end": {
-              "line": 791,
+              "line": 843,
               "column": 3
             }
           },
@@ -4950,11 +7421,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 797,
+              "line": 849,
               "column": 2
             },
             "end": {
-              "line": 808,
+              "line": 860,
               "column": 3
             }
           },
@@ -4976,11 +7447,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 814,
+              "line": 866,
               "column": 2
             },
             "end": {
-              "line": 816,
+              "line": 868,
               "column": 3
             }
           },
@@ -5002,11 +7473,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 822,
+              "line": 874,
               "column": 2
             },
             "end": {
-              "line": 833,
+              "line": 885,
               "column": 3
             }
           },
@@ -5028,11 +7499,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 839,
+              "line": 891,
               "column": 2
             },
             "end": {
-              "line": 841,
+              "line": 893,
               "column": 3
             }
           },
@@ -5054,11 +7525,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 848,
+              "line": 900,
               "column": 2
             },
             "end": {
-              "line": 850,
+              "line": 902,
               "column": 3
             }
           },
@@ -5081,11 +7552,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 861,
+              "line": 913,
               "column": 2
             },
             "end": {
-              "line": 863,
+              "line": 915,
               "column": 3
             }
           },
@@ -5101,11 +7572,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 868,
+              "line": 920,
               "column": 2
             },
             "end": {
-              "line": 870,
+              "line": 922,
               "column": 3
             }
           },
@@ -5121,11 +7592,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 875,
+              "line": 927,
               "column": 2
             },
             "end": {
-              "line": 877,
+              "line": 929,
               "column": 3
             }
           },
@@ -5141,11 +7612,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 885,
+              "line": 937,
               "column": 2
             },
             "end": {
-              "line": 887,
+              "line": 939,
               "column": 3
             }
           },
@@ -5173,11 +7644,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 904,
+              "line": 956,
               "column": 2
             },
             "end": {
-              "line": 959,
+              "line": 1011,
               "column": 3
             }
           },
@@ -5199,11 +7670,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 967,
+              "line": 1019,
               "column": 2
             },
             "end": {
-              "line": 981,
+              "line": 1033,
               "column": 3
             }
           },
@@ -5230,11 +7701,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 989,
+              "line": 1041,
               "column": 2
             },
             "end": {
-              "line": 1013,
+              "line": 1067,
               "column": 3
             }
           },
@@ -5261,11 +7732,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1021,
+              "line": 1075,
               "column": 2
             },
             "end": {
-              "line": 1062,
+              "line": 1116,
               "column": 3
             }
           },
@@ -5292,11 +7763,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1070,
+              "line": 1124,
               "column": 2
             },
             "end": {
-              "line": 1109,
+              "line": 1163,
               "column": 3
             }
           },
@@ -5318,11 +7789,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1126,
+              "line": 1180,
               "column": 2
             },
             "end": {
-              "line": 1178,
+              "line": 1232,
               "column": 3
             }
           },
@@ -5350,11 +7821,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1186,
+              "line": 1240,
               "column": 2
             },
             "end": {
-              "line": 1190,
+              "line": 1244,
               "column": 3
             }
           },
@@ -5377,11 +7848,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1197,
+              "line": 1251,
               "column": 2
             },
             "end": {
-              "line": 1199,
+              "line": 1253,
               "column": 3
             }
           },
@@ -5404,11 +7875,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 1208,
+              "line": 1262,
               "column": 2
             },
             "end": {
-              "line": 1212,
+              "line": 1266,
               "column": 3
             }
           },
@@ -5431,11 +7902,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1217,
+              "line": 1271,
               "column": 2
             },
             "end": {
-              "line": 1234,
+              "line": 1286,
               "column": 3
             }
           },
@@ -5451,11 +7922,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1240,
+              "line": 1292,
               "column": 2
             },
             "end": {
-              "line": 1262,
+              "line": 1316,
               "column": 3
             }
           },
@@ -5477,11 +7948,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1268,
+              "line": 1322,
               "column": 2
             },
             "end": {
-              "line": 1270,
+              "line": 1326,
               "column": 3
             }
           },
@@ -5503,11 +7974,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1277,
+              "line": 1332,
               "column": 2
             },
             "end": {
-              "line": 1279,
+              "line": 1334,
               "column": 3
             }
           },
@@ -5534,11 +8005,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1286,
+              "line": 1341,
               "column": 2
             },
             "end": {
-              "line": 1288,
+              "line": 1343,
               "column": 3
             }
           },
@@ -5561,11 +8032,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1290,
+              "line": 1345,
               "column": 2
             },
             "end": {
-              "line": 1292,
+              "line": 1347,
               "column": 3
             }
           },
@@ -5582,11 +8053,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1300,
+              "line": 1355,
               "column": 2
             },
             "end": {
-              "line": 1303,
+              "line": 1358,
               "column": 3
             }
           },
@@ -5609,11 +8080,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1310,
+              "line": 1365,
               "column": 2
             },
             "end": {
-              "line": 1337,
+              "line": 1392,
               "column": 3
             }
           },
@@ -5635,11 +8106,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1345,
+              "line": 1400,
               "column": 2
             },
             "end": {
-              "line": 1361,
+              "line": 1416,
               "column": 3
             }
           },
@@ -5666,11 +8137,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1369,
+              "line": 1424,
               "column": 2
             },
             "end": {
-              "line": 1374,
+              "line": 1429,
               "column": 3
             }
           },
@@ -5693,16 +8164,40 @@
           }
         },
         {
+          "name": "_handleDblClick",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 1431,
+              "column": 2
+            },
+            "end": {
+              "line": 1433,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
           "name": "_showPagination",
           "description": "Computes to show pagination-panel",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1380,
+              "line": 1438,
               "column": 2
             },
             "end": {
-              "line": 1382,
+              "line": 1440,
               "column": 3
             }
           },
@@ -5724,11 +8219,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1388,
+              "line": 1446,
               "column": 2
             },
             "end": {
-              "line": 1392,
+              "line": 1450,
               "column": 3
             }
           },
@@ -5750,11 +8245,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1397,
+              "line": 1455,
               "column": 2
             },
             "end": {
-              "line": 1408,
+              "line": 1466,
               "column": 3
             }
           },
@@ -5770,11 +8265,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1414,
+              "line": 1472,
               "column": 2
             },
             "end": {
-              "line": 1421,
+              "line": 1479,
               "column": 3
             }
           },
@@ -5796,11 +8291,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1427,
+              "line": 1485,
               "column": 2
             },
             "end": {
-              "line": 1433,
+              "line": 1491,
               "column": 3
             }
           },
@@ -5816,11 +8311,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1439,
+              "line": 1497,
               "column": 2
             },
             "end": {
-              "line": 1442,
+              "line": 1500,
               "column": 3
             }
           },
@@ -5842,11 +8337,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1448,
+              "line": 1506,
               "column": 2
             },
             "end": {
-              "line": 1453,
+              "line": 1513,
               "column": 3
             }
           },
@@ -5868,11 +8363,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 1458,
+              "line": 1518,
               "column": 2
             },
             "end": {
-              "line": 1463,
+              "line": 1523,
               "column": 3
             }
           },
@@ -5888,11 +8383,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1469,
+              "line": 1529,
               "column": 2
             },
             "end": {
-              "line": 1474,
+              "line": 1534,
               "column": 3
             }
           },
@@ -5914,11 +8409,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1476,
+              "line": 1536,
               "column": 2
             },
             "end": {
-              "line": 1509,
+              "line": 1569,
               "column": 3
             }
           },
@@ -5935,11 +8430,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1516,
+              "line": 1576,
               "column": 2
             },
             "end": {
-              "line": 1528,
+              "line": 1588,
               "column": 3
             }
           },
@@ -5966,11 +8461,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1535,
+              "line": 1595,
               "column": 2
             },
             "end": {
-              "line": 1542,
+              "line": 1602,
               "column": 3
             }
           },
@@ -5992,11 +8487,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1549,
+              "line": 1610,
               "column": 2
             },
             "end": {
-              "line": 1563,
+              "line": 1635,
               "column": 3
             }
           },
@@ -6011,6 +8506,11 @@
               "name": "itemsToShow",
               "type": "number",
               "description": "length of items to display"
+            },
+            {
+              "name": "autoFit",
+              "type": "boolean",
+              "description": "to check height set by user or not."
             }
           ],
           "return": {
@@ -6023,11 +8523,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1570,
+              "line": 1642,
               "column": 2
             },
             "end": {
-              "line": 1578,
+              "line": 1650,
               "column": 3
             }
           },
@@ -6050,11 +8550,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 1585,
+              "line": 1657,
               "column": 2
             },
             "end": {
-              "line": 1594,
+              "line": 1666,
               "column": 3
             }
           },
@@ -6082,11 +8582,11 @@
       "metadata": {},
       "sourceRange": {
         "start": {
-          "line": 92,
+          "line": 94,
           "column": 0
         },
         "end": {
-          "line": 1595,
+          "line": 1667,
           "column": 1
         }
       },
@@ -6099,11 +8599,27 @@
           "description": "Setting to `true` hides the header",
           "sourceRange": {
             "start": {
-              "line": 318,
+              "line": 315,
               "column": 6
             },
             "end": {
-              "line": 321,
+              "line": 318,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "auto-fit",
+          "description": "Setting to true enable user to set height of table",
+          "sourceRange": {
+            "start": {
+              "line": 322,
+              "column": 6
+            },
+            "end": {
+              "line": 325,
               "column": 7
             }
           },
@@ -6115,11 +8631,11 @@
           "description": "Setting to true hides the column headers",
           "sourceRange": {
             "start": {
-              "line": 326,
+              "line": 330,
               "column": 6
             },
             "end": {
-              "line": 329,
+              "line": 333,
               "column": 7
             }
           },
@@ -6131,11 +8647,11 @@
           "description": "Disable all table header actions",
           "sourceRange": {
             "start": {
-              "line": 334,
+              "line": 338,
               "column": 6
             },
             "end": {
-              "line": 337,
+              "line": 341,
               "column": 7
             }
           },
@@ -6147,11 +8663,11 @@
           "description": "Disable adding new records",
           "sourceRange": {
             "start": {
-              "line": 342,
+              "line": 346,
               "column": 6
             },
             "end": {
-              "line": 345,
+              "line": 349,
               "column": 7
             }
           },
@@ -6163,11 +8679,11 @@
           "description": "Disable editing records",
           "sourceRange": {
             "start": {
-              "line": 349,
+              "line": 353,
               "column": 6
             },
             "end": {
-              "line": 352,
+              "line": 356,
               "column": 7
             }
           },
@@ -6179,11 +8695,11 @@
           "description": "Disable deleting records",
           "sourceRange": {
             "start": {
-              "line": 356,
+              "line": 360,
               "column": 6
             },
             "end": {
-              "line": 359,
+              "line": 363,
               "column": 7
             }
           },
@@ -6195,11 +8711,11 @@
           "description": "Disable editing column  configuration.",
           "sourceRange": {
             "start": {
-              "line": 363,
+              "line": 367,
               "column": 6
             },
             "end": {
-              "line": 366,
+              "line": 370,
               "column": 7
             }
           },
@@ -6211,11 +8727,11 @@
           "description": "Array of page numbers that has to be shown in Rows per page dropdown",
           "sourceRange": {
             "start": {
-              "line": 371,
+              "line": 375,
               "column": 6
             },
             "end": {
-              "line": 374,
+              "line": 378,
               "column": 7
             }
           },
@@ -6227,11 +8743,11 @@
           "description": "Minimum width that every column should accommodate. Can be overridden in column level.",
           "sourceRange": {
             "start": {
-              "line": 379,
+              "line": 383,
               "column": 6
             },
             "end": {
-              "line": 382,
+              "line": 386,
               "column": 7
             }
           },
@@ -6243,11 +8759,11 @@
           "description": "The page to show when a row is added/edited. For example \"/components/customer-default.html\"",
           "sourceRange": {
             "start": {
-              "line": 387,
+              "line": 391,
               "column": 6
             },
             "end": {
-              "line": 389,
+              "line": 393,
               "column": 7
             }
           },
@@ -6259,11 +8775,11 @@
           "description": "Event to emit on save . Passed to the lazy-component.",
           "sourceRange": {
             "start": {
-              "line": 394,
+              "line": 398,
               "column": 6
             },
             "end": {
-              "line": 396,
+              "line": 400,
               "column": 7
             }
           },
@@ -6275,11 +8791,11 @@
           "description": "Empty state message displayed",
           "sourceRange": {
             "start": {
-              "line": 401,
+              "line": 405,
               "column": 6
             },
             "end": {
-              "line": 404,
+              "line": 408,
               "column": 7
             }
           },
@@ -6291,11 +8807,11 @@
           "description": "When the grid is showing a list of models which needs to be saved by calling save api, then recordHandling needs to be `remote` which is default mode, if it is used for showing embedded/hasMany relations , then the recordHandling needs to be `local`/`localex` respectively.",
           "sourceRange": {
             "start": {
-              "line": 413,
+              "line": 417,
               "column": 6
             },
             "end": {
-              "line": 416,
+              "line": 420,
               "column": 7
             }
           },
@@ -6307,11 +8823,11 @@
           "description": "Default Object to set on the form when a new entry is to be added.",
           "sourceRange": {
             "start": {
-              "line": 428,
+              "line": 432,
               "column": 6
             },
             "end": {
-              "line": 430,
+              "line": 434,
               "column": 7
             }
           },
@@ -6323,11 +8839,11 @@
           "description": "Array of actions to be displayed as icons on the header\nActions should be of format\n{\n   icon: 'icons:alarm',\n   title: 'Notify Users',\n   action: 'alarm'\n}\nThese will appear as icons on the header with a tooltip specified by 'title'\nOn clicking on the icon an event will be raised with 'oe-data-table-action-' + the action provided.\nIn the case of example 'oe-data-table-action-alarm'",
           "sourceRange": {
             "start": {
-              "line": 446,
+              "line": 450,
               "column": 6
             },
             "end": {
-              "line": 448,
+              "line": 452,
               "column": 7
             }
           },
@@ -6339,11 +8855,11 @@
           "description": "Array of actions to be displayed on menu of the header\nThe format and working is similar to toolbarActions , The difference being that these will appear\nWhen the Menu icons is clicked and displays with icon and title.",
           "sourceRange": {
             "start": {
-              "line": 455,
+              "line": 459,
               "column": 6
             },
             "end": {
-              "line": 460,
+              "line": 464,
               "column": 7
             }
           },
@@ -6355,11 +8871,11 @@
           "description": "setting `selectionCellContent` with an object will display an circular overlay with configured content above the selection checkbox.\n The overlay will be hidden when that cell is hovered. This object can have the following properties\n `content` - The property of the row object whose first character that has to be displayed\n `image` - The property of the row object which contains the URL of the image to be displayed\n\n The object can be provided with either `content` or `image`. If both the properties are provided, image will take precedence.",
           "sourceRange": {
             "start": {
-              "line": 471,
+              "line": 475,
               "column": 6
             },
             "end": {
-              "line": 473,
+              "line": 477,
               "column": 7
             }
           },
@@ -6371,11 +8887,11 @@
           "description": "A grid config object. Takes an object with columns and editorFormUrl. Setting this property sets the columns property and editorFormUrl property if provided",
           "sourceRange": {
             "start": {
-              "line": 480,
+              "line": 484,
               "column": 6
             },
             "end": {
-              "line": 483,
+              "line": 487,
               "column": 7
             }
           },
@@ -6387,11 +8903,11 @@
           "description": "Config code related to entry in GridConfig Model to fetch configuration for the data-table",
           "sourceRange": {
             "start": {
-              "line": 488,
+              "line": 492,
               "column": 6
             },
             "end": {
-              "line": 492,
+              "line": 496,
               "column": 7
             }
           },
@@ -6403,11 +8919,11 @@
           "description": "Setting to `true` shows the aggregator row between column header and table body.",
           "sourceRange": {
             "start": {
-              "line": 497,
+              "line": 501,
               "column": 6
             },
             "end": {
-              "line": 499,
+              "line": 503,
               "column": 7
             }
           },
@@ -6419,11 +8935,11 @@
           "description": "Array of action objects that to be shown in each row.",
           "sourceRange": {
             "start": {
-              "line": 504,
+              "line": 508,
               "column": 6
             },
             "end": {
-              "line": 506,
+              "line": 510,
               "column": 7
             }
           },
@@ -6435,11 +8951,11 @@
           "description": "The definition of the columns to show in the header of the grid.",
           "sourceRange": {
             "start": {
-              "line": 513,
+              "line": 517,
               "column": 6
             },
             "end": {
-              "line": 520,
+              "line": 524,
               "column": 7
             }
           },
@@ -6451,11 +8967,11 @@
           "description": "Array of objects to show in the grid. Each object in the array will be shown as each row.",
           "sourceRange": {
             "start": {
-              "line": 525,
+              "line": 529,
               "column": 6
             },
             "end": {
-              "line": 528,
+              "line": 532,
               "column": 7
             }
           },
@@ -6467,11 +8983,11 @@
           "description": "Number of rows that has to be displayed in each page",
           "sourceRange": {
             "start": {
-              "line": 533,
+              "line": 537,
               "column": 6
             },
             "end": {
-              "line": 537,
+              "line": 541,
               "column": 7
             }
           },
@@ -6483,11 +8999,11 @@
           "description": "An array containing the list of selected items.",
           "sourceRange": {
             "start": {
-              "line": 542,
+              "line": 546,
               "column": 6
             },
             "end": {
-              "line": 549,
+              "line": 553,
               "column": 7
             }
           },
@@ -6499,11 +9015,11 @@
           "description": "Setting to false disabled row selection and checkbox column on the grid",
           "sourceRange": {
             "start": {
-              "line": 554,
+              "line": 558,
               "column": 6
             },
             "end": {
-              "line": 558,
+              "line": 562,
               "column": 7
             }
           },
@@ -6515,11 +9031,11 @@
           "description": "Settting to true enables selecting multiple items.\nThe `disableSelection` attribute has to be false in order to `multiSeletion` to work.",
           "sourceRange": {
             "start": {
-              "line": 564,
+              "line": 568,
               "column": 6
             },
             "end": {
-              "line": 567,
+              "line": 571,
               "column": 7
             }
           },
@@ -6531,11 +9047,11 @@
           "description": "Startin page number on load",
           "sourceRange": {
             "start": {
-              "line": 572,
+              "line": 576,
               "column": 6
             },
             "end": {
-              "line": 576,
+              "line": 580,
               "column": 7
             }
           },
@@ -6543,15 +9059,31 @@
           "type": "Object | null | undefined"
         },
         {
-          "name": "row-count",
-          "description": "If `restUrl` is provided in `dataController`, total row count will be fetched and stored in this variable",
+          "name": "rest-url",
+          "description": "REST url where data has to fetch from data",
           "sourceRange": {
             "start": {
-              "line": 581,
+              "line": 585,
               "column": 6
             },
             "end": {
-              "line": 584,
+              "line": 588,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "row-count",
+          "description": "If `restUrl` is provided , total row count will be fetched and stored in this variable",
+          "sourceRange": {
+            "start": {
+              "line": 593,
+              "column": 6
+            },
+            "end": {
+              "line": 596,
               "column": 7
             }
           },
@@ -6563,11 +9095,11 @@
           "description": "Name of the model to get columns to show",
           "sourceRange": {
             "start": {
-              "line": 593,
+              "line": 605,
               "column": 6
             },
             "end": {
-              "line": 595,
+              "line": 607,
               "column": 7
             }
           },
@@ -6576,30 +9108,30 @@
         },
         {
           "name": "data-controller",
-          "description": "`dataController` is an object which takes parameters needed for doing custom pagination. This object can have the following properties\n\n`restUrl` - REST url where data has to fetch from data , `controller` a function which does custom data processing for pagination and provide data.\n\nThe filter can take an object filter object with where clause.",
+          "description": "`dataController` is  a function which does custom data processing for pagination and provide data.",
           "sourceRange": {
             "start": {
-              "line": 610,
+              "line": 617,
               "column": 6
             },
             "end": {
-              "line": 613,
+              "line": 620,
               "column": 7
             }
           },
           "metadata": {},
-          "type": "{controller: function, restUrl: string, filter: Object}"
+          "type": "{Function}"
         },
         {
           "name": "pagination-type",
           "description": "Property determining the type of pagination on the client side.\n \"scroll\" - support infinite scrolling for pagination ,\n \"page\" - show distinct records per page.",
           "sourceRange": {
             "start": {
-              "line": 627,
+              "line": 634,
               "column": 6
             },
             "end": {
-              "line": 630,
+              "line": 636,
               "column": 7
             }
           },
@@ -6611,16 +9143,48 @@
           "description": "Label to appear on heading",
           "sourceRange": {
             "start": {
-              "line": 635,
+              "line": 641,
               "column": 6
             },
             "end": {
-              "line": 637,
+              "line": 643,
               "column": 7
             }
           },
           "metadata": {},
           "type": "string | null | undefined"
+        },
+        {
+          "name": "show-accordian",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 644,
+              "column": 6
+            },
+            "end": {
+              "line": 647,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "enable-inline-filter",
+          "description": "Setting to `true` shows the inline filter, otherwise oe-data-table-filter is used",
+          "sourceRange": {
+            "start": {
+              "line": 651,
+              "column": 4
+            },
+            "end": {
+              "line": 656,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
         }
       ],
       "events": [
@@ -6653,6 +9217,12 @@
           "name": "row-count-changed",
           "description": "Fired when the `rowCount` property changes.",
           "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "enable-inline-filter-changed",
+          "description": "Fired when the `enableInlineFilter` property changes.",
+          "metadata": {}
         }
       ],
       "styling": {
@@ -6679,11 +9249,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 214,
+              "line": 218,
               "column": 4
             },
             "end": {
-              "line": 216,
+              "line": 220,
               "column": 5
             }
           },
@@ -6701,11 +9271,11 @@
           "privacy": "private",
           "sourceRange": {
             "start": {
-              "line": 38,
+              "line": 41,
               "column": 4
             },
             "end": {
-              "line": 94,
+              "line": 97,
               "column": 5
             }
           },
@@ -6742,11 +9312,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 100,
+              "line": 103,
               "column": 4
             },
             "end": {
-              "line": 123,
+              "line": 126,
               "column": 5
             }
           },
@@ -6768,11 +9338,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 131,
+              "line": 134,
               "column": 4
             },
             "end": {
-              "line": 150,
+              "line": 154,
               "column": 5
             }
           },
@@ -6788,11 +9358,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 157,
+              "line": 161,
               "column": 4
             },
             "end": {
-              "line": 166,
+              "line": 170,
               "column": 5
             }
           },
@@ -6819,11 +9389,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 173,
+              "line": 177,
               "column": 4
             },
             "end": {
-              "line": 180,
+              "line": 184,
               "column": 5
             }
           },
@@ -6846,11 +9416,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 185,
+              "line": 189,
               "column": 4
             },
             "end": {
-              "line": 206,
+              "line": 210,
               "column": 5
             }
           },
@@ -6866,11 +9436,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 218,
+              "line": 222,
               "column": 4
             },
             "end": {
-              "line": 241,
+              "line": 250,
               "column": 5
             }
           },
@@ -6886,11 +9456,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 247,
+              "line": 256,
               "column": 4
             },
             "end": {
-              "line": 268,
+              "line": 277,
               "column": 5
             }
           },
@@ -6906,11 +9476,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 273,
+              "line": 282,
               "column": 4
             },
             "end": {
-              "line": 297,
+              "line": 306,
               "column": 5
             }
           },
@@ -6926,11 +9496,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 305,
+              "line": 314,
               "column": 4
             },
             "end": {
-              "line": 331,
+              "line": 340,
               "column": 5
             }
           },
@@ -6952,11 +9522,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 338,
+              "line": 347,
               "column": 4
             },
             "end": {
-              "line": 352,
+              "line": 361,
               "column": 5
             }
           },
@@ -6978,11 +9548,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 359,
+              "line": 368,
               "column": 4
             },
             "end": {
-              "line": 373,
+              "line": 382,
               "column": 5
             }
           },
@@ -7004,11 +9574,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 380,
+              "line": 389,
               "column": 4
             },
             "end": {
-              "line": 390,
+              "line": 399,
               "column": 5
             }
           },
@@ -7030,11 +9600,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 397,
+              "line": 406,
               "column": 4
             },
             "end": {
-              "line": 410,
+              "line": 419,
               "column": 5
             }
           },
@@ -7056,11 +9626,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 417,
+              "line": 426,
               "column": 4
             },
             "end": {
-              "line": 427,
+              "line": 436,
               "column": 5
             }
           },
@@ -7082,11 +9652,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 435,
+              "line": 444,
               "column": 4
             },
             "end": {
-              "line": 458,
+              "line": 480,
               "column": 5
             }
           },
@@ -7108,11 +9678,11 @@
       "metadata": {},
       "sourceRange": {
         "start": {
-          "line": 21,
+          "line": 24,
           "column": 0
         },
         "end": {
-          "line": 461,
+          "line": 483,
           "column": 2
         }
       },
