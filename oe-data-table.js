@@ -127,6 +127,9 @@ window.customElements.define(CustomIronList.is, CustomIronList);
  * ----------------|-------------|----------
  * `--oe-data-table` | Mixin to be applied to whole table | {}
  * `--oe-data-table-header` | Mixin to be applied to the table header  | {}
+ * `--oe-data-table-row` | Mixin to be applied to the table row | {}
+ * `--oe-data-table-row-hover` | Mixin to be applied to the table row on hover | {}
+ * `--oe-data-table-row-focus` | Mixin to be applied to the row on focus | {}
  * `--oe-data-table-header-title` | Mixin to be applied to the table header title  | {}
  * `--oe-data-table-row-first` | Mixin to be applied to the first row of the table | {}
  * `--oe-data-table-row-last` | Mixin to be applied to the last row of the table | {}
@@ -228,7 +231,18 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
         }
         oe-data-table-row {
           border-bottom: 1px solid #ededed;
+          background: #FFF;
+          @apply --oe-data-table-row;
         }
+        oe-data-table-row:focus {
+          @apply --oe-data-table-row-focus;
+      }
+     
+     
+      oe-data-table-row:hover {
+          background: #eee;
+          @apply --oe-data-table-row-hover;
+      }
         .form-content {
           height: 100%;
         }
@@ -890,11 +904,11 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       iron._render();
     }.bind(this));
   }
-  computePosition(level,rows){
-    if(level === (rows.length-1)){
+  computePosition(index,items){
+    if(index === (items.length-1)){
       return 'last-of-type';
     }
-    else if(level === 0){
+    else if(index === 0){
       return 'first-of-type';
     }
     return '';
