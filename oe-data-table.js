@@ -127,6 +127,9 @@ window.customElements.define(CustomIronList.is, CustomIronList);
  * ----------------|-------------|----------
  * `--oe-data-table` | Mixin to be applied to whole table | {}
  * `--oe-data-table-header` | Mixin to be applied to the table header  | {}
+ * `--oe-data-table-row` | Mixin to be applied to the table row | {}
+ * `--oe-data-table-row-hover` | Mixin to be applied to the table row on hover | {}
+ * `--oe-data-table-row-focus` | Mixin to be applied to the row on focus | {}
  * `--oe-data-table-header-title` | Mixin to be applied to the table header title  | {}
  * `--oe-data-table-row-first` | Mixin to be applied to the first row of the table | {}
  * `--oe-data-table-row-last` | Mixin to be applied to the last row of the table | {}
@@ -219,14 +222,27 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
           --paper-checkbox-checked-color: var(--secondary-color);
         }
 
-        oe-data-table-row:first-of-type {
+        oe-data-table-row.first-of-type {
           @apply --oe-data-table-row-first;
         }
 
-        oe-data-table-row:last-of-type {
+        oe-data-table-row.last-of-type {
           @apply --oe-data-table-row-last;
         }
-
+        oe-data-table-row {
+          border-bottom: 1px solid #ededed;
+          background: #FFF;
+          @apply --oe-data-table-row;
+        }
+        oe-data-table-row:focus {
+          @apply --oe-data-table-row-focus;
+      }
+     
+     
+      oe-data-table-row:hover {
+          background: #eee;
+          @apply --oe-data-table-row-hover;
+      }
         .form-content {
           height: 100%;
         }
@@ -310,9 +326,9 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
 
               <template is="dom-if" if=[[_items.length]] restamp=true>
                
-                  <custom-iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth" index-as="key">
+                  <custom-iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth">
                     <template>
-                      <oe-data-table-row on-dblclick="_handleDblClick" is-accordian-open=[[_visibleAccordian(rowIndex)]] row-action-as-menu=[[rowActionAsMenu]] accordian-element=[[accordianElement]] show-accordian=[[showAccordian]] 
+                      <oe-data-table-row class$="[[computePosition(rowIndex,_items)]]" on-dblclick="_handleDblClick" is-accordian-open=[[_visibleAccordian(rowIndex)]] row-action-as-menu=[[rowActionAsMenu]] accordian-element=[[accordianElement]] show-accordian=[[showAccordian]] 
                       columns=[[columns]] selection-cell-content=[[selectionCellContent]] row=[[row]] row-index=[[rowIndex]] table-host=[[tableHost]]
                       tab-index="0" selected=[[_getSelectionState(row,_computeSelection)]] disable-selection=[[disableSelection]] row-actions=[[rowActions]]
                       row-action-width=[[__rowActionWidth]] read-only=[[__isCellReadOnly]] min-col-width=[[minColWidth]] column-templates=[[columnTemplates]] auto-fit=[[autoFit]]></oe-data-table-row>
@@ -893,7 +909,15 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       iron._render();
     }.bind(this));
   }
-
+  computePosition(index,items){
+    if(index === (items.length-1)){
+      return 'last-of-type';
+    }
+    else if(index === 0){
+      return 'first-of-type';
+    }
+    return '';
+  }
   disconnectedCallback() {
     super.disconnectedCallback();
     document.removeEventListener('tap', this._resetActiveCell.bind(this));
