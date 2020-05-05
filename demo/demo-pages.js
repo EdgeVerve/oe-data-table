@@ -22,6 +22,7 @@ import './custom-demo-snippet';
 import 'oe-combo/oe-typeahead.js';
 import '../oe-data-table';
 import './templates/demo-accordian.js';
+import './templates/literal-custom-form.js';
 var OEUtils = window.OEUtils || {};
 
 var DemoMixin = function (base) {
@@ -785,6 +786,7 @@ window.customElements.define("row-editing", class extends DemoMixin(PolymerEleme
           One can edit the whole row of the grid by giving "editor-form-url" property pointing to the url of the ui-component. On clicking
           the "+" icon on top , or the "edit" icon after selecting a row, one can see the ui-component displayed with
           the selection.
+          If the element is already imported in the page , instead of "editor-form-url" the component name can be provided via "editor-form-element" proeprty.
         </p>
         <p>
           When editing the row, it is important to have the correct "record-handling" attribute.
@@ -797,11 +799,12 @@ window.customElements.define("row-editing", class extends DemoMixin(PolymerEleme
           this record-handling needs to be set to "localex".</p>
         <custom-demo-snippet>
 					<div>
-            <oe-data-table id="rowedit" label="Simple Table" record-handling="local" editor-form-url="../oe-data-table/demo/templates/literal-default.js"></oe-data-table>
+            <oe-data-table id="rowedit" label="Simple Table Dynamic Imported Form" record-handling="local" editor-form-url="../oe-data-table/demo/templates/literal-default.js"></oe-data-table>
+            <oe-data-table id="rowview" label="Simple Table Pre Imported Form" editor-form-element="literal-custom-form"></oe-data-table>
             <script>
               var rowedit = this.shadowRoot.querySelector('#rowedit');
-
-              rowedit.set('columns', [{
+              var rowview = this.shadowRoot.querySelector('#rowview');
+              var columns = [{
                 key: 'key',
                 label: 'Key',
                 type: 'string'
@@ -809,11 +812,10 @@ window.customElements.define("row-editing", class extends DemoMixin(PolymerEleme
                 key: 'value',
                 label: 'Value',
                 type: 'string'
-              }]);
-
-              rowedit.set('editorFormUrl',OEUtils.getUrl('../template'))
-
-              rowedit.set('items', [{
+              }]
+              rowedit.set('columns',columns.slice());
+              rowview.set('columns',columns.slice());
+              var records = [{
                 key: 'ADM',
                 value: 'Admin'
               }, {
@@ -825,8 +827,9 @@ window.customElements.define("row-editing", class extends DemoMixin(PolymerEleme
               }, {
                 key: 'TES',
                 value: 'Tester'
-              }]);
-
+              }];
+              rowedit.set('items', records.slice());
+              rowview.set('items', records.slice());
             </script>
           </div>
 				</custom-demo-snippet>
@@ -837,8 +840,8 @@ window.customElements.define("row-editing", class extends DemoMixin(PolymerEleme
 
   _onPageVisible() {
     var rowedit = this.shadowRoot.querySelector('#rowedit');
-
-    rowedit.set('columns', [{
+    var rowview = this.shadowRoot.querySelector('#rowview');
+    var columns = [{
       key: 'key',
       label: 'Key',
       type: 'string'
@@ -846,9 +849,11 @@ window.customElements.define("row-editing", class extends DemoMixin(PolymerEleme
       key: 'value',
       label: 'Value',
       type: 'string'
-    }]);
+    }]
+    rowedit.set('columns', columns.slice());
+    rowview.set('columns', columns.slice());
 
-    rowedit.set('items', [{
+    var records = [{
       key: 'ADM',
       value: 'Admin'
     }, {
@@ -860,7 +865,9 @@ window.customElements.define("row-editing", class extends DemoMixin(PolymerEleme
     }, {
       key: 'TES',
       value: 'Tester'
-    }]);
+    }];
+    rowedit.set('items', records.slice());
+    rowview.set('items', records.slice());
 
   }
 

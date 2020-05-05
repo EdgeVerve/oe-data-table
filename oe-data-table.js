@@ -374,7 +374,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
           <iron-collapse view="form" opened=[[_showPanel(_mainView,'form')]]>
             <div class="form-content">
               <paper-icon-button icon="icons:arrow-back" on-tap="_showGridView" hidden=[[!hideFormBackButton]]></paper-icon-button>
-              <lazy-component id="form-component" url=[[dataTableFormUrl]] model=[[modelToEdit]] emit-on-save=[[emitOnSave]]></lazy-component>
+              <lazy-component id="form-component" element-name=[[editorFormElement]] url=[[dataTableFormUrl]] model=[[modelToEdit]] emit-on-save=[[emitOnSave]]></lazy-component>
             </div>
           </iron-collapse>
         </iron-selector> 
@@ -478,12 +478,17 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       },
 
       /**
-       * The page to show when a row is added/edited. For example "/components/customer-default.html"
+       * The page to show when a row is added/edited. For example "/components/customer-default.js"
        */
       editorFormUrl: {
         type: String
       },
-
+      /**
+       * The element to show when a row is added/edited. For example "customer-default"
+       */
+      editorFormElement: {
+        type: String
+      },
       /**
        * Event to emit on save . Passed to the lazy-component.
        */
