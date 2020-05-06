@@ -3,6 +3,7 @@
  * ©2018-2019 EdgeVerve Systems Limited (a fully owned Infosys subsidiary),
  * Bangalore, India. All Rights Reserved.
  */
+import "@polymer/polymer/lib/elements/dom-module.js";
 const styleElement = document.createElement('dom-module');
 styleElement.innerHTML = 
 `<template>

@@ -412,6 +412,10 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
           return [];
         }
       },
+      accordianElement: {
+        type:String,
+        notify:true
+    },
       /**
        * Setting to true hides the column headers
        */
