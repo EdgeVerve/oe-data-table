@@ -3743,6 +3743,8 @@ window.customElements.define('accordian-view', class extends DemoMixin(PolymerEl
     <custom-demo-snippet>
     <div>
         <oe-data-table disabled disable-config-editor disable-edit disable-delete disable-add id="accordian-table" label="Simple Table"></oe-data-table>
+        <p>Accordian element icon in the beginning of the row </p>
+        <oe-data-table disabled disable-config-editor disable-edit disable-delete disable-add id="accordian-table2" label="Simple Table 2"></oe-data-table>
         <script>
           var dataTable = this.shadowRoot.querySelector('#accordian-table');
           var dropDownRenderer= function (column, row) { // eslint-disable-line no-unused-vars
@@ -3860,6 +3862,113 @@ window.customElements.define('accordian-view', class extends DemoMixin(PolymerEl
           
           dataTable.set('accordianElement', "demo-accordian");
           dataTable.set('showAccordian', true);
+          var dataTable2 = this.shadowRoot.querySelector('#accordian-table2');
+          dataTable2.set('columns', [{
+            key: 'account',
+            label: 'Account',
+            type: 'number'
+          }, {
+            key: 'checknumber',
+            label: 'Check Number',
+            type: 'number',
+            cellClass: 'blue-color'
+          }, {
+            key: 'amount',
+            label: 'Amount',
+            type: 'number',
+            renderer: amountRenderer
+          }, {
+            key: 'exception_reason',
+            label: 'Exception Reason',
+            type: 'string'
+          },
+          {
+            key: 'status',
+            label: 'Status',
+            type: 'string'
+          },
+          {
+            key: 'action',
+            label: 'Action',
+      
+      
+            type: 'string',
+            renderer: dropDownRenderer
+      
+          }]);
+      
+          var data2 = [{
+            account: 861363459,
+            checknumber: 223457,
+            amount: 470631.71,
+            status: 'Approved',
+            exception_reason: 'Paid No Issue',
+            action: 'Select'
+          },
+          {
+            account: 794659139,
+            checknumber: 23456,
+            amount: 4763.28,
+            status: 'Pending Decision',
+            exception_reason: 'Paid Fraud',
+            action: 'Select'
+          },
+          {
+            account: 479677228,
+            checknumber: 223431,
+            amount: 41170631.11,
+            status: 'Pending Decision',
+            exception_reason: 'Payee Missmatch',
+            action: 'Select'
+          },
+          {
+            account: 334547856,
+            checknumber: 2234567,
+            amount: 731.71,
+            status: 'Rejected',
+            exception_reason: 'Paid Fraud',
+            action: 'Select'
+          },
+          {
+            account: 452135542,
+            checknumber: 123564,
+            amount: 520631.51,
+            status: 'Pending Decision',
+            exception_reason: 'Paid Fraud',
+            action: 'Select'
+          },
+          {
+            account: 542412943,
+            checknumber: 342352,
+            amount: 41170631.71,
+            status: 'Pending Decision',
+            exception_reason: 'Paid No Issue',
+            action: 'Select'
+          },
+          {
+            account: 135322523,
+            checknumber: 3341234,
+            amount: 420631.16,
+            status: 'Pending Decision',
+            exception_reason: 'Payee Missmatch',
+            action: 'Select'
+          },
+          {
+            account: 432356742,
+            checknumber: 223456,
+            amount: 631.71,
+            status: 'Pending Decision',
+            exception_reason: 'Paid Fraud',
+            action: 'Select'
+          }
+      
+          ];
+          dataTable2.set('items', data2);
+      
+      
+      
+          dataTable2.set('accordianElement', "demo-accordian");
+          dataTable2.set('showAccordianBeginning', true);
         </script>
      </div>
     	</custom-demo-snippet>
@@ -3868,7 +3977,7 @@ window.customElements.define('accordian-view', class extends DemoMixin(PolymerEl
   }
   _onPageVisible() {
     var dataTable = this.shadowRoot.querySelector('#accordian-table');
-
+    
 
     var dropDownRenderer = function (column, row) { // eslint-disable-line no-unused-vars
 
@@ -4002,6 +4111,113 @@ window.customElements.define('accordian-view', class extends DemoMixin(PolymerEl
 
     dataTable.set('accordianElement', "demo-accordian");
     dataTable.set('showAccordian', true);
+    var dataTable2 = this.shadowRoot.querySelector('#accordian-table2');
+    dataTable2.set('columns', [{
+      key: 'account',
+      label: 'Account',
+      type: 'number'
+    }, {
+      key: 'checknumber',
+      label: 'Check Number',
+      type: 'number',
+      cellClass: 'blue-color'
+    }, {
+      key: 'amount',
+      label: 'Amount',
+      type: 'number',
+      renderer: amountRenderer
+    }, {
+      key: 'exception_reason',
+      label: 'Exception Reason',
+      type: 'string'
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      type: 'string'
+    },
+    {
+      key: 'action',
+      label: 'Action',
+
+
+      type: 'string',
+      renderer: dropDownRenderer
+
+    }]);
+
+    var data2 = [{
+      account: 861363459,
+      checknumber: 223457,
+      amount: 470631.71,
+      status: 'Approved',
+      exception_reason: 'Paid No Issue',
+      action: 'Select'
+    },
+    {
+      account: 794659139,
+      checknumber: 23456,
+      amount: 4763.28,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    },
+    {
+      account: 479677228,
+      checknumber: 223431,
+      amount: 41170631.11,
+      status: 'Pending Decision',
+      exception_reason: 'Payee Missmatch',
+      action: 'Select'
+    },
+    {
+      account: 334547856,
+      checknumber: 2234567,
+      amount: 731.71,
+      status: 'Rejected',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    },
+    {
+      account: 452135542,
+      checknumber: 123564,
+      amount: 520631.51,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    },
+    {
+      account: 542412943,
+      checknumber: 342352,
+      amount: 41170631.71,
+      status: 'Pending Decision',
+      exception_reason: 'Paid No Issue',
+      action: 'Select'
+    },
+    {
+      account: 135322523,
+      checknumber: 3341234,
+      amount: 420631.16,
+      status: 'Pending Decision',
+      exception_reason: 'Payee Missmatch',
+      action: 'Select'
+    },
+    {
+      account: 432356742,
+      checknumber: 223456,
+      amount: 631.71,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    }
+
+    ];
+    dataTable2.set('items', data2);
+
+
+
+    dataTable2.set('accordianElement', "demo-accordian");
+    dataTable2.set('showAccordianBeginning', true);
   }
 });
 window.customElements.define('oecombo-showcell', class extends DemoMixin(PolymerElement) {
