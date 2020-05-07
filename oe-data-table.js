@@ -304,6 +304,9 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
                   <paper-checkbox class="selection-checkbox" checked=[[_selectedAll]] disabled$=[[!multiSelection]] on-change="_toggleSelectAll"></paper-checkbox>
                 </div>
               </template>
+              <template is="dom-if" if="[[showAccordianBeginning]]">
+                <div style="flex: 0 0 48px"></div>
+              </template>
               <template is="dom-repeat" items="{{columns}}" as="column" filter="_getVisibleColumns" observe="hidden">
                 <oe-data-table-header-cell table-height="[[_computeHeightFilter(__tableHeight)]]" enable-inline-filter="[[enableInlineFilter]]" col-index=[[index]] class="table-data" items=[[items]] column={{column}} is-server-data=[[isServerData]] has-pagination=[[_hasPagination]]
                 style$="[[_computeCellWidth(column.*,column)]]"></oe-data-table-header-cell>
@@ -328,7 +331,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
                
                   <custom-iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth">
                     <template>
-                      <oe-data-table-row class$="[[computePosition(rowIndex,_items)]]" on-dblclick="_handleDblClick" is-accordian-open=[[_visibleAccordian(rowIndex)]] row-action-as-menu=[[rowActionAsMenu]] accordian-element=[[accordianElement]] show-accordian-begining=[[showAccordianBegining]] show-accordian=[[showAccordian]] 
+                      <oe-data-table-row class$="[[computePosition(rowIndex,_items)]]" on-dblclick="_handleDblClick" is-accordian-open=[[_visibleAccordian(rowIndex)]] row-action-as-menu=[[rowActionAsMenu]] accordian-element=[[accordianElement]] show-accordian-beginning=[[showAccordianBeginning]] show-accordian=[[showAccordian]] 
                       columns=[[columns]] selection-cell-content=[[selectionCellContent]] row=[[row]] row-index=[[rowIndex]] table-host=[[tableHost]]
                       tab-index="0" selected=[[_getSelectionState(row,_computeSelection)]] disable-selection=[[disableSelection]] row-actions=[[rowActions]]
                       row-action-width=[[__rowActionWidth]] read-only=[[__isCellReadOnly]] min-col-width=[[minColWidth]] column-templates=[[columnTemplates]] auto-fit=[[autoFit]]></oe-data-table-row>
@@ -746,7 +749,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
         type:Boolean,
         value:false
       },
-      showAccordianBegining:{
+      showAccordianBeginning:{
         type:Boolean,
         value:false
       },
@@ -1025,7 +1028,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
    * @return {boolean} selected value.
    */
   _getSelectionState(item) {
-    return this._selectionState.get(item) ? !(this.showAccordian || this.showAccordianBegining) : false;
+    return this._selectionState.get(item) ? !(this.showAccordian || this.showAccordianBeginning) : false;
   }
 
   _positionMenuDialog(event) { // eslint-disable-line no-unused-vars
