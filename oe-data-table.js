@@ -328,7 +328,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
                
                   <custom-iron-list index-as="rowIndex" id="row-list" items="{{_items}}" as="row" max-physical-count="[[_maxDomElement]]" on-scroll="_scrollHandler" on-iron-resize="_updateRowWidth">
                     <template>
-                      <oe-data-table-row class$="[[computePosition(rowIndex,_items)]]" on-dblclick="_handleDblClick" is-accordian-open=[[_visibleAccordian(rowIndex)]] row-action-as-menu=[[rowActionAsMenu]] accordian-element=[[accordianElement]] show-accordian=[[showAccordian]] 
+                      <oe-data-table-row class$="[[computePosition(rowIndex,_items)]]" on-dblclick="_handleDblClick" is-accordian-open=[[_visibleAccordian(rowIndex)]] row-action-as-menu=[[rowActionAsMenu]] accordian-element=[[accordianElement]] show-accordian-begining=[[showAccordianBegining]] show-accordian=[[showAccordian]] 
                       columns=[[columns]] selection-cell-content=[[selectionCellContent]] row=[[row]] row-index=[[rowIndex]] table-host=[[tableHost]]
                       tab-index="0" selected=[[_getSelectionState(row,_computeSelection)]] disable-selection=[[disableSelection]] row-actions=[[rowActions]]
                       row-action-width=[[__rowActionWidth]] read-only=[[__isCellReadOnly]] min-col-width=[[minColWidth]] column-templates=[[columnTemplates]] auto-fit=[[autoFit]]></oe-data-table-row>
@@ -746,6 +746,10 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
         type:Boolean,
         value:false
       },
+      showAccordianBegining:{
+        type:Boolean,
+        value:false
+      },
       actionOffset:{
         type: Object
       },
@@ -1021,7 +1025,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
    * @return {boolean} selected value.
    */
   _getSelectionState(item) {
-    return this._selectionState.get(item) ? !this.showAccordian : false;
+    return this._selectionState.get(item) ? !(this.showAccordian || this.showAccordianBegining) : false;
   }
 
   _positionMenuDialog(event) { // eslint-disable-line no-unused-vars

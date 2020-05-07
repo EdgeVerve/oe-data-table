@@ -101,6 +101,11 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
               <oe-data-table-selection-cell selection-cell-content=[[selectionCellContent]] row=[[row]] selected=[[selected]]></oe-data-table-selection-cell>
             </div>
           </template>
+          <template is="dom-if" if=[[showAccordianBegining]]>
+          <div class="row-actions row" style="flex: 0 0 48px">
+            <iron-icon id="paperExpand" icon$="{{getIcon(isAccordianOpen)}}" row$="[[row]]" rowIndex$="[[rowIndex]]" on-tap="_toggleAccordian"></iron-icon>
+          </div>
+        </template>
           <template is="dom-repeat" items="[[columns]]" as="column" filter="_getVisibleColumns" observe="hidden">
             <oe-data-table-cell is-first-row=[[_isFirstRow(rowIndex)]] read-only=[[readOnly]] key=[[key]] row={{row}} column=[[column]] class$="table-data [[_computeCellClass(row.*,column)]]" column-template=[[_getValidTemplate(row.*,row,column)]] style$="[[_computeCellWidth(column.*,column)]]"></oe-data-table-cell> 
           </template>
@@ -122,7 +127,7 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
                 </div>
             </template>           
         </div>  
-      <template is="dom-if" if=[[showAccordian]]>
+      <template is="dom-if" if=[[_showAccordian(showAccordian,showAccordianBegining)]]>
       <div id="accordianContainer" hidden$="[[!isAccordianOpen]]" visible$=[[__computeVisibleEl(rowIndex,isAccordianOpen)]]>
       </div>      
       </template>
@@ -335,7 +340,13 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             return itemNode;
         }
     }
-
+    _showAccordian(showAccordianEnd,showAccordianBegining){
+        if(showAccordianEnd || showAccordianBegining){
+            return true;
+        }
+        else
+            return false;
+    }
     /**
      * Computes Cell width style properties
      * @param {Object} columnDelta change data of column
