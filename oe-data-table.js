@@ -822,7 +822,12 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
           attributesToSkip = ['class', 'id'];
         [].forEach.call(this._columnInfoContent, function (columnDInfo) {
           var attributes = columnDInfo.attributes;
-          var column = {};
+          if(typeof(columnDInfo.config) === 'object'){
+            var column = columnDInfo.config;
+          }
+          else {
+            var column = {};
+          }
           for (var j = 0, al = attributes.length; j < al; j++) {
             var attribute = attributes[j];
             if (attributesToSkip.indexOf(attribute.name) == -1) {
