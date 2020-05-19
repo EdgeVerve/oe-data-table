@@ -767,6 +767,9 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       value: false,
       notify: true,
       observer: 'onUpdateInlineFilter'
+    },
+    lightDomColumns: {
+      type: Array
     }
     };
   }
@@ -782,7 +785,8 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       '_itemsChanged(items.*)',
       '_organizeData(currentPage)',
       '_computeRowActionWidth(rowActions.length)',
-      '_computeCellReadOnly(disabled,disableEdit)'
+      '_computeCellReadOnly(disabled,disableEdit)',
+      'columnsChanged(columns.*)'
     ];
   }
 
@@ -822,12 +826,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
           attributesToSkip = ['class', 'id'];
         [].forEach.call(this._columnInfoContent, function (columnDInfo) {
           var attributes = columnDInfo.attributes;
-          if(typeof(columnDInfo.config) === 'object'){
-            var column = columnDInfo.config;
-          }
-          else {
-            var column = {};
-          }
+          var column = {};
           for (var j = 0, al = attributes.length; j < al; j++) {
             var attribute = attributes[j];
             if (attributesToSkip.indexOf(attribute.name) == -1) {
@@ -840,6 +839,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
           column.valueAsTooltip = columnDInfo.hasAttribute('value-as-tooltip');
           columns.push(column);
         });
+        this.set('lightDomColumns',columns);
         this.set('columns', columns);
       }
     }
@@ -924,6 +924,18 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       var iron = this.shadowRoot.querySelector('#row-list');
       iron._render();
     }.bind(this));
+  }
+  columnsChanged(columns){
+    if(this.lightDomColumns && this.lightDomColumns.length && JSON.stringify(this.lightDomColumns) !== JSON.stringify(this.columns)){
+    if(this.columns && this.columns.length){
+      this.columns.map((item,i)=>{
+        if(item.key === this.lightDomColumns[i].key){
+            this.columns[i] = Object.assign({},item,this.lightDomColumns[i]);
+        }
+     })
+     this.lightDomColumns = [];
+    }
+    }
   }
   computePosition(index,items){
     if(index === (items.length-1)){

@@ -330,37 +330,67 @@ window.customElements.define("declaring-column", class extends DemoMixin(Polymer
           can take is avalilable in the component page </p>
         <p> The columns can also be specified in declarative way. Check the below example. </p>
         <custom-demo-snippet>
-					<div>
-            <oe-data-table id="columns-table" label="Columns Table">
-              <oe-data-table-column key='id' read-only label='Id' type='number'></oe-data-table-column>
-              <oe-data-table-column key='name' label='Name' type='string'></oe-data-table-column>
+          <div>
+          <dom-bind id="columns-table">
+          <template>
+         
+          <h3> Default Virtual Pagination </h3>
+       
+            <oe-data-table items=[[items]] columns=[[columns]] label="Columns Table">
+            
+              <oe-data-table-column  key='id' read-only label='Id' type='number'></oe-data-table-column>
+              <oe-data-table-column  key='name' label='Name' type='string'></oe-data-table-column>
+              <oe-data-table-column  key='labelname' label='Label Name' type='string'></oe-data-table-column>
             </oe-data-table>
+           
+            </template>
+            </dom-bind>
             <script>
-              var columnsTable = this.shadowRoot.querySelector('#columns-table');
+          var columnsTable = this.shadowRoot.querySelector('#columns-table');
+         
+          columnsTable.set('items', [{
+            id: 1,
+            name: 'Admin'
+          }, {
+            id: 2,
+            name: 'Developer'
+          }, {
+            id: 3,
+            name: 'Designer'
+          }, {
+            id: 4,
+            name: 'Tester'
+          }]);
 
-              columnsTable.set('items', [{
-                id: 1,
-                name: 'Admin'
-              }, {
-                id: 2,
-                name: 'Developer'
-              }, {
-                id: 3,
-                name: 'Designer'
-              }, {
-                id: 4,
-                name: 'Tester'
-              }]);
-
-            </script>
+        </script>
           </div>
 				</custom-demo-snippet>
       </div>      
         `;
   }
+  static get properties() {
+    return {
+      nameColumnConfig: {
+        type: Object
 
+      }
+    }
+  };
   _onPageVisible() {
     var columnsTable = this.shadowRoot.querySelector('#columns-table');
+    columnsTable.set('columns', [{
+      key: 'id',
+    }, {
+      key: 'name'
+    },
+    {
+      key:'labelname',
+      type:'string',
+      valueGetter: function(row){
+        return (row.name.toLowerCase());
+      }
+    }
+    ]);
 
     columnsTable.set('items', [{
       id: 1,
@@ -375,6 +405,8 @@ window.customElements.define("declaring-column", class extends DemoMixin(Polymer
       id: 4,
       name: 'Tester'
     }]);
+
+
   }
 });
 
@@ -3977,7 +4009,7 @@ window.customElements.define('accordian-view', class extends DemoMixin(PolymerEl
   }
   _onPageVisible() {
     var dataTable = this.shadowRoot.querySelector('#accordian-table');
-    
+
 
     var dropDownRenderer = function (column, row) { // eslint-disable-line no-unused-vars
 

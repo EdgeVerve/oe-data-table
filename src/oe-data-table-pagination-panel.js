@@ -150,7 +150,7 @@ class OeDataTablePaginationPanel extends OECommonMixin(PolymerElement) {
    */
   _computeRowIndex(currentPage,pageSize,itemsLength,rowCount) {
         var startIndex = (currentPage - 1) * pageSize;
-        this.set('_startRow',startIndex+1);
+        this.set('_startRow',itemsLength ? startIndex + 1 : startIndex);
         this.set('_endRow', startIndex + itemsLength);
         this.set('_isLastPage',this._endRow == rowCount);
   }

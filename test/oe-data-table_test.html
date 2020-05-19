@@ -21,23 +21,32 @@
 <body>
   <test-fixture id="basic">
     <template>
-      <oe-data-table columns='[{ "key" : "id", "label" : "Id", "type" : "number" }]'
-        items='[{"id":1, "name": "Admin"}, {"id":2, "name": "Developer"}, {"id":3, "name": "Designer"}, {"id":4, "name": "Tester"}]'>
+      <oe-data-table columns='[{ "key" : "id", "label" : "Id", "type" : "number" }]' 
+      items='[{"id":1, "name": "Admin"}, {"id":2, "name": "Developer"}, {"id":3, "name": "Designer"}, {"id":4, "name": "Tester"}]'>
       </oe-data-table>
     </template>
   </test-fixture>
   <test-fixture id="table-actions">
     <template>
-      <oe-data-table selection-cell-content='{"content":"name"}'
-        columns='[{ "key" : "id", "label" : "Id", "type" : "number" }]'
+      <oe-data-table selection-cell-content='{"content":"name"}' 
+      columns='[{ "key" : "id", "label" : "Id", "type" : "number" }]'
         items='[{"id":1, "name": "Admin"}, {"id":2, "name": "Developer"}, {"id":3, "name": "Designer"}, {"id":4, "name": "Tester"}]'>
       </oe-data-table>
     </template>
   </test-fixture>
+  <test-fixture id="declaring-column">
+    <template>
+    <oe-data-table label="Declaring Columns Table">
+      <oe-data-table-column key='id' read-only label='Id' type='number'></oe-data-table-column>
+      <oe-data-table-column key='name' label='Name' type='string'></oe-data-table-column>
+      <oe-data-table-column key='labelname' label='Label Name' type='string'></oe-data-table-column>
+    </oe-data-table>
+  </template>
+  </test-fixture>
   <test-fixture id="client-pagination">
     <template>
-      <oe-data-table
-        items='[{"id":1, "name": "Admin"}, {"id":2, "name": "Developer"}, {"id":3, "name": "Designer"}, {"id":4, "name": "Tester"}]'
+      <oe-data-table 
+      items='[{"id":1, "name": "Admin"}, {"id":2, "name": "Developer"}, {"id":3, "name": "Designer"}, {"id":4, "name": "Tester"}]'
         page-size="2" pagination-type="page">
         <oe-data-table-column key="id" label="Id" type="number"></oe-data-table-column>
       </oe-data-table>
@@ -45,8 +54,8 @@
   </test-fixture>
   <test-fixture id="disabled-table">
     <template>
-      <oe-data-table disabled columns='[{ "key" : "id", "label" : "Id", "type" : "number" }]'
-        items='[{"id":1, "name": "Admin"}, {"id":2, "name": "Developer"}, {"id":3, "name": "Designer"}, {"id":4, "name": "Tester"}]'>
+      <oe-data-table disabled columns='[{ "key" : "id", "label" : "Id", "type" : "number" }]' 
+      items='[{"id":1, "name": "Admin"}, {"id":2, "name": "Developer"}, {"id":3, "name": "Designer"}, {"id":4, "name": "Tester"}]'>
       </oe-data-table>
     </template>
   </test-fixture>
@@ -76,14 +85,14 @@
   </test-fixture>
   <test-fixture id="row-edit">
     <template>
-      <oe-data-table label="Row Edit" record-handling="local"
-        editor-form-url="../oe-data-table/demo/templates/literal-default.js"></oe-data-table>
+      <oe-data-table label="Row Edit" record-handling="local" 
+      editor-form-url="../oe-data-table/demo/templates/literal-default.js"></oe-data-table>
     </template>
   </test-fixture>
   <test-fixture id="row-edit-remote">
     <template>
-      <oe-data-table label="Row Edit" record-handling="remote"
-        editor-form-url="../oe-data-table/demo/templates/literal-default.js"></oe-data-table>
+      <oe-data-table label="Row Edit" record-handling="remote" 
+      editor-form-url="../oe-data-table/demo/templates/literal-default.js"></oe-data-table>
     </template>
   </test-fixture>
   <test-fixture id="accordion-view">
@@ -284,14 +293,14 @@
         dataTable.async(done, 1);
       });
 
-      test('Display rows based on page size.', function (done) {
+test('Display rows based on page size.', function (done) {
         flush(function () {
           var rowItems = dataTable.deepQueryAll('oe-data-table-row');
           expect(rowItems.length).to.be.equal(dataTable.pageSize);
           done();
         });
       });
-
+      
       test('Filter column', function (done) {
         flush(function () {
           expect(dataTable._items.length).to.be.equal(2);
@@ -338,7 +347,39 @@
         });
       });
     });
-
+  suite('Declaring Column',function(){
+    var dataTable;
+    var columns = [{key: "id"},{key: "name"},{key:"labelname",type:"string",valueGetter: function(row){ return (row.name.toLowerCase());}}];
+    var items = [{
+      id: 1,
+      name: 'Admin'
+    }, {
+      id: 2,
+      name: 'Developer'
+    }, {
+      id: 3,
+      name: 'Designer'
+    }, {
+      id: 4,
+      name: 'Tester'
+    }]
+    setup(function (done) {
+        dataTable = fixture('declaring-column');
+        dataTable.set('columns', columns);
+        dataTable.set('items', items);
+        setTimeout(done, 1);
+      });
+    test('Declaring Columns using dom element and setting valueGetter to attribute set', function (done) {
+        flush(function () {
+          dataTable.async(function () {
+            expect(dataTable.columns[0].label).to.equal('Id');
+            expect(dataTable.columns[1].label).to.equal('Name');
+            expect(typeof(dataTable.columns[2].valueGetter)).to.equal('function');
+          });
+          done();
+        });
+      });
+  });
     suite('Custom Columns', function () {
       var dataTable, items, columns = [{
         key: 's1',
