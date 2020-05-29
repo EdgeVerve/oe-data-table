@@ -928,10 +928,8 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
   columnsChanged(columns){
     if(this.lightDomColumns && this.lightDomColumns.length && JSON.stringify(this.lightDomColumns) !== JSON.stringify(this.columns)){
     if(this.columns && this.columns.length){
-      this.columns.map((item,i)=>{
-        if(item.key === this.lightDomColumns[i].key){
-            this.columns[i] = Object.assign({},item,this.lightDomColumns[i]);
-        }
+      this.columns.forEach((item,i)=>{
+        this.columns[i] = Object.assign({},item,this.lightDomColumns.find(element => item.key === element.key));
      })
      this.lightDomColumns = [];
     }
