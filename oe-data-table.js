@@ -767,6 +767,9 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       value: false,
       notify: true,
       observer: 'onUpdateInlineFilter'
+    },
+    lightDomColumns: {
+      type: Array
     }
     };
   }
@@ -782,7 +785,8 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       '_itemsChanged(items.*)',
       '_organizeData(currentPage)',
       '_computeRowActionWidth(rowActions.length)',
-      '_computeCellReadOnly(disabled,disableEdit)'
+      '_computeCellReadOnly(disabled,disableEdit)',
+      'columnsChanged(columns.*)'
     ];
   }
 
@@ -835,6 +839,7 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
           column.valueAsTooltip = columnDInfo.hasAttribute('value-as-tooltip');
           columns.push(column);
         });
+        this.set('lightDomColumns',columns);
         this.set('columns', columns);
       }
     }
@@ -919,6 +924,16 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
       var iron = this.shadowRoot.querySelector('#row-list');
       iron._render();
     }.bind(this));
+  }
+  columnsChanged(columns){
+    if(this.lightDomColumns && this.lightDomColumns.length && JSON.stringify(this.lightDomColumns) !== JSON.stringify(this.columns)){
+    if(this.columns && this.columns.length){
+      this.columns.forEach((item,i)=>{
+        this.columns[i] = Object.assign({},item,this.lightDomColumns.find(element => item.key === element.key));
+     })
+     this.lightDomColumns = [];
+    }
+    }
   }
   computePosition(index,items){
     if(index === (items.length-1)){
