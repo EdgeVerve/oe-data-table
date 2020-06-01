@@ -74,8 +74,12 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             .table-row:hover .row-action {
               opacity: 1;
             }
-			
-			      .table-row:focus .row-action {
+            .table-row:focus {
+                outline: none;
+                @apply --oe-data-table-row-div-focus;
+            }
+
+		    .table-row:focus .row-action {   
               opacity: 1;
             }
 			
