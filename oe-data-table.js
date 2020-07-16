@@ -1617,9 +1617,11 @@ class OeDataTable extends OEDataTableMixin(OECommonMixin(PolymerElement)) {
     this.async(function () {
       if (rowList) {
         this.set('_scrollBarWidth', rowList.offsetWidth - rowList.clientWidth);
-        var style = {
-          '--row-width': this.$['table-header'].scrollWidth + 'px'
-        };
+        if(this.$['table-header'].scrollWidth){
+          var style = {
+            '--row-width': this.$['table-header'].scrollWidth + 'px'
+          };
+        }
         this.updateStyles(style);
       }
     }, 100);

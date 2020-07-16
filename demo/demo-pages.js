@@ -340,7 +340,7 @@ window.customElements.define("declaring-column", class extends DemoMixin(Polymer
             
               <oe-data-table-column  key='id' read-only label='Id' type='number'></oe-data-table-column>
               <oe-data-table-column  key='name' label='Name' type='string'></oe-data-table-column>
-              <oe-data-table-column  key='labelname' label='Label Name' type='string'></oe-data-table-column>
+              <oe-data-table-column  id="label" key='labelname' label='Label Name' type='number'></oe-data-table-column>
             </oe-data-table>
            
             </template>
@@ -350,16 +350,20 @@ window.customElements.define("declaring-column", class extends DemoMixin(Polymer
          
           columnsTable.set('items', [{
             id: 1,
-            name: 'Admin'
+            name: 'Admin',
+            labelname: 0.98
           }, {
             id: 2,
-            name: 'Developer'
+            name: 'Developer',
+            labelname: 0.95
           }, {
             id: 3,
-            name: 'Designer'
+            name: 'Designer',
+            labelname: 0.96
           }, {
             id: 4,
-            name: 'Tester'
+            name: 'Tester',
+            labelname: 0.94
           }]);
 
         </script>
@@ -385,27 +389,30 @@ window.customElements.define("declaring-column", class extends DemoMixin(Polymer
     },
     {
       key:'labelname',
-      type:'string',
-      valueGetter: function(row){
-        return (row.name.toLowerCase());
+      type:'number',
+      formatter: (value) => {// eslint-disable-line no-unused-vars
+        return value*100;
       }
     }
     ]);
-
+   
     columnsTable.set('items', [{
       id: 1,
-      name: 'Admin'
+      name: 'Admin',
+      labelname: 0.98
     }, {
       id: 2,
-      name: 'Developer'
+      name: 'Developer',
+      labelname: 0.95
     }, {
       id: 3,
-      name: 'Designer'
+      name: 'Designer',
+      labelname: 0.96
     }, {
       id: 4,
-      name: 'Tester'
+      name: 'Tester',
+      labelname: 0.94
     }]);
-
 
   }
 });
@@ -1834,7 +1841,107 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
             }</script>
         </div>
         </custom-demo-snippet>
+        <p>
+        Row actions as menu
+      </p>
+      <custom-demo-snippet>
+      <div>
+          <dom-bind id="myappRowActionComputeMenu">
+          <template>
+            <oe-data-table label="User" disable-selection id="table-2" row-action-as-menu items=[[items]] columns=[[columns]] row-actions=[[rowActions]] on-oe-data-table-row-action="handleRowActions">
+            </oe-data-table>
+            <template is="dom-if" if=[[eventString]]>
+              <h3>Event Data</h3>
+              <pre style="padding:8px;">
+                  [[eventString]]
+              </pre>                   
+            </template>
+            </template>
+          </dom-bind>
+          <script>
+          var myapp2 = this.shadowRoot.querySelector('#myappRowActionComputeMenu');
+            
+            myapp2.set('columns', [{
+              key: 'key',
+              label: 'Key',
+              type: 'string'
+            }, {
+              key: 'value',
+              label: 'Value',
+              type: 'string'
+            }]);
 
+            myapp2.set('items', [{
+              id: 1,
+              key: 'Mike',
+              value: 'mike@ev.com',
+              isHiddenView: true
+            }, {
+              id: 2,
+              key: 'John',
+              value: 'john@ev.com',
+              isHiddenEdit: true
+            }, {
+              id: 3,
+              key: 'Stella',
+              value: 'stella@ev.com',
+              isHiddenBookMark: true,
+              isHiddenEdit: true
+
+            }, {
+              id: 4,
+              key: 'Francis',
+              value: 'francis@ev.com',
+              isHiddenView: true,
+              isHiddenEdit: true
+            }]);
+
+            var isHiddenEdit = function (row) {
+                return row.isHiddenEdit;
+            }
+
+            var isHiddenView = function (row) {
+                return row.isHiddenView;
+            }
+
+            var isHiddenBookMark = function (row) {
+                return row.isHiddenBookMark;
+            }
+
+            myapp2.set('rowActions', [{
+              icon: 'info',
+              action: 'info',
+              title: 'details',
+              formUrl:'templates/literal-view.js',
+              isHiddenFunction: isHiddenView
+            }, {
+              icon: 'editor:mode-edit',
+              title: 'edit',
+              action: 'edit',
+              formUrl:'templates/literal-default.js',
+              isHiddenFunction: isHiddenEdit
+            },{
+              icon: 'star',
+              action: 'bookmark',
+              title: 'bookmark',
+              isHiddenFunction: isHiddenBookMark
+            }]);
+
+            myapp2.handleRowActions = function (event) {
+              myapp2.set('eventString',JSON.stringify(event.detail,null,2));
+            }
+
+            myapp2.rowUpdated = function (event) {
+              event.stopPropagation();
+              if (myapp2.userEdit) {
+                var index = myapp2.items.indexOf(myapp.userEdit);
+                var newRecord = event.detail;
+                (index >= 0) && myapp2.splice('items', index, 1, newRecord);
+                myapp2.set('userEdit', null);
+              }
+            }</script>
+        </div>
+        </custom-demo-snippet>
       </div>      
         `;
   }
@@ -1979,8 +2086,67 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
         myapp.set('userEdit', null);
       }
     };
-  }
+  
+  var myapp = this.shadowRoot.querySelector('#myappRowActionComputeMenu');
+            
+  myapp.set('columns', [{
+    key: 'key',
+    label: 'Key',
+    type: 'string'
+  }, {
+    key: 'value',
+    label: 'Value',
+    type: 'string'
+  }]);
 
+  myapp.set('items', [{
+    id: 1,
+    key: 'Mike',
+    value: 'mike@ev.com'
+  }, {
+    id: 2,
+    key: 'John',
+    value: 'john@ev.com'
+  }, {
+    id: 3,
+    key: 'Stella',
+    value: 'stella@ev.com'
+  }, {
+    id: 4,
+    key: 'Francis',
+    value: 'francis@ev.com'
+  }]);
+
+  myapp.set('rowActions', [{
+    icon: 'info',
+    action: 'info',
+    title: 'details',
+    formUrl: '../oe-data-table/demo/templates/literal-view.js'
+  }, {
+    icon: 'editor:mode-edit',
+    title: 'edit',
+    action: 'edit',
+    formUrl: '../oe-data-table/demo/templates/literal-default.js'
+  }, {
+    icon: 'star',
+    action: 'bookmark',
+    title: 'bookmark'
+  }]);
+
+  myapp.handleRowActions = function (event) {
+    myapp.set('eventString', JSON.stringify(event.detail, null, 2));
+  };
+
+  myapp.rowUpdated = function (event) {
+    event.stopPropagation();
+    if (myapp.userEdit) {
+      var index = myapp.items.indexOf(myapp.userEdit);
+      var newRecord = event.detail;
+      (index >= 0) && myapp.splice('items', index, 1, newRecord);
+      myapp.set('userEdit', null);
+    }
+  };
+          }
 });
 
 window.customElements.define("pagination-setting", class extends DemoMixin(PolymerElement) {

@@ -119,6 +119,7 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             </div>
           </template>
             <template is="dom-if" if=[[rowActions.length]]>
+            <template is="dom-if" if=[[!rowActionAsMenu]]>
                 <div class="row-actions" style$="flex: [[rowActionWidth]]">
                     <template is="dom-repeat" items=[[rowActions]] as="action">
                         <div>
@@ -129,6 +130,15 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
                         </div>
                     </template>
                 </div>
+                </template>
+                <template is="dom-if" if=[[rowActionAsMenu]]>
+                <div class="row-actions" style$="flex: 0 0 48px">
+                        <div>
+                            <paper-icon-button class="row-action" row=[[row]] rowIndex$=[[rowIndex]] icon="more-vert" on-tap="_rowMenuActionClicked"></paper-icon-button>
+                        </div>
+                    </template>
+                </div>
+                </template>
             </template>           
         </div>  
       <template is="dom-if" if=[[_showAccordian(showAccordian,showAccordianBeginning)]]>
@@ -282,7 +292,13 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             this.fire('toggle-row-selection', this.row);
         }
     }
-
+    _rowMenuActionClicked(event){
+        this.fire('row-menu-action-clicked', {
+            data:this.rowActions,
+            currentRow: this,
+            target:event.target
+        });
+    }
     /**
      * Checks if the row is the first row of the table.
      * @param {number} rowIndex Index of current row.
