@@ -1,7 +1,7 @@
 {
   "name": "oe-data-table",
   "description": "A template element , used to create oe-ui Polymer 3 elements",
-  "version": "2.1.0",
+  "version": "2.3.0",
   "main": "oe-data-table.js",
   "scripts": {
     "test": "polymer test --module-resolution node --skip-selenium-install",
@@ -21,14 +21,14 @@
     "@polymer/paper-toast": "^3.0.1",
     "@polymer/paper-tooltip": "^3.0.1",
     "@polymer/polymer": "^3.1.0",
-    "oe-ajax": "git+http://evgit/oecloud.io/oe-ajax.git#master",
-    "oe-combo": "git+http://evgit/oecloud.io/oe-combo.git#master",
-    "oe-i18n-msg": "git+http://evgit/oecloud.io/oe-i18n-msg.git#master",
-    "oe-info": "git+http://evgit/oecloud.io/oe-info.git#master",
-    "oe-input": "git+http://evgit/oecloud.io/oe-input.git#master",
-    "oe-mixins": "git+http://evgit/oecloud.io/oe-mixins.git#master",
-    "oe-ui-forms": "git+http://evgit/oecloud.io/oe-ui-forms.git#master",
-    "oe-utils": "git+http://evgit/oecloud.io/oe-utils.git#master",
+    "oe-ajax": "git+http://evgit/oecloud.io/oe-ajax.git#2.2.0",
+    "oe-combo": "git+http://evgit/oecloud.io/oe-combo.git#2.3.0",
+    "oe-i18n-msg": "git+http://evgit/oecloud.io/oe-i18n-msg.git#2.2.0",
+    "oe-info": "git+http://evgit/oecloud.io/oe-info.git#2.3.0",
+    "oe-input": "git+http://evgit/oecloud.io/oe-input.git#2.3.0",
+    "oe-mixins": "git+http://evgit/oecloud.io/oe-mixins.git#2.3.0",
+    "oe-ui-forms": "git+http://evgit/oecloud.io/oe-ui-forms.git#2.3.0",
+    "oe-utils": "git+http://evgit/oecloud.io/oe-utils.git#2.3.0",
     "sortablejs": "1.8.3"
   },
   "devDependencies": {
@@ -42,7 +42,7 @@
     "axe-core": "3.1.2",
     "chai": "4.2.0",
     "mocha": "5.2.0",
-    "oe-app-route": "git+http://evgit/oecloud.io/oe-app-route.git#master",
+    "oe-app-route": "git+http://evgit/oecloud.io/oe-app-route.git#2.3.0",
     "sinon": "7.2.3",
     "wct-mocha": "1.0.0"
   },
