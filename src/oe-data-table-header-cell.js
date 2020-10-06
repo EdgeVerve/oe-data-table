@@ -154,7 +154,7 @@ class OeDataTableHeaderCell extends OECommonMixin(PolymerElement) {
     <template is="dom-if" if="[[!enableInlineFilter]]">
     <iron-icon hidden$=[[_disableFilter(column)]] class="filter-icon" icon="icons:filter-list" on-tap="openFilter"></iron-icon>
     <paper-dialog id="dialog" on-iron-overlay-opened="_positionFilterDialog">
-      <oe-data-table-filter id="filterEl" is-server-data=[[isServerData]] column=[[column]] items=[[items]]></oe-data-table-filter>
+      <oe-data-table-filter id="filterEl" is-server-data=[[isServerData]] column=[[column]] height="[[dialogHeight]]" items=[[items]]></oe-data-table-filter>
     </paper-dialog>
     </template>
    
@@ -189,8 +189,13 @@ class OeDataTableHeaderCell extends OECommonMixin(PolymerElement) {
 				type: String,
 				notify: true,
         observer: 'inlineSearchCriteria'
-			}
-
+			},
+      tableHeight: {
+        type: String
+      },
+      dialogHeight: {
+        type: String
+      }
     };
 
     /**
@@ -353,8 +358,9 @@ class OeDataTableHeaderCell extends OECommonMixin(PolymerElement) {
    * @param {Event} evt tap event
    */
   openFilter(evt) { // eslint-disable-line no-unused-vars
-    this.root.querySelector('#filterEl')._updateListSize();
     this.root.querySelector('#dialog').open();
+    //this.root.querySelector('#filterEl')._updateListSize();
+    //this.root.querySelector('#dialog')._renderOpened();
   }
 
   /**
@@ -374,6 +380,11 @@ class OeDataTableHeaderCell extends OECommonMixin(PolymerElement) {
       var offset = this.getBoundingClientRect();
       filterDialog.set('horizontalAlign', ((offset.left + filterDialog.offsetWidth) < window.innerWidth) ?
         'left' : 'right');
+      filterDialog.set('verticalAlign','top');
+      if(this.tableHeight !== "0px"){
+        filterDialog.style['max-height'] = (parseInt(this.tableHeight.match(/\d+/)[0]) + this.getBoundingClientRect().height) + 'px';
+      }
+      this.set('dialogHeight',filterDialog.style['max-height']);
       filterDialog.position();
     });
   }
@@ -384,7 +395,12 @@ class OeDataTableHeaderCell extends OECommonMixin(PolymerElement) {
    * @return {boolean} flag denoting to disable filter
    */
   _disableFilter(column) {
-    return column.disableFilter;
+    if(column.type === 'object'){
+      return true;
+    }
+    else{
+      return column.disableFilter;
+     }
   }
 
   /**

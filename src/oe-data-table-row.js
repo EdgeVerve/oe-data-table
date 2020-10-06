@@ -24,9 +24,7 @@ import "./oe-data-table-row-style.js";
  * 
  * CSS Variable | Description | Default
  * ----------------|-------------|----------
- * `--oe-data-table-row` | Mixin to be applied to the table row | {}
  * `--oe-data-table-row-selected` | Mixiin to be applied to the table row when selected | {}
- * `--oe-data-table-row-hover` | Mixin to be applied to the table row on hover | {}
  * `--oe-data-table-data` | Mixin to be applied to the table cell | {}
  * `--oe-data-table-column-first` | Mixin to be applied to the first column | {}
  * `--oe-data-table-column-last` | Mixin to be applied to the last column | {}
@@ -50,29 +48,24 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
                 @apply --layout;
                 @apply --layout-center;
             }
-
-            .table-row {
-                border-bottom: 1px solid #ededed;
-                background: #FFF;
-                @apply --layout;
-                @apply --oe-data-table-row;
-            }
-        
-            .table-row.selected {
-                background: #f5f5f5;
-                @apply --oe-data-table-row-selected;
-            }
-        
-            .table-row:hover {
-                background: #eee;
-                @apply --oe-data-table-row-hover;
-            }
+           
         
             .row-actions {
                 @apply --layout-horizontal;
                 @apply --layout-center;
             }
-        
+            .table-row {
+                @apply --layout;
+            }
+            .table-row.selected {
+                background: #f5f5f5;
+                @apply --oe-data-table-row-selected;
+            }
+            .row-actions {
+                @apply --layout-horizontal;
+                @apply --layout-center;
+            }
+
             .row-action {
                 opacity: 0;
                 @apply --oe-data-table-row-action;
@@ -81,8 +74,12 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             .table-row:hover .row-action {
               opacity: 1;
             }
-			
-			      .table-row:focus .row-action {
+            .table-row:focus {
+                outline: none;
+                @apply --oe-data-table-row-div-focus;
+            }
+
+		    .table-row:focus .row-action {   
               opacity: 1;
             }
 			
@@ -108,6 +105,11 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
               <oe-data-table-selection-cell selection-cell-content=[[selectionCellContent]] row=[[row]] selected=[[selected]]></oe-data-table-selection-cell>
             </div>
           </template>
+          <template is="dom-if" if=[[showAccordianBeginning]]>
+          <div class="row-actions row" style="flex: 0 0 48px">
+            <iron-icon id="paperExpand" icon$="{{getIcon(isAccordianOpen)}}" row$="[[row]]" rowIndex$="[[rowIndex]]" on-tap="_toggleAccordian"></iron-icon>
+          </div>
+        </template>
           <template is="dom-repeat" items="[[columns]]" as="column" filter="_getVisibleColumns" observe="hidden">
             <oe-data-table-cell is-first-row=[[_isFirstRow(rowIndex)]] read-only=[[readOnly]] key=[[key]] row={{row}} column=[[column]] class$="table-data [[_computeCellClass(row.*,column)]]" column-template=[[_getValidTemplate(row.*,row,column)]] style$="[[_computeCellWidth(column.*,column)]]"></oe-data-table-cell> 
           </template>
@@ -117,6 +119,7 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             </div>
           </template>
             <template is="dom-if" if=[[rowActions.length]]>
+            <template is="dom-if" if=[[!rowActionAsMenu]]>
                 <div class="row-actions" style$="flex: [[rowActionWidth]]">
                     <template is="dom-repeat" items=[[rowActions]] as="action">
                         <div>
@@ -127,9 +130,18 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
                         </div>
                     </template>
                 </div>
+                </template>
+                <template is="dom-if" if=[[rowActionAsMenu]]>
+                <div class="row-actions" style$="flex: 0 0 48px">
+                        <div>
+                            <paper-icon-button class="row-action" row=[[row]] rowIndex$=[[rowIndex]] icon="more-vert" on-tap="_rowMenuActionClicked"></paper-icon-button>
+                        </div>
+                    </template>
+                </div>
+                </template>
             </template>           
         </div>  
-      <template is="dom-if" if=[[showAccordian]]>
+      <template is="dom-if" if=[[_showAccordian(showAccordian,showAccordianBeginning)]]>
       <div id="accordianContainer" hidden$="[[!isAccordianOpen]]" visible$=[[__computeVisibleEl(rowIndex,isAccordianOpen)]]>
       </div>      
       </template>
@@ -280,7 +292,13 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             this.fire('toggle-row-selection', this.row);
         }
     }
-
+    _rowMenuActionClicked(event){
+        this.fire('row-menu-action-clicked', {
+            data:this.rowActions,
+            currentRow: this,
+            target:event.target
+        });
+    }
     /**
      * Checks if the row is the first row of the table.
      * @param {number} rowIndex Index of current row.
@@ -342,7 +360,13 @@ class OeDataTableRow extends OETemplatizeMixin(OECommonMixin(PolymerElement)) {
             return itemNode;
         }
     }
-
+    _showAccordian(showAccordianEnd,showAccordianBeginning){
+        if(showAccordianEnd || showAccordianBeginning){
+            return true;
+        }
+        else
+            return false;
+    }
     /**
      * Computes Cell width style properties
      * @param {Object} columnDelta change data of column

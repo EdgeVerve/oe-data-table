@@ -1,7 +1,7 @@
 {
   "name": "oe-data-table",
   "description": "A template element , used to create oe-ui Polymer 3 elements",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "main": "oe-data-table.js",
   "scripts": {
     "test": "polymer test --module-resolution node --skip-selenium-install",

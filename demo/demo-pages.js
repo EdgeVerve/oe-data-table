@@ -22,6 +22,7 @@ import './custom-demo-snippet';
 import 'oe-combo/oe-typeahead.js';
 import '../oe-data-table';
 import './templates/demo-accordian.js';
+import './templates/literal-custom-form.js';
 var OEUtils = window.OEUtils || {};
 
 var DemoMixin = function (base) {
@@ -329,51 +330,90 @@ window.customElements.define("declaring-column", class extends DemoMixin(Polymer
           can take is avalilable in the component page </p>
         <p> The columns can also be specified in declarative way. Check the below example. </p>
         <custom-demo-snippet>
-					<div>
-            <oe-data-table id="columns-table" label="Columns Table">
-              <oe-data-table-column key='id' read-only label='Id' type='number'></oe-data-table-column>
-              <oe-data-table-column key='name' label='Name' type='string'></oe-data-table-column>
+          <div>
+          <dom-bind id="columns-table">
+          <template>
+         
+          <h3> Default Virtual Pagination </h3>
+       
+            <oe-data-table items=[[items]] columns=[[columns]] label="Columns Table">
+            
+              <oe-data-table-column  key='id' read-only label='Id' type='number'></oe-data-table-column>
+              <oe-data-table-column  key='name' label='Name' type='string'></oe-data-table-column>
+              <oe-data-table-column  id="label" key='labelname' label='Label Name' type='number'></oe-data-table-column>
             </oe-data-table>
+           
+            </template>
+            </dom-bind>
             <script>
-              var columnsTable = this.shadowRoot.querySelector('#columns-table');
+          var columnsTable = this.shadowRoot.querySelector('#columns-table');
+         
+          columnsTable.set('items', [{
+            id: 1,
+            name: 'Admin',
+            labelname: 0.98
+          }, {
+            id: 2,
+            name: 'Developer',
+            labelname: 0.95
+          }, {
+            id: 3,
+            name: 'Designer',
+            labelname: 0.96
+          }, {
+            id: 4,
+            name: 'Tester',
+            labelname: 0.94
+          }]);
 
-              columnsTable.set('items', [{
-                id: 1,
-                name: 'Admin'
-              }, {
-                id: 2,
-                name: 'Developer'
-              }, {
-                id: 3,
-                name: 'Designer'
-              }, {
-                id: 4,
-                name: 'Tester'
-              }]);
-
-            </script>
+        </script>
           </div>
 				</custom-demo-snippet>
       </div>      
         `;
   }
+  static get properties() {
+    return {
+      nameColumnConfig: {
+        type: Object
 
+      }
+    }
+  };
   _onPageVisible() {
     var columnsTable = this.shadowRoot.querySelector('#columns-table');
-
+    columnsTable.set('columns', [{
+      key: 'id',
+    }, {
+      key: 'name'
+    },
+    {
+      key:'labelname',
+      type:'number',
+      formatter: (value) => {// eslint-disable-line no-unused-vars
+        return value*100;
+      }
+    }
+    ]);
+   
     columnsTable.set('items', [{
       id: 1,
-      name: 'Admin'
+      name: 'Admin',
+      labelname: 0.98
     }, {
       id: 2,
-      name: 'Developer'
+      name: 'Developer',
+      labelname: 0.95
     }, {
       id: 3,
-      name: 'Designer'
+      name: 'Designer',
+      labelname: 0.96
     }, {
       id: 4,
-      name: 'Tester'
+      name: 'Tester',
+      labelname: 0.94
     }]);
+
   }
 });
 
@@ -785,6 +825,7 @@ window.customElements.define("row-editing", class extends DemoMixin(PolymerEleme
           One can edit the whole row of the grid by giving "editor-form-url" property pointing to the url of the ui-component. On clicking
           the "+" icon on top , or the "edit" icon after selecting a row, one can see the ui-component displayed with
           the selection.
+          If the element is already imported in the page , instead of "editor-form-url" the component name can be provided via "editor-form-element" proeprty.
         </p>
         <p>
           When editing the row, it is important to have the correct "record-handling" attribute.
@@ -797,11 +838,12 @@ window.customElements.define("row-editing", class extends DemoMixin(PolymerEleme
           this record-handling needs to be set to "localex".</p>
         <custom-demo-snippet>
 					<div>
-            <oe-data-table id="rowedit" label="Simple Table" record-handling="local" editor-form-url="../oe-data-table/demo/templates/literal-default.js"></oe-data-table>
+            <oe-data-table id="rowedit" label="Simple Table Dynamic Imported Form" record-handling="local" editor-form-url="../oe-data-table/demo/templates/literal-default.js"></oe-data-table>
+            <oe-data-table id="rowview" label="Simple Table Pre Imported Form" editor-form-element="literal-custom-form"></oe-data-table>
             <script>
               var rowedit = this.shadowRoot.querySelector('#rowedit');
-
-              rowedit.set('columns', [{
+              var rowview = this.shadowRoot.querySelector('#rowview');
+              var columns = [{
                 key: 'key',
                 label: 'Key',
                 type: 'string'
@@ -809,11 +851,10 @@ window.customElements.define("row-editing", class extends DemoMixin(PolymerEleme
                 key: 'value',
                 label: 'Value',
                 type: 'string'
-              }]);
-
-              rowedit.set('editorFormUrl',OEUtils.getUrl('../template'))
-
-              rowedit.set('items', [{
+              }]
+              rowedit.set('columns',columns.slice());
+              rowview.set('columns',columns.slice());
+              var records = [{
                 key: 'ADM',
                 value: 'Admin'
               }, {
@@ -825,8 +866,9 @@ window.customElements.define("row-editing", class extends DemoMixin(PolymerEleme
               }, {
                 key: 'TES',
                 value: 'Tester'
-              }]);
-
+              }];
+              rowedit.set('items', records.slice());
+              rowview.set('items', records.slice());
             </script>
           </div>
 				</custom-demo-snippet>
@@ -837,8 +879,8 @@ window.customElements.define("row-editing", class extends DemoMixin(PolymerEleme
 
   _onPageVisible() {
     var rowedit = this.shadowRoot.querySelector('#rowedit');
-
-    rowedit.set('columns', [{
+    var rowview = this.shadowRoot.querySelector('#rowview');
+    var columns = [{
       key: 'key',
       label: 'Key',
       type: 'string'
@@ -846,9 +888,11 @@ window.customElements.define("row-editing", class extends DemoMixin(PolymerEleme
       key: 'value',
       label: 'Value',
       type: 'string'
-    }]);
+    }]
+    rowedit.set('columns', columns.slice());
+    rowview.set('columns', columns.slice());
 
-    rowedit.set('items', [{
+    var records = [{
       key: 'ADM',
       value: 'Admin'
     }, {
@@ -860,7 +904,9 @@ window.customElements.define("row-editing", class extends DemoMixin(PolymerEleme
     }, {
       key: 'TES',
       value: 'Tester'
-    }]);
+    }];
+    rowedit.set('items', records.slice());
+    rowview.set('items', records.slice());
 
   }
 
@@ -1795,7 +1841,107 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
             }</script>
         </div>
         </custom-demo-snippet>
+        <p>
+        Row actions as menu
+      </p>
+      <custom-demo-snippet>
+      <div>
+          <dom-bind id="myappRowActionComputeMenu">
+          <template>
+            <oe-data-table label="User" disable-selection id="table-2" row-action-as-menu items=[[items]] columns=[[columns]] row-actions=[[rowActions]] on-oe-data-table-row-action="handleRowActions">
+            </oe-data-table>
+            <template is="dom-if" if=[[eventString]]>
+              <h3>Event Data</h3>
+              <pre style="padding:8px;">
+                  [[eventString]]
+              </pre>                   
+            </template>
+            </template>
+          </dom-bind>
+          <script>
+          var myapp2 = this.shadowRoot.querySelector('#myappRowActionComputeMenu');
+            
+            myapp2.set('columns', [{
+              key: 'key',
+              label: 'Key',
+              type: 'string'
+            }, {
+              key: 'value',
+              label: 'Value',
+              type: 'string'
+            }]);
 
+            myapp2.set('items', [{
+              id: 1,
+              key: 'Mike',
+              value: 'mike@ev.com',
+              isHiddenView: true
+            }, {
+              id: 2,
+              key: 'John',
+              value: 'john@ev.com',
+              isHiddenEdit: true
+            }, {
+              id: 3,
+              key: 'Stella',
+              value: 'stella@ev.com',
+              isHiddenBookMark: true,
+              isHiddenEdit: true
+
+            }, {
+              id: 4,
+              key: 'Francis',
+              value: 'francis@ev.com',
+              isHiddenView: true,
+              isHiddenEdit: true
+            }]);
+
+            var isHiddenEdit = function (row) {
+                return row.isHiddenEdit;
+            }
+
+            var isHiddenView = function (row) {
+                return row.isHiddenView;
+            }
+
+            var isHiddenBookMark = function (row) {
+                return row.isHiddenBookMark;
+            }
+
+            myapp2.set('rowActions', [{
+              icon: 'info',
+              action: 'info',
+              title: 'details',
+              formUrl:'templates/literal-view.js',
+              isHiddenFunction: isHiddenView
+            }, {
+              icon: 'editor:mode-edit',
+              title: 'edit',
+              action: 'edit',
+              formUrl:'templates/literal-default.js',
+              isHiddenFunction: isHiddenEdit
+            },{
+              icon: 'star',
+              action: 'bookmark',
+              title: 'bookmark',
+              isHiddenFunction: isHiddenBookMark
+            }]);
+
+            myapp2.handleRowActions = function (event) {
+              myapp2.set('eventString',JSON.stringify(event.detail,null,2));
+            }
+
+            myapp2.rowUpdated = function (event) {
+              event.stopPropagation();
+              if (myapp2.userEdit) {
+                var index = myapp2.items.indexOf(myapp.userEdit);
+                var newRecord = event.detail;
+                (index >= 0) && myapp2.splice('items', index, 1, newRecord);
+                myapp2.set('userEdit', null);
+              }
+            }</script>
+        </div>
+        </custom-demo-snippet>
       </div>      
         `;
   }
@@ -1940,8 +2086,67 @@ window.customElements.define("row-action", class extends DemoMixin(PolymerElemen
         myapp.set('userEdit', null);
       }
     };
-  }
+  
+  var myapp = this.shadowRoot.querySelector('#myappRowActionComputeMenu');
+            
+  myapp.set('columns', [{
+    key: 'key',
+    label: 'Key',
+    type: 'string'
+  }, {
+    key: 'value',
+    label: 'Value',
+    type: 'string'
+  }]);
 
+  myapp.set('items', [{
+    id: 1,
+    key: 'Mike',
+    value: 'mike@ev.com'
+  }, {
+    id: 2,
+    key: 'John',
+    value: 'john@ev.com'
+  }, {
+    id: 3,
+    key: 'Stella',
+    value: 'stella@ev.com'
+  }, {
+    id: 4,
+    key: 'Francis',
+    value: 'francis@ev.com'
+  }]);
+
+  myapp.set('rowActions', [{
+    icon: 'info',
+    action: 'info',
+    title: 'details',
+    formUrl: '../oe-data-table/demo/templates/literal-view.js'
+  }, {
+    icon: 'editor:mode-edit',
+    title: 'edit',
+    action: 'edit',
+    formUrl: '../oe-data-table/demo/templates/literal-default.js'
+  }, {
+    icon: 'star',
+    action: 'bookmark',
+    title: 'bookmark'
+  }]);
+
+  myapp.handleRowActions = function (event) {
+    myapp.set('eventString', JSON.stringify(event.detail, null, 2));
+  };
+
+  myapp.rowUpdated = function (event) {
+    event.stopPropagation();
+    if (myapp.userEdit) {
+      var index = myapp.items.indexOf(myapp.userEdit);
+      var newRecord = event.detail;
+      (index >= 0) && myapp.splice('items', index, 1, newRecord);
+      myapp.set('userEdit', null);
+    }
+  };
+          }
 });
 
 window.customElements.define("pagination-setting", class extends DemoMixin(PolymerElement) {
@@ -3736,6 +3941,8 @@ window.customElements.define('accordian-view', class extends DemoMixin(PolymerEl
     <custom-demo-snippet>
     <div>
         <oe-data-table disabled disable-config-editor disable-edit disable-delete disable-add id="accordian-table" label="Simple Table"></oe-data-table>
+        <p>Accordian element icon in the beginning of the row </p>
+        <oe-data-table disabled disable-config-editor disable-edit disable-delete disable-add id="accordian-table2" label="Simple Table 2"></oe-data-table>
         <script>
           var dataTable = this.shadowRoot.querySelector('#accordian-table');
           var dropDownRenderer= function (column, row) { // eslint-disable-line no-unused-vars
@@ -3853,6 +4060,113 @@ window.customElements.define('accordian-view', class extends DemoMixin(PolymerEl
           
           dataTable.set('accordianElement', "demo-accordian");
           dataTable.set('showAccordian', true);
+          var dataTable2 = this.shadowRoot.querySelector('#accordian-table2');
+          dataTable2.set('columns', [{
+            key: 'account',
+            label: 'Account',
+            type: 'number'
+          }, {
+            key: 'checknumber',
+            label: 'Check Number',
+            type: 'number',
+            cellClass: 'blue-color'
+          }, {
+            key: 'amount',
+            label: 'Amount',
+            type: 'number',
+            renderer: amountRenderer
+          }, {
+            key: 'exception_reason',
+            label: 'Exception Reason',
+            type: 'string'
+          },
+          {
+            key: 'status',
+            label: 'Status',
+            type: 'string'
+          },
+          {
+            key: 'action',
+            label: 'Action',
+      
+      
+            type: 'string',
+            renderer: dropDownRenderer
+      
+          }]);
+      
+          var data2 = [{
+            account: 861363459,
+            checknumber: 223457,
+            amount: 470631.71,
+            status: 'Approved',
+            exception_reason: 'Paid No Issue',
+            action: 'Select'
+          },
+          {
+            account: 794659139,
+            checknumber: 23456,
+            amount: 4763.28,
+            status: 'Pending Decision',
+            exception_reason: 'Paid Fraud',
+            action: 'Select'
+          },
+          {
+            account: 479677228,
+            checknumber: 223431,
+            amount: 41170631.11,
+            status: 'Pending Decision',
+            exception_reason: 'Payee Missmatch',
+            action: 'Select'
+          },
+          {
+            account: 334547856,
+            checknumber: 2234567,
+            amount: 731.71,
+            status: 'Rejected',
+            exception_reason: 'Paid Fraud',
+            action: 'Select'
+          },
+          {
+            account: 452135542,
+            checknumber: 123564,
+            amount: 520631.51,
+            status: 'Pending Decision',
+            exception_reason: 'Paid Fraud',
+            action: 'Select'
+          },
+          {
+            account: 542412943,
+            checknumber: 342352,
+            amount: 41170631.71,
+            status: 'Pending Decision',
+            exception_reason: 'Paid No Issue',
+            action: 'Select'
+          },
+          {
+            account: 135322523,
+            checknumber: 3341234,
+            amount: 420631.16,
+            status: 'Pending Decision',
+            exception_reason: 'Payee Missmatch',
+            action: 'Select'
+          },
+          {
+            account: 432356742,
+            checknumber: 223456,
+            amount: 631.71,
+            status: 'Pending Decision',
+            exception_reason: 'Paid Fraud',
+            action: 'Select'
+          }
+      
+          ];
+          dataTable2.set('items', data2);
+      
+      
+      
+          dataTable2.set('accordianElement', "demo-accordian");
+          dataTable2.set('showAccordianBeginning', true);
         </script>
      </div>
     	</custom-demo-snippet>
@@ -3995,6 +4309,113 @@ window.customElements.define('accordian-view', class extends DemoMixin(PolymerEl
 
     dataTable.set('accordianElement', "demo-accordian");
     dataTable.set('showAccordian', true);
+    var dataTable2 = this.shadowRoot.querySelector('#accordian-table2');
+    dataTable2.set('columns', [{
+      key: 'account',
+      label: 'Account',
+      type: 'number'
+    }, {
+      key: 'checknumber',
+      label: 'Check Number',
+      type: 'number',
+      cellClass: 'blue-color'
+    }, {
+      key: 'amount',
+      label: 'Amount',
+      type: 'number',
+      renderer: amountRenderer
+    }, {
+      key: 'exception_reason',
+      label: 'Exception Reason',
+      type: 'string'
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      type: 'string'
+    },
+    {
+      key: 'action',
+      label: 'Action',
+
+
+      type: 'string',
+      renderer: dropDownRenderer
+
+    }]);
+
+    var data2 = [{
+      account: 861363459,
+      checknumber: 223457,
+      amount: 470631.71,
+      status: 'Approved',
+      exception_reason: 'Paid No Issue',
+      action: 'Select'
+    },
+    {
+      account: 794659139,
+      checknumber: 23456,
+      amount: 4763.28,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    },
+    {
+      account: 479677228,
+      checknumber: 223431,
+      amount: 41170631.11,
+      status: 'Pending Decision',
+      exception_reason: 'Payee Missmatch',
+      action: 'Select'
+    },
+    {
+      account: 334547856,
+      checknumber: 2234567,
+      amount: 731.71,
+      status: 'Rejected',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    },
+    {
+      account: 452135542,
+      checknumber: 123564,
+      amount: 520631.51,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    },
+    {
+      account: 542412943,
+      checknumber: 342352,
+      amount: 41170631.71,
+      status: 'Pending Decision',
+      exception_reason: 'Paid No Issue',
+      action: 'Select'
+    },
+    {
+      account: 135322523,
+      checknumber: 3341234,
+      amount: 420631.16,
+      status: 'Pending Decision',
+      exception_reason: 'Payee Missmatch',
+      action: 'Select'
+    },
+    {
+      account: 432356742,
+      checknumber: 223456,
+      amount: 631.71,
+      status: 'Pending Decision',
+      exception_reason: 'Paid Fraud',
+      action: 'Select'
+    }
+
+    ];
+    dataTable2.set('items', data2);
+
+
+
+    dataTable2.set('accordianElement', "demo-accordian");
+    dataTable2.set('showAccordianBeginning', true);
   }
 });
 window.customElements.define('oecombo-showcell', class extends DemoMixin(PolymerElement) {
